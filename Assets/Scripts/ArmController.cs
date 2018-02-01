@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ArmController : MonoBehaviour {
-  
+
   [Header("Body Parts")]
   public Transform Shoulder;
 	public Transform UpperArm;
@@ -28,6 +28,8 @@ public class ArmController : MonoBehaviour {
   [Range(0.0f, 1.0f)]
   private float armExtend;
   private bool isCalibrated = false;
+  [SerializeField]
+  private float MECH_ARM_LENGTH = 5f;
 
   private SteamVR_TrackedObject viveController;
 
@@ -51,7 +53,7 @@ public class ArmController : MonoBehaviour {
 	void Update () {
     // Shallow copy
     controllerAngle = Controller.eulerAngles;
-    if (isCalibrated)
+    //if (isCalibrated)
       ControllerCheck ();
 		// ShoulderCheck (UpperArmCheck ( ElbowCheck ( LowerArmCheck ( HandCheck () ) ) ));
 	}
@@ -71,7 +73,7 @@ public class ArmController : MonoBehaviour {
     else
       forearmToArm = currArmLength / maxArmLength;
     Vector3 handDirection = Vector3.Normalize(Controller.transform.position - PlayerShoulder.transform.position);
-    Hand.transform.position = forearmToArm * maxArmLength * handDirection;
+    Hand.transform.position = MECH_ARM_LENGTH * forearmToArm * maxArmLength * handDirection;
     ElbowCheck();
   }
 
@@ -141,7 +143,8 @@ public class ArmController : MonoBehaviour {
     Debug.Log ("Ready to check shoulder position.");
 
     Vector3 firstPosition;
-    yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    //yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    yield return StartCoroutine(WaitForButtonPress());
     //yield return new WaitUntil(()=> DeviceInput.GetHairTriggerDown() == true);
     //yield return new WaitWhile(DeviceInput.GetHairTriggerUp);
 
@@ -186,8 +189,17 @@ public class ArmController : MonoBehaviour {
   }
 
   IEnumerator WaitForButtonPress() {
-    yield return new WaitWhile (DeviceInput.GetHairTriggerUp);
+    /*yield return new WaitWhile (DeviceInput.GetHairTriggerUp);
     Debug.Log ("Breaks from loop");
-    yield break;
+    yield break;*/
+    bool wait = true;
+    while (wait) {
+      if (DeviceInput.GetHairTriggerDown ()) {
+        Debug.Log ("Hair trigger pressed");
+        wait = false;
+      }
+      yield return null;
+    }
+    yield return null;
   }
 }
