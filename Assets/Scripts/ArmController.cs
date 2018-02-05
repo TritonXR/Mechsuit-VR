@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ArmController : MonoBehaviour {
 
+  #region Variables
   [Header("Body Parts")]
   public Transform Shoulder;
-	public Transform UpperArm;
-	public Transform Elbow;
-	public Transform LowerArm;
-	public Transform Hand;
-	public Transform Controller;
+  public Transform UpperArm;
+  public Transform Elbow;
+  public Transform LowerArm;
+  public Transform Hand;
+  public Transform Controller;
   public Transform PlayerShoulder;
 
   [Header("Attributes")]
@@ -23,20 +24,28 @@ public class ArmController : MonoBehaviour {
   [SerializeField]
   private float maxArmLength;
   [SerializeField]
-  [Range(0.4f, 0.6f)]
-  private float forearmToArm;
+  [Range(0.2f, 0.8f)]
+  private static float forearmToArm = 0.5f;
   [Range(0.0f, 1.0f)]
   private float armExtend;
   private bool isCalibrated = false;
   [SerializeField]
-  private float MECH_ARM_LENGTH = 5f;
+  private static float MECH_ARM_LENGTH = 5f;
+  [SerializeField]
+  private static float minArmExtend = 0.1f;
+  private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm) - 0.5f;
+  #endregion
 
-  // Controller
+  #region Controller and Awake
   private SteamVR_TrackedObject viveController;
   private SteamVR_Controller.Device DeviceInput {
-    get { return SteamVR_Controller.Input ((int)viveController.index); }
+    get { return SteamVR_Controller.Input((int)viveController.index); }
   }
 
+  void Awake() {
+    viveController = GetComponent<SteamVR_TrackedObject>();
+  }
+  #endregion
 
   private float ArmLength {
     get {
@@ -48,83 +57,111 @@ public class ArmController : MonoBehaviour {
     }
   }
 
-  void Awake() {
-    viveController = GetComponent<SteamVR_TrackedObject> ();
-  }
-
-
-	/// <summary>
+  /// <summary>
   /// Determine left/right controller, and start calibration process
   /// </summary>
-  void Start () {
+  void Start() {
     isLeft = Controller.name == "Controller (left)";
     isCalibrated = false;
     StartCoroutine(CalibrateArmLength());
+    Debug.Log("UPL: " + mechUpperArmLength);
   }
-	
-	/// <summary>
+
+  /// <summary>
   /// If we have calibrated the controllers, update the inverse kinematics
   /// </summary>
-	void Update () {
+  void Update() {
     // Shallow copy
     if (isCalibrated) {
-      controllerAngle = Controller.eulerAngles;
-      HandCheck ();
+      HandCheck();
+      /* After updating the hand, update the elbow */
+      
+      
       //ControllerCheck ();
-		  //ShoulderCheck (UpperArmCheck ( ElbowCheck ( LowerArmCheck ( HandCheck () ) ) ));
+      //ShoulderCheck (UpperArmCheck ( ElbowCheck ( LowerArmCheck ( HandCheck () ) ) ));
+    } else {
+      armExtend = 1.0f;
+      Hand.transform.position = Shoulder.position + MECH_ARM_LENGTH * armExtend * Vector3.forward;
     }
-	}
-
-  //void ControllerCheck() {
-  //  HandCheck();
-  //}
+  }
 
   /// <summary>
   /// Rotation and position update for hands.
   /// </summary>
   void HandCheck() {
     /* Rotation update */
-    Hand.eulerAngles = new Vector3 (controllerAngle.x, controllerAngle.y, controllerAngle.z);
+    controllerAngle = Controller.eulerAngles;
+    Hand.eulerAngles = new Vector3(controllerAngle.x, controllerAngle.y, controllerAngle.z);
 
     /* Position update */
-    if (ArmLength > maxArmLength)
-      forearmToArm = 0.6f; //1.0f;
-    else if (ArmLength < 0.0f)
-      forearmToArm = 0.04f; //0.0f
-    else
-      forearmToArm = ArmLength / maxArmLength;
-    Vector3 handDirection = Vector3.Normalize(Controller.transform.position - PlayerShoulder.transform.position);
-    Hand.transform.position = MECH_ARM_LENGTH * forearmToArm * maxArmLength * handDirection;
-
-    /* After updating the hand, update the elbow */
+    armExtend = ArmLength / maxArmLength;
+    if (armExtend > 1.0f)
+      armExtend = 1.0f;
+    else if (armExtend < minArmExtend)
+      armExtend = minArmExtend;
+    //Vector3 handDirection = Vector3.Normalize(Controller.transform.position - PlayerShoulder.transform.position);
+    Vector3 handDirection = Vector3.Normalize(Controller.position - PlayerShoulder.position);
+    Hand.position = Shoulder.position + MECH_ARM_LENGTH * armExtend * handDirection;
     ElbowCheck();
   }
 
   /// <summary>
-  /// TODO: Update elbow position
+  /// Update elbow position
   /// </summary>
   void ElbowCheck() {
+    // The "naive" way
+    Vector3 elbowDirection = Hand.up * forearmToArm * MECH_ARM_LENGTH;
+    Elbow.position = Hand.position + elbowDirection;
 
+    // Based on that, account for wrist rotations
+    if (armExtend < 1.0) {
+      float newX = Elbow.position.x;
+
+      if (isLeft) {
+        newX -= mechUpperArmLength * (1.0f - armExtend);
+      }
+      
+      else {
+        newX += mechUpperArmLength * (1.0f - armExtend);
+      }
+
+      float newY = Elbow.position.y;
+      float newZ = Elbow.position.z;
+      //if (isLeft) xOffset *= -1;
+      // Calculations that take isLeft into account
+      // Elbow.position.x * armExtend + (mechUpperArmLength + Shoulder.position.x) * (1 - armExtend)
+      Elbow.position = new Vector3(newX, newY, newZ);
+    }
+    LowerArmCheck();
   }
 
   /// <summary>
-  /// Rotation and TODO: position update for lower arm.
+  /// Rotation and Position update for lower arm.
   /// </summary>
   void LowerArmCheck() {
+
     /* Rotation update */
-    LowerArm.eulerAngles = new Vector3 (0, controllerAngle.y, 0);
+    //LowerArm.eulerAngles = new Vector3(LowerArm.eulerAngles.x, controllerAngle.y, LowerArm.eulerAngles.z);
+    float yAngle = controllerAngle.y;
+    LowerArm.eulerAngles = new Vector3(0, yAngle, 0);
 
     /* Update y rotation of upper arm */
     if ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 180.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 270.0f)) {
-      float yAngle = isLeft ? controllerAngle.y - 90.0f : controllerAngle.y + 90.0f;
-      UpperArm.eulerAngles = new Vector3 (UpperArm.eulerAngles.x, yAngle, UpperArm.eulerAngles.z);
+      yAngle = isLeft ? controllerAngle.y - 90.0f : controllerAngle.y + 90.0f;
+      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, yAngle, UpperArm.eulerAngles.z);
+    } else if ((isLeft && controllerAngle.y > 270.0f) || (!isLeft && controllerAngle.y < 90)) {
+      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, controllerAngle.y, UpperArm.eulerAngles.z);
     }
 
-    else if ((isLeft && controllerAngle.y > 270.0f) || (!isLeft && controllerAngle.y < 90)) {
-      UpperArm.eulerAngles = new Vector3 (UpperArm.eulerAngles.x, controllerAngle.y, UpperArm.eulerAngles.z);
-    }
+    Vector3 lowerArmDirection = Vector3.Normalize(Elbow.position - Hand.position);
+    //LowerArm.position = Elbow.position;
+    
+    LowerArm.position = new Vector3(Elbow.position.x, Elbow.position.y + 0.07f, Elbow.position.z);
+    LowerArm.up = lowerArmDirection;
+    LowerArm.Rotate(0.0f, Hand.eulerAngles.y, 0.0f);
+    //LowerArm.eulerAngles = new Vector3(LowerArm.eulerAngles.x, yAngle, LowerArm.eulerAngles.z);
 
-    //Concept script to avoid jumping from forbidden angle to the greatest possible angle for the upper arm.
+    #region Concept script to avoid jumping from forbidden angle to the greatest possible angle for the upper arm.
     //    if (upperCanRotate || ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 95.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 185.0f))) {
     //      upperCanRotate = true;
     //      if ((controllerAngle.y > 90.0f && controllerAngle.y < 180.0f && upperCanRotate) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 270.0f && upperCanRotate))
@@ -133,14 +170,15 @@ public class ArmController : MonoBehaviour {
 
     //    else if ((isLeft && controllerAngle.y < 90.0f) || (!isLeft && controllerAngle.y < 180.0f))
     //      upperCanRotate = false;
+    #endregion
   }
 
   /// <summary>
   /// x, z Rotation and position update for lower arm.
   /// </summary>
 	void UpperArmCheck() {
-    
-	}
+
+  }
 
 
   /// <summary>
@@ -157,26 +195,23 @@ public class ArmController : MonoBehaviour {
   IEnumerator CalibrateArmLength() {
     /* Check if the controller is on */
     if (DeviceInput == null) {
-      Debug.Log ("Null controller value, attempting to fetch.");
-      viveController = GetComponent<SteamVR_TrackedObject> ();
+      Debug.Log("Null controller value, attempting to fetch.");
+      viveController = GetComponent<SteamVR_TrackedObject>();
       if (DeviceInput == null) {
-        Debug.Log ("Fetch failed");
+        Debug.Log("Fetch failed");
         //return;
         yield break;
       }
     }
 
     /* First check */
-    Debug.Log ("Ready to check shoulder position.");
+    Debug.Log("Ready to check shoulder position.");
 
     Vector3 firstPosition;
-    //yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
-    yield return StartCoroutine(WaitForButtonPress());
-    //yield return new WaitUntil(()=> DeviceInput.GetHairTriggerDown() == true);
-    //yield return new WaitWhile(DeviceInput.GetHairTriggerUp);
+    yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
 
-    Debug.Log ("Trigger pulled, expected at shoulder.");
-    firstPosition = new Vector3 (
+    Debug.Log("Trigger pulled, expected at shoulder.");
+    firstPosition = new Vector3(
       Controller.transform.position.x,
       Controller.transform.position.y,
       Controller.transform.position.z
@@ -185,10 +220,10 @@ public class ArmController : MonoBehaviour {
     // Move our empty shoulder gameobject to the player's assumed shoulder position.
     PlayerShoulder.position = firstPosition;
 
-    Debug.Log ("firstPosition is ("
-                +firstPosition.x+", "
-                +firstPosition.y+", "
-                +firstPosition.z+")");
+    Debug.Log("firstPosition is ("
+                + firstPosition.x + ", "
+                + firstPosition.y + ", "
+                + firstPosition.z + ")");
 
     yield return new WaitForSeconds(1.0f);
 
@@ -196,41 +231,22 @@ public class ArmController : MonoBehaviour {
     Vector3 secondPosition;
     yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
 
-    Debug.Log ("Trigger pulled, expected arm to be extended.");
-    secondPosition = new Vector3 (
+    Debug.Log("Trigger pulled, expected arm to be extended.");
+    secondPosition = new Vector3(
       Controller.transform.position.x,
       Controller.transform.position.y,
       Controller.transform.position.z
     );
-    Debug.Log ("secondPosition is ("
-                +secondPosition.x+", "
-                +secondPosition.y+", "
-                +secondPosition.z+")");
+    Debug.Log("secondPosition is ("
+                + secondPosition.x + ", "
+                + secondPosition.y + ", "
+                + secondPosition.z + ")");
 
     maxArmLength = Mathf.Sqrt(Mathf.Pow(firstPosition.x - secondPosition.x, 2.0f)
-                             +Mathf.Pow(firstPosition.y - secondPosition.y, 2.0f)
-                             +Mathf.Pow(firstPosition.z - secondPosition.z, 2.0f));
-    Debug.Log (isLeft + ", length: " + maxArmLength);
+                             + Mathf.Pow(firstPosition.y - secondPosition.y, 2.0f)
+                             + Mathf.Pow(firstPosition.z - secondPosition.z, 2.0f));
+    Debug.Log(isLeft + ", length: " + maxArmLength);
 
     isCalibrated = true;
-  }
-
-  /// <summary>
-  /// Waits for button press.
-  /// </summary>
-  /// <returns>an IEnumerator as a coroutine.</returns>
-  IEnumerator WaitForButtonPress() {
-    /*yield return new WaitWhile (DeviceInput.GetHairTriggerUp);
-    Debug.Log ("Breaks from loop");
-    yield break;*/
-    bool wait = true;
-    while (wait) {
-      if (DeviceInput.GetHairTriggerDown ()) {
-        Debug.Log ("Hair trigger pressed");
-        wait = false;
-      }
-      yield return null;
-    }
-    yield return null;
   }
 }
