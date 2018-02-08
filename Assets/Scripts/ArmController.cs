@@ -33,7 +33,7 @@ public class ArmController : MonoBehaviour {
   private static float MECH_ARM_LENGTH = 5f;
   [SerializeField]
   private static float minArmExtend = 0.1f;
-  private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm) - 0.5f;
+  private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm);
   #endregion
 
   #region Controller and Awake
@@ -110,11 +110,12 @@ public class ArmController : MonoBehaviour {
   /// </summary>
   void ElbowCheck() {
     // The "naive" way
-    Vector3 elbowDirection = Hand.up * forearmToArm * MECH_ARM_LENGTH;
+    Vector3 a = (1.0f - armExtend) * Hand.up + armExtend * Vector3.Normalize(Shoulder.position - Hand.position);
+    Vector3 elbowDirection = a * forearmToArm * MECH_ARM_LENGTH;
     Elbow.position = Hand.position + elbowDirection;
 
     // Based on that, account for wrist rotations
-    if (armExtend < 1.0) {
+    if (armExtend < 1.0f) {
       float newX = Elbow.position.x;
 
       if (isLeft) {
@@ -132,7 +133,9 @@ public class ArmController : MonoBehaviour {
       // Elbow.position.x * armExtend + (mechUpperArmLength + Shoulder.position.x) * (1 - armExtend)
       Elbow.position = new Vector3(newX, newY, newZ);
     }
+
     LowerArmCheck();
+    UpperArmCheck();
   }
 
   /// <summary>
@@ -161,6 +164,7 @@ public class ArmController : MonoBehaviour {
     LowerArm.Rotate(0.0f, Hand.eulerAngles.y, 0.0f);
     //LowerArm.eulerAngles = new Vector3(LowerArm.eulerAngles.x, yAngle, LowerArm.eulerAngles.z);
 
+
     #region Concept script to avoid jumping from forbidden angle to the greatest possible angle for the upper arm.
     //    if (upperCanRotate || ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 95.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 185.0f))) {
     //      upperCanRotate = true;
@@ -177,7 +181,8 @@ public class ArmController : MonoBehaviour {
   /// x, z Rotation and position update for lower arm.
   /// </summary>
 	void UpperArmCheck() {
-
+    Vector3 upperArmDirection = Vector3.Normalize(UpperArm.position - Elbow.position);
+    UpperArm.up = upperArmDirection;
   }
 
 
