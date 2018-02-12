@@ -13,7 +13,7 @@ public class ArmController : MonoBehaviour {
   public Transform Hand;
   public Transform Controller;
   public Transform PlayerShoulder;
-
+  
   [Header("Attributes")]
   [SerializeField]
   private bool isLeft;
@@ -30,10 +30,13 @@ public class ArmController : MonoBehaviour {
   private float armExtend;
   private bool isCalibrated = false;
   [SerializeField]
-  private static float MECH_ARM_LENGTH = 5f;
+  private static float MECH_ARM_LENGTH = 6.0f;
   [SerializeField]
   private static float minArmExtend = 0.1f;
   private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm);
+  private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
+
+  private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
   #endregion
 
   #region Controller and Awake
@@ -47,15 +50,13 @@ public class ArmController : MonoBehaviour {
   }
   #endregion
 
+
   private float ArmLength {
     get {
-      Vector3 controllerPos = Controller.transform.position;
-      Vector3 shoulderPos = PlayerShoulder.transform.position;
-      return Mathf.Sqrt(Mathf.Pow(controllerPos.x - shoulderPos.x, 2.0f)
-        + Mathf.Pow(controllerPos.y - shoulderPos.y, 2.0f)
-        + Mathf.Pow(controllerPos.z - shoulderPos.z, 2.0f));
+      return Vector3.Distance(Controller.position, PlayerShoulder.position);
     }
   }
+
 
   /// <summary>
   /// Determine left/right controller, and start calibration process
@@ -67,6 +68,7 @@ public class ArmController : MonoBehaviour {
     Debug.Log("UPL: " + mechUpperArmLength);
   }
 
+
   /// <summary>
   /// If we have calibrated the controllers, update the inverse kinematics
   /// </summary>
@@ -76,14 +78,13 @@ public class ArmController : MonoBehaviour {
       HandCheck();
       /* After updating the hand, update the elbow */
       
-      
       //ControllerCheck ();
-      //ShoulderCheck (UpperArmCheck ( ElbowCheck ( LowerArmCheck ( HandCheck () ) ) ));
     } else {
       armExtend = 1.0f;
-      Hand.transform.position = Shoulder.position + MECH_ARM_LENGTH * armExtend * Vector3.forward;
+      Hand.position = UpperArm.position + MECH_ARM_LENGTH * armExtend * Vector3.forward;
     }
   }
+
 
   /// <summary>
   /// Rotation and position update for hands.
@@ -95,22 +96,23 @@ public class ArmController : MonoBehaviour {
 
     /* Position update */
     armExtend = ArmLength / maxArmLength;
-    if (armExtend > 1.0f)
+    if (armExtend > 1.0f) {
       armExtend = 1.0f;
-    else if (armExtend < minArmExtend)
+    } else if (armExtend < minArmExtend) {
       armExtend = minArmExtend;
-    //Vector3 handDirection = Vector3.Normalize(Controller.transform.position - PlayerShoulder.transform.position);
+    }
     Vector3 handDirection = Vector3.Normalize(Controller.position - PlayerShoulder.position);
-    Hand.position = Shoulder.position + MECH_ARM_LENGTH * armExtend * handDirection;
+    Hand.position = UpperArm.position + MECH_ARM_LENGTH * armExtend * handDirection;
     ElbowCheck();
   }
+
 
   /// <summary>
   /// Update elbow position
   /// </summary>
   void ElbowCheck() {
     // The "naive" way
-    Vector3 a = (1.0f - armExtend) * Hand.up + armExtend * Vector3.Normalize(Shoulder.position - Hand.position);
+    Vector3 a = (1.0f - armExtend) * Hand.up + armExtend * Vector3.Normalize(UpperArm.position - Hand.position);
     Vector3 elbowDirection = a * forearmToArm * MECH_ARM_LENGTH;
     Elbow.position = Hand.position + elbowDirection;
 
@@ -120,50 +122,51 @@ public class ArmController : MonoBehaviour {
 
       if (isLeft) {
         newX -= mechUpperArmLength * (1.0f - armExtend);
-      }
-      
-      else {
+      } else {
         newX += mechUpperArmLength * (1.0f - armExtend);
       }
 
       float newY = Elbow.position.y;
       float newZ = Elbow.position.z;
+      Vector3 newElbowPosition = new Vector3(newX, newY, newZ);
+      float elbowDistance = Vector3.Distance(newElbowPosition, UpperArm.position);
+      //if (elbowDistance < upperArmRadius) {
+      if (elbowDistance < mechUpperArmLength) {
+        //newElbowPosition = UpperArm.position + upperArmRadius * Vector3.Normalize(newElbowPosition - UpperArm.position);
+        newElbowPosition = UpperArm.position + mechUpperArmLength * Vector3.Normalize(newElbowPosition - UpperArm.position);
+      }
       //if (isLeft) xOffset *= -1;
       // Calculations that take isLeft into account
       // Elbow.position.x * armExtend + (mechUpperArmLength + Shoulder.position.x) * (1 - armExtend)
-      Elbow.position = new Vector3(newX, newY, newZ);
+      //Elbow.position = new Vector3(newX, newY, newZ);
+      Elbow.position = newElbowPosition;
     }
 
     LowerArmCheck();
     UpperArmCheck();
   }
 
+
   /// <summary>
   /// Rotation and Position update for lower arm.
   /// </summary>
   void LowerArmCheck() {
-
     /* Rotation update */
     //LowerArm.eulerAngles = new Vector3(LowerArm.eulerAngles.x, controllerAngle.y, LowerArm.eulerAngles.z);
     float yAngle = controllerAngle.y;
     LowerArm.eulerAngles = new Vector3(0, yAngle, 0);
 
-    /* Update y rotation of upper arm */
-    if ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 180.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 270.0f)) {
-      yAngle = isLeft ? controllerAngle.y - 90.0f : controllerAngle.y + 90.0f;
-      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, yAngle, UpperArm.eulerAngles.z);
-    } else if ((isLeft && controllerAngle.y > 270.0f) || (!isLeft && controllerAngle.y < 90)) {
-      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, controllerAngle.y, UpperArm.eulerAngles.z);
-    }
-
     Vector3 lowerArmDirection = Vector3.Normalize(Elbow.position - Hand.position);
     //LowerArm.position = Elbow.position;
-    
-    LowerArm.position = new Vector3(Elbow.position.x, Elbow.position.y + 0.07f, Elbow.position.z);
+
+    float handToElbowDistance = Vector3.Distance(Elbow.position, Hand.position);
+    //LowerArm.position = new Vector3(Elbow.position.x, Elbow.position.y + 0.5f * (handToElbowDistance - mechLowerArmLength)/* + 0.02f*/, Elbow.position.z);
+    LowerArm.position = new Vector3(Elbow.position.x, Elbow.position.y, Elbow.position.z);
+    /*if (handToElbowDistance > mechLowerArmLength) {
+      LowerArm.Translate(Vector3.forward * 0.5f * (handToElbowDistance - mechLowerArmLength));
+    }*/
     LowerArm.up = lowerArmDirection;
     LowerArm.Rotate(0.0f, Hand.eulerAngles.y, 0.0f);
-    //LowerArm.eulerAngles = new Vector3(LowerArm.eulerAngles.x, yAngle, LowerArm.eulerAngles.z);
-
 
     #region Concept script to avoid jumping from forbidden angle to the greatest possible angle for the upper arm.
     //    if (upperCanRotate || ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 95.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 185.0f))) {
@@ -177,12 +180,25 @@ public class ArmController : MonoBehaviour {
     #endregion
   }
 
+
   /// <summary>
   /// x, z Rotation and position update for lower arm.
   /// </summary>
 	void UpperArmCheck() {
     Vector3 upperArmDirection = Vector3.Normalize(UpperArm.position - Elbow.position);
     UpperArm.up = upperArmDirection;
+
+
+
+    // Update y rotation of upper arm 
+    /*float yAngle = controllerAngle.y;
+    if ((isLeft && controllerAngle.y > 90.0f && controllerAngle.y < 180.0f) || (!isLeft && controllerAngle.y > 180.0f && controllerAngle.y < 270.0f)) {
+      yAngle = isLeft ? controllerAngle.y - 90.0f : controllerAngle.y + 90.0f;
+      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, yAngle, UpperArm.eulerAngles.z);
+    } else if ((isLeft && controllerAngle.y > 270.0f) || (!isLeft && controllerAngle.y < 90)) {
+      UpperArm.eulerAngles = new Vector3(UpperArm.eulerAngles.x, controllerAngle.y, UpperArm.eulerAngles.z);
+    }*/
+    
   }
 
 
@@ -192,6 +208,7 @@ public class ArmController : MonoBehaviour {
   void ShoulderCheck() {
 
   }
+
 
   /// <summary>
   /// Calibrates the length of the arm.
@@ -247,11 +264,11 @@ public class ArmController : MonoBehaviour {
                 + secondPosition.y + ", "
                 + secondPosition.z + ")");
 
-    maxArmLength = Mathf.Sqrt(Mathf.Pow(firstPosition.x - secondPosition.x, 2.0f)
-                             + Mathf.Pow(firstPosition.y - secondPosition.y, 2.0f)
-                             + Mathf.Pow(firstPosition.z - secondPosition.z, 2.0f));
+    maxArmLength = Vector3.Distance(firstPosition, secondPosition);
+    
     Debug.Log(isLeft + ", length: " + maxArmLength);
 
     isCalibrated = true;
   }
-}
+
+} // end of public class armController
