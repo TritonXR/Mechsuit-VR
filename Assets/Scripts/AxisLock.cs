@@ -9,9 +9,15 @@ public class AxisLock : MonoBehaviour {
 //	public float zlimit;
 
 	public Transform HeadCam;
+  [SerializeField]
+  private bool lockX;
+  [SerializeField]
+  private bool lockY;
+  [SerializeField]
+  private bool lockZ;
 
-	// Use this for initialization
-	void Start () {
+  // Use this for initialization
+  void Start () {
 		HeadCam = GetComponent<Transform>();
 	}
 	
@@ -21,9 +27,13 @@ public class AxisLock : MonoBehaviour {
 //		transform.rotation.x = 0;
 //		transform.rotation.y = headCoords.rotation.y;
 //		transform.rotation.z = 0;
-
+    
 		Vector3 eulerAngles = HeadCam.rotation.eulerAngles;
-		eulerAngles = new Vector3(0, eulerAngles.y, eulerAngles.z);
-		transform.rotation = Quaternion. Euler(eulerAngles);
+    float newX = lockX ? 0 : eulerAngles.x;
+    float newY = lockY ? 0 : eulerAngles.y;
+    float newZ = lockZ ? 0 : eulerAngles.z;
+    //eulerAngles = new Vector3(0, eulerAngles.y, eulerAngles.z);
+    eulerAngles = new Vector3(newX, newY, newZ);
+    transform.rotation = Quaternion. Euler(eulerAngles);
 	}
 }

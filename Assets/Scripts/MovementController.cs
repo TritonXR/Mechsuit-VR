@@ -24,6 +24,7 @@ public class MovementController : MonoBehaviour {
   */
   public float maxPulseMagnitude;
 
+  [SerializeField]
   public float pulseStrength;
 
   //reference to the tracked-object component on the controller/HMD GameObject
@@ -90,7 +91,7 @@ public class MovementController : MonoBehaviour {
   public void ForwardPulse() {
     cooldown = true;
     suitBody.velocity = Vector3.zero;
-    suitBody.AddForce (GetForwardDirection () * 125000);
+    suitBody.AddForce (GetForwardDirection () * pulseStrength);
     Invoke ("EndPulse", cooldownTime);
     //calc force
     //float m = velocity.magnitude / maxPulseMagnitude;

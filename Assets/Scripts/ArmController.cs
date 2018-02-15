@@ -81,7 +81,7 @@ public class ArmController : MonoBehaviour {
       //ControllerCheck ();
     } else {
       armExtend = 1.0f;
-      Hand.position = UpperArm.position + MECH_ARM_LENGTH * armExtend * Vector3.forward;
+      Hand.position = UpperArm.position + MECH_ARM_LENGTH * armExtend * Hand.forward;
     }
   }
 
@@ -121,25 +121,33 @@ public class ArmController : MonoBehaviour {
       float newX = Elbow.position.x;
 
       if (isLeft) {
-        newX -= mechUpperArmLength * (1.0f - armExtend);
+        //newX -= mechUpperArmLength * (1.0f - armExtend);
+        Elbow.position -= Elbow.forward * mechUpperArmLength * (1.0f - armExtend);
       } else {
-        newX += mechUpperArmLength * (1.0f - armExtend);
+        //newX += mechUpperArmLength * (1.0f - armExtend);
+        Elbow.position += Elbow.forward * mechUpperArmLength * (1.0f - armExtend);
       }
 
       float newY = Elbow.position.y;
       float newZ = Elbow.position.z;
-      Vector3 newElbowPosition = new Vector3(newX, newY, newZ);
-      float elbowDistance = Vector3.Distance(newElbowPosition, UpperArm.position);
-      //if (elbowDistance < upperArmRadius) {
+      Vector3 newElbowPosition = new Vector3(Elbow.position.x, newY, newZ);
+      //float elbowDistance = Vector3.Distance(newElbowPosition, UpperArm.position);
+      float elbowDistance = Vector3.Distance(Elbow.position, UpperArm.position);
       if (elbowDistance < mechUpperArmLength) {
-        //newElbowPosition = UpperArm.position + upperArmRadius * Vector3.Normalize(newElbowPosition - UpperArm.position);
-        newElbowPosition = UpperArm.position + mechUpperArmLength * Vector3.Normalize(newElbowPosition - UpperArm.position);
+        //newElbowPosition = UpperArm.position + mechUpperArmLength * Vector3.Normalize(newElbowPosition - UpperArm.position);
+        newElbowPosition = UpperArm.position + mechUpperArmLength * Vector3.Normalize(Elbow.position - UpperArm.position);
       }
-      //if (isLeft) xOffset *= -1;
       // Calculations that take isLeft into account
-      // Elbow.position.x * armExtend + (mechUpperArmLength + Shoulder.position.x) * (1 - armExtend)
-      //Elbow.position = new Vector3(newX, newY, newZ);
       Elbow.position = newElbowPosition;
+      /*if (isLeft) {
+        Elbow.position -= Elbow.right * mechUpperArmLength * (1.0f - armExtend);
+      } else {
+        Elbow.position += Elbow.right * mechUpperArmLength * (1.0f - armExtend);
+      }
+      float elbowDistance = Vector3.Distance(Elbow.position, UpperArm.position);
+      if (elbowDistance < mechUpperArmLength) {
+        Elbow.position = UpperArm.position + mechUpperArmLength * Vector3.Normalize(Elbow.position - UpperArm.position);
+      }*/
     }
 
     LowerArmCheck();
