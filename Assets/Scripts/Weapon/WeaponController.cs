@@ -5,16 +5,51 @@ using UnityEngine.UI;
 
 public class WeaponController : MonoBehaviour {
   /* Buttons */
-  private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
   // Grip button
-  private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+  private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
   // Trigger button
+  private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
-  public SteamVR_TrackedObject trackedObj;
+  // Threshold for trigger click
+  public float triggerThreshold;
 
-  public SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
+  public AmmoPooler weapon;
 
-  public List<Weapon> weapons;
+  public string[] ammoType;
+  public float[] fireDelay;
+  private int currAmmoIndex;
+  private float currDelay;
+
+  public SteamVR_TrackedObject viveController;
+
+  public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int) viveController.index); } }
+
+  bool TriggerClicked() {
+    if (Controller == null) return false;
+    return Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x >= triggerThreshold;
+  }
+
+  private void Awake() {
+    viveController = GetComponent<SteamVR_TrackedObject>();
+    currAmmoIndex = 0;
+    currDelay = 0.0f;
+  }
+
+  private void Update() {
+    //Debug.Log("WeaponController.Update()");
+    //if (currDelay <= 0.0f && TriggerClicked()) {
+    if (TriggerClicked()) {
+      Debug.Log("Trigger clicked, attempting to fire");
+      weapon.Fire(ammoType[currAmmoIndex], this.gameObject.transform.position, this.gameObject.transform.rotation);
+      currDelay = fireDelay[currAmmoIndex];
+    }
+    if (currDelay > 0.0f) {
+      currDelay -= Time.deltaTime;
+    }
+  }
+
+  #region Ugly Crap
+  /*public List<Weapon> weapons;
   public bool b_setup;
 
   public Text text_debug;
@@ -41,7 +76,7 @@ public class WeaponController : MonoBehaviour {
   void Update () {
 
     //	In final build, add null checking for controller:
-    /* if (controller == null) {
+    if (controller == null) {
     	Debug.Log("Controller not initialized.");
     	return;
     }
@@ -60,7 +95,7 @@ public class WeaponController : MonoBehaviour {
 			setWeapon(weapons[5]);
 		else if(Input.GetKeyDown (KeyCode.Alpha7) && weapons.Count > 5)
 			setWeapon(weapons[6]);
-      */
+    
   }
 
   //TODO, implement dictionary for weapon lookup
@@ -102,5 +137,7 @@ public class WeaponController : MonoBehaviour {
       }
     }
     //}
-  }
+  }*/
+  #endregion
+
 }

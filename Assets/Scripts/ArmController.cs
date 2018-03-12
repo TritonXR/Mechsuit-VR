@@ -37,6 +37,8 @@ public class ArmController : MonoBehaviour {
   private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
 
   private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
+
+  public float triggerThreshold;
   #endregion
 
   #region Controller and Awake
@@ -217,6 +219,9 @@ public class ArmController : MonoBehaviour {
 
   }
 
+  bool TriggerClicked() {
+    return DeviceInput.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x >= triggerThreshold;
+  }
 
   /// <summary>
   /// Calibrates the length of the arm.
@@ -238,7 +243,8 @@ public class ArmController : MonoBehaviour {
     Debug.Log("Ready to check shoulder position.");
 
     Vector3 firstPosition;
-    yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    //yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    yield return new WaitUntil(TriggerClicked);
 
     Debug.Log("Trigger pulled, expected at shoulder.");
     firstPosition = new Vector3(
@@ -259,7 +265,9 @@ public class ArmController : MonoBehaviour {
 
     /* Second check */
     Vector3 secondPosition;
-    yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    //yield return new WaitUntil(DeviceInput.GetHairTriggerDown);
+    yield return new WaitUntil(TriggerClicked);
+    //Debug.Log();
 
     Debug.Log("Trigger pulled, expected arm to be extended.");
     secondPosition = new Vector3(
