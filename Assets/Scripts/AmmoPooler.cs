@@ -36,24 +36,25 @@ public class AmmoPooler : MonoBehaviour
         obj.SetActive(false);
         objPool.Enqueue(obj);
       }
+      poolDictionary.Add(pool.tag, objPool);
     }
 	}
 
-  public GameObject Fire(string tag, Vector3 position, Quaternion rotation)
+  public GameObject Fire(string ammoTag, Vector3 weaponPosition, Quaternion weaponRotation)
   {
-    if (!poolDictionary.ContainsKey(tag)) {
-      Debug.LogWarning("Projectile " + tag + " not found");
-      Debug.LogWarning("Check spelling of tag");
+    if (!poolDictionary.ContainsKey(ammoTag)) {
+      Debug.Log("Projectile " + ammoTag + " not found");
+      Debug.Log("Check spelling of tag");
       return null;
     }
 
     Debug.Log("Successful fire");
 
-    GameObject projectile = poolDictionary[tag].Dequeue();
+    GameObject projectile = poolDictionary[ammoTag].Dequeue();
 
     projectile.SetActive(true);
-    projectile.transform.position = position;
-    projectile.transform.rotation = rotation;
+    projectile.transform.position = weaponPosition;
+    projectile.transform.rotation = weaponRotation;
 
     I_Ammo pooledProjectile = projectile.GetComponent<I_Ammo>();
 
@@ -62,7 +63,7 @@ public class AmmoPooler : MonoBehaviour
       pooledProjectile.OnObjectSpawn();
     }
 
-    poolDictionary[tag].Enqueue(projectile);
+    poolDictionary[ammoTag].Enqueue(projectile);
 
     return projectile;
   }

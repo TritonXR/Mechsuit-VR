@@ -15,6 +15,9 @@ public class WeaponController : MonoBehaviour {
 
   public AmmoPooler weapon;
 
+  [SerializeField]
+  public GameObject gunBarrel;
+
   public string[] ammoType;
   public float[] fireDelay;
   private int currAmmoIndex;
@@ -30,6 +33,7 @@ public class WeaponController : MonoBehaviour {
   }
 
   private void Awake() {
+    Gizmos.color = Color.green;
     viveController = GetComponent<SteamVR_TrackedObject>();
     currAmmoIndex = 0;
     currDelay = 0.0f;
@@ -38,14 +42,21 @@ public class WeaponController : MonoBehaviour {
   private void Update() {
     //Debug.Log("WeaponController.Update()");
     //if (currDelay <= 0.0f && TriggerClicked()) {
-    if (TriggerClicked()) {
-      Debug.Log("Trigger clicked, attempting to fire");
-      weapon.Fire(ammoType[currAmmoIndex], this.gameObject.transform.position, this.gameObject.transform.rotation);
-      currDelay = fireDelay[currAmmoIndex];
-    }
     if (currDelay > 0.0f) {
       currDelay -= Time.deltaTime;
     }
+    if (currDelay <= 0.0f && TriggerClicked()) {
+      Debug.Log("Trigger clicked, attempting to fire");
+      weapon.Fire(ammoType[currAmmoIndex], gunBarrel.transform.position, gunBarrel.transform.rotation);
+      currDelay = fireDelay[currAmmoIndex];
+    }
+  }
+
+  private void OnDrawGizmos() {
+    //Debug.Log("OnDrawGizmos()");
+    Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.forward);
+    Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.right);
+    Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.up);
   }
 
   #region Ugly Crap
