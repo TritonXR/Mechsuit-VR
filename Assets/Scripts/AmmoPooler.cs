@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoPooler : MonoBehaviour
-{
+public class AmmoPooler : MonoBehaviour {
   [System.Serializable]
-  public class Pool
-  {
+  public class Pool {
     public string tag;
     public GameObject prefab;
     public int size;
@@ -16,22 +14,18 @@ public class AmmoPooler : MonoBehaviour
   public List<Pool> pools;
   public Dictionary<string, Queue<GameObject>> poolDictionary;
 
-	void Awake ()
-  {
+	void Awake () {
     //Instance = this;
 	}
 
   // Use this for initialization
-  void Start ()
-  {
+  void Start () {
     poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-    foreach (Pool pool in pools)
-    {
+    foreach (Pool pool in pools) {
       Queue<GameObject> objPool = new Queue<GameObject>();
 
-      for (int i = 0; i < pool.size; ++i)
-      {
+      for (int i = 0; i < pool.size; ++i) {
         GameObject obj = Instantiate(pool.prefab);
         obj.SetActive(false);
         objPool.Enqueue(obj);
@@ -40,8 +34,7 @@ public class AmmoPooler : MonoBehaviour
     }
 	}
 
-  public GameObject Fire(string ammoTag, Vector3 weaponPosition, Quaternion weaponRotation)
-  {
+  public GameObject Fire(string ammoTag, Vector3 weaponPosition, Quaternion weaponRotation, Vector3 forwardDirection) {
     if (!poolDictionary.ContainsKey(ammoTag)) {
       Debug.Log("Projectile " + ammoTag + " not found");
       Debug.Log("Check spelling of tag");
@@ -52,9 +45,11 @@ public class AmmoPooler : MonoBehaviour
 
     GameObject projectile = poolDictionary[ammoTag].Dequeue();
 
+    
     projectile.SetActive(true);
-    projectile.transform.position = weaponPosition;
-    projectile.transform.rotation = weaponRotation;
+    projectile.transform.position = new Vector3(weaponPosition.x, weaponPosition.y, weaponPosition.z);
+    projectile.transform.rotation = new Quaternion(weaponRotation.x, weaponRotation.y, weaponRotation.z, weaponRotation.w);
+    projectile.transform.forward = new Vector3(forwardDirection.x, forwardDirection.y, forwardDirection.z);
 
     I_Ammo pooledProjectile = projectile.GetComponent<I_Ammo>();
 
