@@ -13,11 +13,16 @@ public class Laser : MonoBehaviour, I_Ammo {
 	
 	// Update is called once per frame
 	void Update () {
-    this.gameObject.transform.Translate(this.transform.forward * speed);
+    Debug.DrawRay(this.transform.position, this.transform.forward, Color.green);
+    this.transform.Translate(Vector3.forward * speed * Time.deltaTime);
 	}
 
   public void OnObjectSpawn() {
 
+  }
+
+  public void OnCollisionEnter(Collision collision) {
+    //Destroy(this.gameObject);
   }
 
 }

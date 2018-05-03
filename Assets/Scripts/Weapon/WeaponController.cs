@@ -40,6 +40,7 @@ public class WeaponController : MonoBehaviour {
   }
 
   private void Update() {
+    Debug.DrawRay(gunBarrel.transform.position, gunBarrel.transform.forward, Color.red);
     //Debug.Log("WeaponController.Update()");
     //if (currDelay <= 0.0f && TriggerClicked()) {
     if (currDelay > 0.0f) {
@@ -47,7 +48,7 @@ public class WeaponController : MonoBehaviour {
     }
     if (currDelay <= 0.0f && TriggerClicked()) {
       Debug.Log("Trigger clicked, attempting to fire");
-      weapon.Fire(ammoType[currAmmoIndex], gunBarrel.transform.position, gunBarrel.transform.rotation);
+      weapon.Fire(ammoType[currAmmoIndex], gunBarrel.transform.position, gunBarrel.transform.rotation, gunBarrel.transform.forward);
       currDelay = fireDelay[currAmmoIndex];
     }
   }
