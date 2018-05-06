@@ -28,7 +28,7 @@ public class ArmController : MonoBehaviour {
   private static float forearmToArm = 0.5f;
   [Range(0.0f, 1.0f)]
   private float armExtend;
-  private bool isCalibrated = false;
+  public static bool isCalibrated = false;
   [SerializeField]
   private static float MECH_ARM_LENGTH = 6.0f;
   [SerializeField]
