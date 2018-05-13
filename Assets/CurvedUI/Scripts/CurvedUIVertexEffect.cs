@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 using TMPro;
 #endif
 
@@ -35,14 +35,14 @@ namespace CurvedUI
 		Graphic myGraphic;
 		Image myImage;
 		Text myText;
-		#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 		TextMeshProUGUI myTMP;
 		CurvedUITMPSubmesh myTMPSubMesh;
-		#endif
+#endif
 
 
         //variables we operate on
-		bool tesselationRequired = true;
+        bool tesselationRequired = true;
 		bool curvingRequired = true;
 		float angle = 90;
 		bool TransformMisaligned = false;
@@ -80,20 +80,46 @@ namespace CurvedUI
                 myGraphic.SetVerticesDirty();
             }
 
-
+            //add text events and callbacks
 			myText = GetComponent<Text>();
 			if (myText) {
 				myText.RegisterDirtyVerticesCallback (TesselationRequiredCallback);
 				Font.textureRebuilt += FontTextureRebuiltCallback;
 			}
 
-#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 			myTMP = GetComponent<TextMeshProUGUI>();
             myTMPSubMesh = GetComponent<CurvedUITMPSubmesh>();
 #endif
         }
 
-        protected override void OnDisable()
+        /// <summary>
+        /// Start is executed after OnEnable
+        /// </summary>
+        protected override void Start()
+        {
+            base.Start();
+
+            //if we have an interactable component, make sure its inside the canvas and it's Z position is 0 in relation to the canvas.
+            //Otherwise the interactions on it will not be accurate, or it may not work at all!
+            //This is because, in order to save performance, CurvedUI creates a collider only for the space inside the Canvas rectangle.
+            if (myCanvas && GetComponent<Selectable>())
+            {
+                Vector3 myPosOnCanvas = myCanvas.transform.worldToLocalMatrix.MultiplyPoint3x4(this.transform.position);
+                RectTransform canvasRect = (myCanvas.transform as RectTransform);
+                if (myPosOnCanvas.x.Abs() > canvasRect.rect.width / 2.0f || myPosOnCanvas.y.Abs() > canvasRect.rect.height / 2.0f)
+                {
+                    Debug.LogWarning("CurvedUI: " + GetComponent<Selectable>().GetType().Name + " \"" + this.gameObject.name + "\" is outside of the canvas. It will not be interactable. Move it inside the canvas rectangle (white border in scene view) for it to work.", this.gameObject);
+                }
+
+                if (myPosOnCanvas.z.Abs() > 0.1f)
+                {
+                    Debug.LogWarning("CurvedUI: The Pos Z of " + GetComponent<Selectable>().GetType().Name + " \"" + this.gameObject.name + "\" is not 0 in relation to the canvas. The interactions may not be perfectly accurate.", this.gameObject);
+                }
+            }
+        }
+
+    protected override void OnDisable()
 		{
 			//If there is an update to the graphic, we cant reuse old vertices, so new tesselation will be required
 			if (myGraphic)
@@ -126,7 +152,7 @@ namespace CurvedUI
         void Update()
         {
 
-#if CURVEDUI_TMP // CurvedUITMP handles updates for TextMeshPro objects.
+#if CURVEDUI_TMP || TMP_PRESENT  // CurvedUITMP handles updates for TextMeshPro objects.
         if (myTMP || myTMPSubMesh) return;
 #endif
 
@@ -470,7 +496,7 @@ namespace CurvedUI
 
 
             //do not tesselate text verts. Text usually is small and has plenty of verts already.
-#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 			if (myText == null && myTMP == null && !DoNotTesselate)  {
 #else
             if (myText == null && !DoNotTesselate)
@@ -512,11 +538,12 @@ namespace CurvedUI
             // Tesselate vertically only if the recttransform (or parent) is rotated
             // This cuts down the time needed to tesselate by 90% in some cases.
             if (TransformMisaligned || mySettings.Shape == CurvedUISettings.CurvedUIShape.SPHERE || mySettings.Shape == CurvedUISettings.CurvedUIShape.CYLINDER_VERTICAL)
-                verticalQuads = Mathf.CeilToInt(verticalDir.magnitude * (1.0f / Mathf.Max(1.0f, requiredSize.y)));
+                verticalQuads = Mathf.CeilToInt(verticalDir.magnitude * (1.0f / Mathf.Max(0.0001f, requiredSize.y)));
 
             if (TransformMisaligned || mySettings.Shape != CurvedUISettings.CurvedUIShape.CYLINDER_VERTICAL) {
-                horizontalQuads = Mathf.CeilToInt(horizontalDir.magnitude * (1.0f / Mathf.Max(1.0f, requiredSize.x)));
+                horizontalQuads = Mathf.CeilToInt(horizontalDir.magnitude * (1.0f / Mathf.Max(0.0001f, requiredSize.x)));
             }
+            //Debug.Log(this.transform.root.name + "'s panel: hori size:" + horizontalDir.magnitude + " req:" + requiredSize.x + " divs:"+horizontalQuads);
              
 			bool oneVert = false;
 			bool oneHori = false;

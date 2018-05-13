@@ -10,7 +10,7 @@ GameObject:
   - component: {fileID: 419518}
   - component: {fileID: 11440360}
   m_Layer: 0
-  m_Name: ControllerLaserPointer
+  m_Name: CurvedUILaserBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,6 +215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LaserBeamTransform: {fileID: 429460}
   LaserBeamDot: {fileID: 421922}
+  hideWhenNotAimingAtCanvas: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

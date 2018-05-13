@@ -10,12 +10,42 @@ namespace CurvedUI {
 	[CustomEditor(typeof(CurvedUIInputModule))]
 	public class CurvedUIInputModuleEditor : Editor {
 
-		public override void OnInspectorGUI()
-		{
-			//to be expanded at a later date.
+        bool opened = false;
 
-			DrawDefaultInspector ();
-		}
+
+#if CURVEDUI_GOOGLEVR
+        bool isGVR = true;
+#else
+        bool isGVR = false;
+#endif
+
+        public override void OnInspectorGUI()
+		{
+            EditorGUILayout.HelpBox("Use CurvedUISettings component on your Canvas to configure CurvedUI", MessageType.Info);
+
+
+            if (isGVR)//on GVR we draw all the stuff.
+            {
+                DrawDefaultInspector();
+            }
+            else
+            {
+                if (opened)
+                {
+                    if (GUILayout.Button("Hide Fields"))
+                        opened = !opened;
+
+                    DrawDefaultInspector();
+                }
+                else
+                {
+                    if (GUILayout.Button("Show Fields"))
+                        opened = !opened;
+                }
+            }
+       
+            GUILayout.Space(20);
+        }
 	}
 
 }

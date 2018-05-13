@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-#if CURVEDUI_TMP 
+#if CURVEDUI_TMP || TMP_PRESENT
 using TMPro;
 #endif 
 
@@ -15,7 +15,7 @@ namespace CurvedUI
     public class CurvedUITMP : MonoBehaviour
     {
 
-#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 
         //internal
         CurvedUIVertexEffect crvdVE;
@@ -30,7 +30,6 @@ namespace CurvedUI
         Vector3 savedCanvasSize;
         List<CurvedUITMPSubmesh> subMeshes = new List<CurvedUITMPSubmesh>(); 
 
-        [HideInInspector]
         public bool Dirty = false; // set this to true to force mesh update.
 
         bool curvingRequired = false;
@@ -98,13 +97,14 @@ namespace CurvedUI
             curvingRequired = true;
         }
 
-
         void LateUpdate()
         {
-            
             //Edit Mesh on TextMeshPro component
             if (tmp != null)
             {
+
+                //if (!Application.isPlaying)
+                //    tesselationRequired = true;
 
 
                 if (savedSize != (transform as RectTransform).rect.size)
@@ -141,12 +141,7 @@ namespace CurvedUI
                     tmp.ForceMeshUpdate();
                     vh = new VertexHelper(tmp.mesh);
                     crvdVE.TesselationRequired = true;
-#if UNITY_5_1
-				    crvdVE.ModifyMesh(vh.GetUIVertexStream);
-#else
                     crvdVE.ModifyMesh(vh);
-#endif
-
 
                     //upload mesh to TMP Object
                     savedMesh = new Mesh();
@@ -172,15 +167,13 @@ namespace CurvedUI
 
                 if (curvingRequired)
                 {
-                    // Debug.Log("curving TMP");
+                    //Debug.Log("curving TMP ");
                     crvdVE.TesselationRequired = false;
                     crvdVE.CurvingRequired = true;
 
-#if UNITY_5_1
-                    crvdVE.ModifyMesh(vh.GetUIVertexStream);
-#else
-                    crvdVE.ModifyMesh(vh);
-#endif
+                    if(Application.isPlaying)
+                        crvdVE.ModifyMesh(vh);
+
                     //fill mesh to VertexHelper
                     vh.FillMesh(savedMesh);
 
@@ -194,9 +187,7 @@ namespace CurvedUI
 
                     //prompt submeshes to update
                     foreach (CurvedUITMPSubmesh mesh in subMeshes)
-                        mesh.UpdateSubmesh(false, true);
-
-                   
+                        mesh.UpdateSubmesh(false, true);     
                 }
 
                 //tmp.canvasRenderer.SetMesh(savedMesh);

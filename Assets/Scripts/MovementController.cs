@@ -66,8 +66,7 @@ public class MovementController : MonoBehaviour {
   void OnTriggerEnter(Collider other) {
     Debug.Log ("Enters collider " + other.tag);
     if(other.tag == "ForwardCollider") {
-      Debug.Log ("Enters CORRECT collider");
-      if (!cooldown) {
+      if (!cooldown && ArmController.isCalibrated) {
         //NEVER EXECUTED PROPERLY
         //timeLeft = cooldownTime;
         //Debug.Log ("Boost activated! timeLeft is " + timeLeft);

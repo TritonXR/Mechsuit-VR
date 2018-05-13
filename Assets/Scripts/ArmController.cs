@@ -120,7 +120,7 @@ public class ArmController : MonoBehaviour {
 
     // Based on that, account for wrist rotations
     if (armExtend < 1.0f) {
-      float newX = Elbow.position.x;
+      //float newX = Elbow.position.x;
 
       if (isLeft) {
         //newX -= mechUpperArmLength * (1.0f - armExtend);
@@ -281,8 +281,9 @@ public class ArmController : MonoBehaviour {
                 + secondPosition.z + ")");
 
     maxArmLength = Vector3.Distance(firstPosition, secondPosition);
-    
-    Debug.Log(isLeft + ", length: " + maxArmLength);
+
+    string left = isLeft ? "Left" : "Right";
+    Debug.Log(left + " arm, length: " + maxArmLength);
 
     isCalibrated = true;
   }

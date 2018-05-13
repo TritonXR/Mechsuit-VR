@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour, I_Ammo {
 
-  public uint lifetime = 0;
+  public uint lifetime;
 
   public float speed;
 
@@ -34,7 +34,9 @@ public class Laser : MonoBehaviour, I_Ammo {
   }
 
   public void OnCollisionEnter(Collision collision) {
-    //Destroy(this.gameObject);
+    IHealth health = (IHealth)collision.gameObject.GetComponent(typeof(IHealth));
+    IDamage damage = (IDamage)GetComponent(typeof(IDamage));
+    health.TakeDamage(damage);
   }
 
 }

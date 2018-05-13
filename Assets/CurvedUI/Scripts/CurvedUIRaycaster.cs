@@ -43,6 +43,7 @@ namespace CurvedUI
         List<GameObject> objectsUnderPointer = new List<GameObject>();
         Vector2 lastCanvasPos = Vector2.zero;
         GameObject colliderContainer;
+        PointerEventData lastFrameEventData;
 
         //gaze click
         List<GameObject> selectablesUnderGaze = new List<GameObject>();
@@ -75,22 +76,35 @@ namespace CurvedUI
 
         protected virtual void Update()
         {
+            // a way to reset GazeClick when user look away from the canvas
+            // not needed in most projects, but left here for reference.
+            //if (!pointingAtCanvas)
+            //{
+            //    ResetGazeTimedClick();
+            //    return;
+            //}
+
             //Gaze click process.
-            if (pointingAtCanvas && CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.GAZE && CurvedUIInputModule.Instance.GazeUseTimedClick)
+            if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.GAZE && CurvedUIInputModule.Instance.GazeUseTimedClick)
             {
-                ProcessGazeTimedClick();
-
-                //save current selectablesUnderGaze
-                selectablesUnderGazeLastFrame.Clear();
-                selectablesUnderGazeLastFrame.AddRange(selectablesUnderGaze);
-
-                //find selectables we're currently pointing at in objects under pointer
-                selectablesUnderGaze.Clear();
-                selectablesUnderGaze.AddRange(objectsUnderPointer);
-                selectablesUnderGaze.RemoveAll(delegate (GameObject obj)
+                if (pointingAtCanvas)
                 {
-                    return obj.GetComponent<Selectable>() == null;
-                });
+                    ProcessGazeTimedClick();
+
+                    //save current selectablesUnderGaze
+                    selectablesUnderGazeLastFrame.Clear();
+                    selectablesUnderGazeLastFrame.AddRange(selectablesUnderGaze);
+
+                    //find selectables we're currently pointing at in objects under pointer
+                    selectablesUnderGaze.Clear();
+                    selectablesUnderGaze.AddRange(objectsUnderPointer);
+                    selectablesUnderGaze.RemoveAll(delegate (GameObject obj)
+                    {
+                        return obj.GetComponent<Selectable>() == null;
+                    });
+                }
+                else //not poiting at canvas, reset the timer.
+                    ResetGazeTimedClick();
 
 
                 //Animate progress bar
@@ -102,7 +116,8 @@ namespace CurvedUI
                     CurvedUIInputModule.Instance.GazeTimedClickProgressImage.fillAmount =
                         (Time.time - objectsUnderGazeLastChangeTime).RemapAndClamp(CurvedUIInputModule.Instance.GazeClickTimerDelay, CurvedUIInputModule.Instance.GazeClickTimer + CurvedUIInputModule.Instance.GazeClickTimerDelay, 0, 1);
                 }
-            }
+
+            } 
 
             //reset this variable. It will be checked again during next Raycast method run.
             pointingAtCanvas = false;
@@ -189,7 +204,7 @@ namespace CurvedUI
                     ray3D = new Ray(worldCamera.transform.position, (mySettings.CanvasToCurvedCanvas(CurvedUIInputModule.Instance.WorldSpaceMouseInCanvasSpace) - myCanvas.worldCamera.transform.position));
                     break;
                 }
-                case CurvedUIInputModule.CUIControlMethod.VIVE:
+                case CurvedUIInputModule.CUIControlMethod.STEAMVR:
                 {
 #if CURVEDUI_VIVE
 					// Get a ray from proper controller.
@@ -212,7 +227,7 @@ namespace CurvedUI
                     goto case CurvedUIInputModule.CUIControlMethod.CUSTOM_RAY;
 #endif
                 }
-                case CurvedUIInputModule.CUIControlMethod.OCULUS_TOUCH:
+                case CurvedUIInputModule.CUIControlMethod.OCULUSVR:
                 {
                     goto case CurvedUIInputModule.CUIControlMethod.CUSTOM_RAY;
                 }
@@ -330,7 +345,7 @@ namespace CurvedUI
 
                 //Scroll Handling---------------------------------------------//
                 //We must handle scroll a little differently on these platforms
-                if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.VIVE)
+                if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.STEAMVR)
                 {
                     eventDataToUse.delta = remappedPosition - lastCanvasPos;
                     lastCanvasPos = remappedPosition;
@@ -352,6 +367,8 @@ namespace CurvedUI
 
             //store objects under pointer so they can quickly retrieved if needed by other scripts
             objectsUnderPointer = eventData.hovered;
+
+            lastFrameEventData = eventData;
 
             // Use base class raycast method to finish the raycast if we hit anything
             base.Raycast(overrideEventData ? eventData : newEventData, resultAppendList);
@@ -762,6 +779,7 @@ namespace CurvedUI
 
 
             //create our box colliders and arrange them in a nice cyllinder
+            float boxDepth = mySettings.GetTesslationSize(false).x / 10;
             for (int i = 0; i < verts.Count - 1; i++)
             {
                 GameObject newBox = new GameObject("Box collider");
@@ -773,13 +791,13 @@ namespace CurvedUI
                 if (vertical)
                 {
                     newBox.transform.localPosition = new Vector3(0, (verts[i + 1].y + verts[i].y) * 0.5f, (verts[i + 1].z + verts[i].z) * 0.5f);
-                    newBox.transform.localScale = new Vector3(0.1f, Vector3.Distance(Vertices[0], Vertices[1]), Vector3.Distance(verts[i + 1], verts[i]));
+                    newBox.transform.localScale = new Vector3(boxDepth, Vector3.Distance(Vertices[0], Vertices[1]), Vector3.Distance(verts[i + 1], verts[i]));
                     newBox.transform.localRotation = Quaternion.LookRotation((verts[i + 1] - verts[i]), Vertices[0] - Vertices[1]);
                 }
                 else
                 {
                     newBox.transform.localPosition = new Vector3((verts[i + 1].x + verts[i].x) * 0.5f, 0, (verts[i + 1].z + verts[i].z) * 0.5f);
-                    newBox.transform.localScale = new Vector3(0.1f, Vector3.Distance(Vertices[0], Vertices[1]), Vector3.Distance(verts[i + 1], verts[i]));
+                    newBox.transform.localScale = new Vector3(boxDepth, Vector3.Distance(Vertices[0], Vertices[1]), Vector3.Distance(verts[i + 1], verts[i]));
                     newBox.transform.localRotation = Quaternion.LookRotation((verts[i + 1] - verts[i]), Vertices[0] - Vertices[1]);
                 }
 
@@ -909,7 +927,7 @@ namespace CurvedUI
                 // Tesselate quads and apply transformation
                 int startingVertexCount = verts.Count;
                 for (int i = 0; i < startingVertexCount; i += 4)
-                    ModifyQuad(verts, i, mySettings.GetTesslationSize(true));
+                    ModifyQuad(verts, i, mySettings.GetTesslationSize(false));
 
                 // Remove old quads
                 verts.RemoveRange(0, startingVertexCount);
@@ -1168,6 +1186,13 @@ namespace CurvedUI
 
         #region PUBLIC
 
+        /// <summary>
+        /// Returns true if user's pointer is currently pointing inside this canvas.
+        /// </summary>
+        public bool PointingAtCanvas {
+            get { return pointingAtCanvas; }
+        }
+
         public void RebuildCollider()
         {
             cyllinderMidPoint = new Vector3(0, 0, -mySettings.GetCyllinderRadiusInCanvasSpace());
@@ -1246,24 +1271,13 @@ namespace CurvedUI
         {
             for (int i = 0; i < GetObjectsUnderPointer().Count; i++)
             {
-				ExecuteEvents.Execute<IPointerClickHandler>(GetObjectsUnderPointer()[i], new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
-
-//				//Old method
-//                Button butt = GetObjectsUnderPointer()[i].GetComponent<Button>();
-//                if (butt && butt.enabled && butt.interactable)
-//                {
-//                    butt.onClick.Invoke();
-//                    //possible alternative: ExecuteEvents.Execute<IPointerClickHandler>(butt.gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler);
-//                    if (showDebug) Debug.Log("Clicked on: " + butt.gameObject.name, butt.gameObject);
-//                }
-//
-//                Toggle togg = GetObjectsUnderPointer()[i].GetComponent<Toggle>();
-//                if (togg && togg.enabled && togg.interactable)
-//                {
-//                    togg.isOn = !togg.isOn;
-//                    if (showDebug) Debug.Log("Clicked on: " + togg.gameObject.name, togg.gameObject);
-//                    continue;
-//                }
+                if (GetObjectsUnderPointer()[i].GetComponent<Slider>())//slider requires a diffrent event to click.
+                {
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerDownHandler); 
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerUpHandler);
+                }
+                else
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler); //all other ui objects
             }
         }
         #endregion

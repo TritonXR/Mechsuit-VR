@@ -35,7 +35,7 @@ public class AmmoPooler : MonoBehaviour {
 	}
 
   public GameObject Fire(string ammoTag, Vector3 weaponPosition, Quaternion weaponRotation, Vector3 forwardDirection) {
-    if (ArmController.isCalibrated == true) {
+    if (ArmController.isCalibrated) {
       if (!poolDictionary.ContainsKey(ammoTag)) {
         Debug.Log("Projectile " + ammoTag + " not found");
         Debug.Log("Check spelling of tag");
@@ -62,9 +62,8 @@ public class AmmoPooler : MonoBehaviour {
       poolDictionary[ammoTag].Enqueue(projectile);
 
       return projectile;
-    }
-    
-    else {
+    } else {
+      Debug.Log("You have not calibrated!");
       return null;
     }
   }

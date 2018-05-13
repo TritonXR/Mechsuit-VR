@@ -140,11 +140,20 @@ public class CurvedUIInputModule : StandaloneInputModule {
 		Instance = this;
 		base.Awake ();
 
+
+        //gaze setup
+        if (gazeTimedClickProgressImage != null)
+            gazeTimedClickProgressImage.fillAmount = 0;
+
+
+
+        //steamvr setup
 #if CURVEDUI_VIVE
 		//SEtup controllers for vive
-		if(ControlMethod == CUIControlMethod.VIVE)
+		if(ControlMethod == CUIControlMethod.STEAMVR)
 		SetupViveControllers();
-#endif // END OF CURVEDUI_VIVE IF
+#endif
+
 
     }
 
@@ -153,30 +162,32 @@ public class CurvedUIInputModule : StandaloneInputModule {
         if (!Application.isPlaying) return;
 
         base.Start();
-#if CURVEDUI_TOUCH
 
+
+        //oculus touchs setup
+#if CURVEDUI_TOUCH
         //find the oculus rig - via manager or by findObjectOfType, if unavailable
-        if(OVRManager.instance != null)
+        if (OVRManager.instance != null)
         {
             oculusRig = OVRManager.instance.GetComponent<OVRCameraRig>();
         }
 
-        if(oculusRig == null)
+        if (oculusRig == null)
         {
             oculusRig = Object.FindObjectOfType<OVRCameraRig>();
         }
 
-        if (oculusRig == null && ControlMethod == CUIControlMethod.OCULUS_TOUCH)
+        if (oculusRig == null && ControlMethod == CUIControlMethod.OCULUSVR)
             Debug.LogError("OVRCameraRig prefab required. Import Oculus Utilities and drag OVRCameraRig prefab onto the scene.");
 #endif
     }
 
 
 
-        #region EVENT PROCESSING - GENERAL
-        /// <summary>
-        /// Process is called by UI system to process events 
-        /// </summary>
+    #region EVENT PROCESSING - GENERAL
+    /// <summary>
+    /// Process is called by UI system to process events 
+    /// </summary>
     public override void Process()
 	{
         //processing mouse
@@ -195,14 +206,14 @@ public class CurvedUIInputModule : StandaloneInputModule {
 				ProcessGaze();
 				break;
 			}
-		case CUIControlMethod.VIVE:
+		case CUIControlMethod.STEAMVR:
 			{
 				ProcessViveControllers();
 				break;
 			}
-		case CUIControlMethod.OCULUS_TOUCH:
+		case CUIControlMethod.OCULUSVR:
 			{
-				ProcessOculusTouchController();
+				ProcessOculusVRController();
 				break;
 			}
 		case CUIControlMethod.WORLD_MOUSE:
@@ -533,6 +544,10 @@ public class CurvedUIInputModule : StandaloneInputModule {
     /// </summary>
     private void SetupViveControllers()
     {
+        //find controller reference
+        if (controllerManager == null)
+                controllerManager = steamVRControllerManager;
+
         //Find Controller manager on the scene.
         if (controllerManager == null)
         {
@@ -559,28 +574,32 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 
     #region EVENT PROCESSING - OCULUS TOUCH
-    protected virtual void ProcessOculusTouchController()
+    protected virtual void ProcessOculusVRController()
     {
 #if CURVEDUI_TOUCH
 
-        // pass the direction and position of the controller as ray to your canvas
-        // pass the state of your button to CurvedUIInputModule
+        //find if we're using Rift with touch. Hand differentiation will only be used for those.
+        bool touchControllersUsed =  OVRInput.GetActiveController() == OVRInput.Controller.Touch ||
+                                     OVRInput.GetActiveController() == OVRInput.Controller.LTouch ||
+                                     OVRInput.GetActiveController() == OVRInput.Controller.RTouch;
 
-        if (usedHand == Hand.Both)
+
+        // check the state of the interaction button
+        if (usedHand == Hand.Both || !touchControllersUsed)
         {
-            CustomControllerRay = new Ray(oculusRig.rightHandAnchor.position, oculusRig.rightHandAnchor.forward);
             CustomControllerButtonDown = OVRInput.Get(InteractionButton);
         }
         else if (usedHand == Hand.Right)
         {
             CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.RTouch);
-            CustomControllerRay = new Ray(oculusRig.rightHandAnchor.position, oculusRig.rightHandAnchor.forward);
         }
         else if (usedHand == Hand.Left)
         {
             CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.LTouch);
-            CustomControllerRay = new Ray(oculusRig.leftHandAnchor.position, oculusRig.leftHandAnchor.forward);
         }
+
+        //set direction ray
+        CustomControllerRay = new Ray(OculusTouchUsedControllerTransform.position, OculusTouchUsedControllerTransform.forward);
 
         //process all events based on this data
         ProcessOculusTouchEventData();
@@ -816,7 +835,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
             {
                 Instance.controlMethod = value;
 #if CURVEDUI_VIVE
-                if(value == CUIControlMethod.VIVE)
+                if(value == CUIControlMethod.STEAMVR)
                     Instance.SetupViveControllers();
 #endif 
             }
@@ -964,9 +983,9 @@ public class CurvedUIInputModule : StandaloneInputModule {
 	GAZE = 1,
 	WORLD_MOUSE = 2,
 	CUSTOM_RAY = 3,
-	VIVE = 4,
-	OCULUS_TOUCH = 5,
-	//DAYDREAM = 6,//deprecated
+	STEAMVR = 4,
+	OCULUSVR = 5,
+	//DAYDREAM = 6,//deprecated, GoogleVR is now used for daydream.
 	GOOGLEVR = 7,
 }
 

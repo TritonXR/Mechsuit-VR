@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine.EventSystems;
 
-#if CURVEDUI_TMP
+#if CURVEDUI_TMP || TMP_PRESENT
 using TMPro;
 #endif 
 
@@ -26,18 +26,19 @@ namespace CurvedUI {
 
 
 
-		#region LIFECYCLE
-       
+        #region LIFECYCLE
+
         void Awake()
 		{
 			AddCurvedUIComponents();
+
+
         }
 			
 		void OnEnable()
 		{
 
             loadingCustomDefine = false;
-
 
             //look for our custom eventsystem, if it makes sense to have it
             if (PlayerSettings.virtualRealitySupported)
@@ -190,13 +191,20 @@ namespace CurvedUI {
             }
             GUILayout.EndHorizontal();
 
-        }  // end of advanced settings
+                //documentation link
+            GUILayout.Space(20);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Documentation", GUILayout.Width(146));
+            if (GUILayout.Button("Open in web browser")) Help.BrowseURL("https://docs.google.com/document/d/10hNcvOMissNbGgjyFyV1MS7HwkXXE6270A6Ul8h8pnQ/edit");
+                GUILayout.EndHorizontal();
 
-        //final settings
-        if (GUI.changed && myTarget != null)
-			EditorUtility.SetDirty(myTarget);
+            } 
 
-	}
+            //final settings
+            if (GUI.changed && myTarget != null)
+                EditorUtility.SetDirty(myTarget);
+
+        }
 
 	
     void SwapEventSystem()
@@ -234,26 +242,23 @@ namespace CurvedUI {
 
 #if CURVEDUI_GOOGLEVR
 					EditorGUILayout.HelpBox("Enabling this control method will disable GoogleVR support.", MessageType.Warning);
-
 					DrawCustomDefineSwitcher("");
 #else
                     GUILayout.Label("Basic Controller. Mouse on screen", EditorStyles.helpBox);
-					#endif
+                    #endif
                     break;
                 }
                 case CurvedUIInputModule.CUIControlMethod.GAZE:
                 {
 #if CURVEDUI_GOOGLEVR
 					EditorGUILayout.HelpBox("Enabling this control method will disable GoogleVR support.", MessageType.Warning);
-
 					DrawCustomDefineSwitcher("");
-
 #else
                     GUILayout.Label("Center of Canvas's Event Camera acts as a pointer. This is a generic gaze implementation, to be used with any headset. If you're on cardboard, use GOOGLEVR control method for Reticle and GameObject interaction support.", EditorStyles.helpBox);
                     CurvedUIInputModule.Instance.GazeUseTimedClick = EditorGUILayout.Toggle("Use Timed Click", CurvedUIInputModule.Instance.GazeUseTimedClick);
                     if (CurvedUIInputModule.Instance.GazeUseTimedClick)
                     {
-                        GUILayout.Label("If user will rests his gaze on a button for a period of time, we'll click it. You can assign an image to be used as a progress bar.", EditorStyles.helpBox);
+                        GUILayout.Label("Clicks a button if player rests his gaze on it for a period of time. You can assign an image to be used as a progress bar.", EditorStyles.helpBox);
                         CurvedUIInputModule.Instance.GazeClickTimer = EditorGUILayout.FloatField("Click Timer (seconds)", CurvedUIInputModule.Instance.GazeClickTimer);
                         CurvedUIInputModule.Instance.GazeClickTimerDelay = EditorGUILayout.FloatField("Timer Start Delay", CurvedUIInputModule.Instance.GazeClickTimerDelay);
                         CurvedUIInputModule.Instance.GazeTimedClickProgressImage = (UnityEngine.UI.Image)EditorGUILayout.ObjectField("Progress Image To FIll", CurvedUIInputModule.Instance.GazeTimedClickProgressImage, typeof(UnityEngine.UI.Image), true);
@@ -267,11 +272,10 @@ namespace CurvedUI {
 
 #if CURVEDUI_GOOGLEVR
 					EditorGUILayout.HelpBox("Enabling this control method will disable GoogleVR support.", MessageType.Warning);
-
 					DrawCustomDefineSwitcher("");
 #else
                     GUILayout.Label("Mouse controller that is independent of the camera view. Use WorldSpaceMouseOnCanvas function to get its position.", EditorStyles.helpBox);
-					CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity = EditorGUILayout.FloatField("Mouse Sensitivity", CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity);
+                    CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity = EditorGUILayout.FloatField("Mouse Sensitivity", CurvedUIInputModule.Instance.WorldSpaceMouseSensitivity);
 					#endif
 					break;
                 }
@@ -279,68 +283,57 @@ namespace CurvedUI {
                 {
 #if CURVEDUI_GOOGLEVR
 					EditorGUILayout.HelpBox("Enabling this control method will disable GoogleVR support.", MessageType.Warning);
-
 					DrawCustomDefineSwitcher("");
 #else
-                    GUILayout.Label("Set a ray used to interact with canvas using CustomControllerRay function. Use CustomControllerButtonDown bool to set button pressed state. \nYou can find both in CurvedUIInputModule class", EditorStyles.helpBox);
-					#endif
-					break;
+                    GUILayout.Label("Set a ray used to interact with canvas using CustomControllerRay function. Use CustomControllerButtonDown bool to set button pressed state. Find both in CurvedUIInputModule class", EditorStyles.helpBox);
+                    GUILayout.BeginHorizontal();
+                    //GUILayout.Space(20);
+                    GUILayout.FlexibleSpace();
+                    if (GUILayout.Button("View code snippet")) Help.BrowseURL("https://docs.google.com/document/d/10hNcvOMissNbGgjyFyV1MS7HwkXXE6270A6Ul8h8pnQ/edit#heading=h.b164qm67xp15");
+                    GUILayout.EndHorizontal();
+#endif
+                    break;
                 }
-//                case CurvedUIInputModule.CUIControlMethod.DAYDREAM: //deprecated
-//                {
-//#if CURVEDUI_GOOGLEVR
-//					EditorGUILayout.HelpBox("Only for GoogleVR SDK 1.60 or earlier. For 1.70 or later, use GOOGLEVR control method.", MessageType.Warning);
-//
-//					DrawCustomDefineSwitcher("");
-//#else
-//                    GUILayout.Label("Set a ray used to find selected objects with CustomControllerRay function. Use CustomControllerButtonDown bool to set button pressed state. /n You can find both of these in CurvedUIInputModule", EditorStyles.helpBox);
-//					#endif
-//					break;
-//                }
-                case CurvedUIInputModule.CUIControlMethod.VIVE:
+                case CurvedUIInputModule.CUIControlMethod.STEAMVR:
                 {
-
 #if CURVEDUI_VIVE
                     // vive enabled, we can show settings
                     GUILayout.Label("Use one or both vive controllers as to interact with canvas. Trigger acts a button", EditorStyles.helpBox);
                     CurvedUIInputModule.Instance.UsedHand = (CurvedUIInputModule.Hand)EditorGUILayout.EnumPopup("Used Controller", CurvedUIInputModule.Instance.UsedHand);
 
 #else
-					DrawCustomDefineSwitcher("CURVEDUI_VIVE");
-
+                    DrawCustomDefineSwitcher("CURVEDUI_VIVE");
 #endif
                     break;
                 }
-                case CurvedUIInputModule.CUIControlMethod.OCULUS_TOUCH:
+                case CurvedUIInputModule.CUIControlMethod.OCULUSVR:
                 {
 
 #if CURVEDUI_TOUCH
                     // oculus enabled, we can show settings
-                    GUILayout.Label("Use Touch controller to interact with canvas.", EditorStyles.helpBox);
-
+                    GUILayout.Label("Use Oculus Touch or GearVR controller to interact with canvas.", EditorStyles.helpBox);
                     //hand property
                     CurvedUIInputModule.Instance.UsedHand = (CurvedUIInputModule.Hand)EditorGUILayout.EnumPopup("Hand", CurvedUIInputModule.Instance.UsedHand);
                     //button property
                     CurvedUIInputModule.Instance.OculusTouchInteractionButton = (OVRInput.Button)EditorGUILayout.EnumPopup("Interaction Button", CurvedUIInputModule.Instance.OculusTouchInteractionButton);
 #else
-					DrawCustomDefineSwitcher("CURVEDUI_TOUCH");
+                    DrawCustomDefineSwitcher("CURVEDUI_TOUCH");
 #endif
                     break;
                 }
 				case CurvedUIInputModule.CUIControlMethod.GOOGLEVR:
 				{
-					
+
 #if CURVEDUI_GOOGLEVR
 					GUILayout.Label("Use GoogleVR Reticle to interact with canvas. Requires GoogleVR SDK 1.110 or later.", EditorStyles.helpBox);
 #else
-					DrawCustomDefineSwitcher("CURVEDUI_GOOGLEVR");
+                    DrawCustomDefineSwitcher("CURVEDUI_GOOGLEVR");
 #endif
 					break;
 				}
             }
 
 			GUILayout.EndVertical();
-
             GUILayout.EndHorizontal();
             GUILayout.Space(40);
         }

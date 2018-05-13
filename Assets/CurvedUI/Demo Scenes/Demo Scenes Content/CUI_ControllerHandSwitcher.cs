@@ -18,15 +18,28 @@ namespace CurvedUI {
 
 
 #if CURVEDUI_TOUCH
+        bool initialized = false;
+
         void Update()
         {
+            if (!initialized)
+            {
+                //Launch Hand Switch. This will place the laser pointer in the current hand.
+                //Works both for Oculus Touch and GearVR
+                SwitchHandTo(CurvedUIInputModule.Instance.UsedHand);
+
+                initialized = true;
+            }
+
+            //switch hand if user clicks with different one
+            //This only works with OculusTouch
             if (OVRInput.GetDown(CurvedUIInputModule.Instance.OculusTouchInteractionButton, OVRInput.Controller.LTouch) && CurvedUIInputModule.Instance.UsedHand != CurvedUIInputModule.Hand.Left)
             {
-                               SwitchHandTo(CurvedUIInputModule.Hand.Left);
+               SwitchHandTo(CurvedUIInputModule.Hand.Left);
             }
             else if (OVRInput.GetDown(CurvedUIInputModule.Instance.OculusTouchInteractionButton, OVRInput.Controller.RTouch) && CurvedUIInputModule.Instance.UsedHand != CurvedUIInputModule.Hand.Right)
             {
-                                SwitchHandTo(CurvedUIInputModule.Hand.Right);
+               SwitchHandTo(CurvedUIInputModule.Hand.Right);
             }
         }
 
