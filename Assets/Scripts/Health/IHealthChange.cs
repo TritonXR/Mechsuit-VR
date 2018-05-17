@@ -5,5 +5,12 @@ using UnityEngine;
 public enum DamageType {
   physical
 };
-public interface IDamage {
+
+public enum RestoreType {
+  health,
+  shield
+};
+
+public interface IHealthChange {
+  void ChangeHealth(IHealth health);
 }

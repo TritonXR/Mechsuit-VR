@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IHealth {
 
-  void TakeDamage(IDamage damage);
-  void Restore(int value, bool once);
+  void TakeDamage(float value, DamageType type);
+  void Restore(float value, RestoreType type);
 }

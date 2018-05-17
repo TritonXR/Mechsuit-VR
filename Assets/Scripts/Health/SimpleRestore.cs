@@ -1,16 +1,14 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class SimpleDamage : MonoBehaviour, IHealthChange {
+public class SimpleRestore : MonoBehaviour, IHealthChange {
   [SerializeField]
-  public DamageType type;
+  public RestoreType type;
   [SerializeField]
   public int value;
 
   public void ChangeHealth(IHealth health) {
-    health.TakeDamage(value, type);
+    health.Restore(value, type);
   }
 }

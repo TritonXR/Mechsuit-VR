@@ -35,8 +35,10 @@ public class Laser : MonoBehaviour, I_Ammo {
 
   public void OnCollisionEnter(Collision collision) {
     IHealth health = (IHealth)collision.gameObject.GetComponent(typeof(IHealth));
-    IDamage damage = (IDamage)GetComponent(typeof(IDamage));
-    health.TakeDamage(damage);
+    if (health != null) {
+      IHealthChange damage = (IHealthChange)GetComponent(typeof(IHealthChange));
+      damage.ChangeHealth(health);
+    }
   }
 
 }

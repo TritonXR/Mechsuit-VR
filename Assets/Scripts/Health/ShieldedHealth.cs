@@ -3,15 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ShieldedHealth : MonoBehaviour, IHealth {
-  [SerializeField]
-  public int MaxShield { get; set; }
+  public int maxShield;
   public int[] shieldResistences;
 
-  public void TakeDamage(IDamage damage) {
+  public int maxHealth;
+  public int[] healthResistences;
+  public bool restoreable; // If the health can be restored by a potion
 
+  private float currHealth;
+  private float currShield;
+
+  void Start() {
+    currHealth = maxHealth;
   }
 
-  public void Restore(int value, bool once) {
+  public void TakeDamage(float value, DamageType type) {
+  }
+
+  public void Restore(float value, RestoreType type) {
 
   }
 }
