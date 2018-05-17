@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Laser : MonoBehaviour, I_Ammo {
+public class Laser : MonoBehaviour, IAmmo {
 
   public uint lifetime;
 
@@ -24,8 +24,7 @@ public class Laser : MonoBehaviour, I_Ammo {
     }
 
     else {
-      // TODO: implement reload functionality
-      //Destroy(this.gameObject);
+      Destroy(this.gameObject);
     }
 	}
 

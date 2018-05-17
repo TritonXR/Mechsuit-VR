@@ -4,49 +4,32 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour {
 
-	public string key;
-	public GameObject model_weapon;
+	public GameObject modelWeapon;
 	public WeaponController controller;
 	public GameObject hand;
 
-	public Collider weaponCollider;
-	// Collider that monitors the summoning action
+  // Collider that monitors the summoning action
+  public Collider weaponCollider;
 
-	public virtual void Setup () {
-		//Setup
-
-	}
+  public abstract void Setup();
 
 	public virtual void Show () {
 		//enable the model
-		model_weapon.gameObject.SetActive(true);
+		modelWeapon.gameObject.SetActive(true);
 		//model_weapon.transform.SetParent(controller.debug_tracked_object.transform);
-		model_weapon.transform.SetParent(hand.transform);
+		modelWeapon.transform.SetParent(hand.transform);
 		//model_weapon.transform.localPosition = Vector3.zero;
 	}
 
 	/* After switching weapons, hide it */
   public virtual void Hide () {
-    model_weapon.gameObject.SetActive(false);
-    model_weapon.transform.SetParent(null);
+    modelWeapon.gameObject.SetActive(false);
+    modelWeapon.transform.SetParent(null);
 	}
 
 	/* Gun/Rocket launcher firing */
-	public virtual void Fire () {
+	public virtual void Fire (string ammoTag) {}
 
-	}
-
-	/* Updates after each fire */
-	public virtual void UpdateStatus () {
-
-	}
-
-	public void Update () {
-		//Debug.Log("t");
-		//if (controller && controller.debug_tracked_object)
-		//model_weapon.transform.position = hand.transform.position;
-	}
-
-	/* Detects the movents that correspond to the summoning action */
-	public abstract bool DetectMovements ();
+  /* Gun/Rocket launcher reloading */
+  public virtual void Reload(string ammoTag) {}
 }

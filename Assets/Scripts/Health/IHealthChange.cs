@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum DamageType {
-  physical
+  physical,
+  health_physical
 };
 
 public enum RestoreType {
   health,
-  shield
+  shield,
+  healthShield,
+  shieldHealth
 };
 
 public interface IHealthChange {

@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface I_Ammo {
+public interface IAmmo {
   void OnObjectSpawn();
 }

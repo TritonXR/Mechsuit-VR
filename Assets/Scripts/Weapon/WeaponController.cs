@@ -4,32 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class WeaponController : MonoBehaviour {
+  /* SteamVR controller */
+  public SteamVR_TrackedObject viveController;
+  public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)viveController.index); } }
+
   /* Buttons */
   // Grip button
   private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
   // Trigger button
   private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-
   // Threshold for trigger click
   public float triggerThreshold;
 
-  public AmmoPooler weapon;
-
-  [SerializeField]
-  public GameObject gunBarrel;
+  /* Weapon-related variables */
+  public Weapon weapon;
 
   public string[] ammoType;
   public float[] fireDelay;
   private int currAmmoIndex;
   private float currDelay;
 
-  public SteamVR_TrackedObject viveController;
-
-  public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int) viveController.index); } }
-
-  bool TriggerClicked() {
+  /* Methods */
+  private bool TriggerClicked() {
     if (Controller == null) return false;
-    return Controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x >= triggerThreshold;
+    return Controller.GetAxis(triggerButton).x >= triggerThreshold;
+  }
+
+  private bool GripClicked() {
+    if (Controller == null) return false;
+    return Controller.GetAxis(gripButton).x >= triggerThreshold;
   }
 
   private void Awake() {
@@ -40,7 +43,6 @@ public class WeaponController : MonoBehaviour {
   }
 
   private void Update() {
-    Debug.DrawRay(gunBarrel.transform.position, gunBarrel.transform.forward, Color.red);
     //Debug.Log("WeaponController.Update()");
     //if (currDelay <= 0.0f && TriggerClicked()) {
     if (currDelay > 0.0f) {
@@ -48,20 +50,27 @@ public class WeaponController : MonoBehaviour {
     }
     if (currDelay <= 0.0f && TriggerClicked()) {
       Debug.Log("Trigger clicked, attempting to fire");
-      weapon.Fire(ammoType[currAmmoIndex], gunBarrel.transform.position, gunBarrel.transform.rotation, gunBarrel.transform.forward);
+      weapon.Fire(ammoType[currAmmoIndex]);
       currDelay = fireDelay[currAmmoIndex];
+    }
+
+    if (GripClicked()) {
+      Debug.Log("Grip clicked, attempting to reload");
+      weapon.Reload(ammoType[currAmmoIndex]);
     }
   }
 
-  private void OnDrawGizmos() {
+
+
+  #region Ugly Crap
+  /*
+   * private void OnDrawGizmos() {
     //Debug.Log("OnDrawGizmos()");
     Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.forward);
     Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.right);
     Gizmos.DrawRay(gunBarrel.transform.position, 5*gunBarrel.transform.up);
   }
-
-  #region Ugly Crap
-  /*public List<Weapon> weapons;
+   * public List<Weapon> weapons;
   public bool b_setup;
 
   public Text text_debug;

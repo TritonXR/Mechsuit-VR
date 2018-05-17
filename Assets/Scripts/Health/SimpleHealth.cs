@@ -9,7 +9,8 @@ using UnityEngine;
 public class SimpleHealth : MonoBehaviour, IHealth {
   [SerializeField]
   public int maxHealth;
-  public int[] healthResistences;
+  [SerializeField]
+  public List<int> healthResistances;
   public bool restoreable; // If the health can be restored by a potion
 
   private float currHealth;
@@ -21,7 +22,7 @@ public class SimpleHealth : MonoBehaviour, IHealth {
   public void TakeDamage(float value, DamageType type) {
     Debug.Log("Damage caused to: " + this.gameObject.name);
     Debug.Log("The health of this object is: " + currHealth);
-    float percentageReduced = 1 - ((float)healthResistences[(int)type]) / 100;
+    float percentageReduced = 1 - ((float)healthResistances[(int)type]) / 100;
     float actualDamage = value * percentageReduced;
     currHealth = (currHealth - actualDamage <= 0) ? 0 : currHealth - actualDamage;
 
