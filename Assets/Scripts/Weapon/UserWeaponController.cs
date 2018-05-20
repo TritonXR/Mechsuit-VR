@@ -3,43 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponController : MonoBehaviour {
+public class UserWeaponController : SimpleWeaponController {
   /* SteamVR controller */
-  public SteamVR_TrackedObject viveController;
-  public SteamVR_Controller.Device Controller { get { return SteamVR_Controller.Input((int)viveController.index); } }
+  private SteamVR_TrackedController controller;
 
-  /* Buttons */
-  // Grip button
-  private Valve.VR.EVRButtonId gripButton = Valve.VR.EVRButtonId.k_EButton_Grip;
-  // Trigger button
-  private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-  // Threshold for trigger click
-  public float triggerThreshold;
-
-  /* Weapon-related variables */
-  public Weapon weapon;
-
-  public string[] ammoType;
-  public float[] fireDelay;
-  private int currAmmoIndex;
-  private float currDelay;
 
   /* Methods */
-  private bool TriggerClicked() {
-    if (Controller == null) return false;
-    return Controller.GetAxis(triggerButton).x >= triggerThreshold;
-  }
-
-  private bool GripClicked() {
-    if (Controller == null) return false;
-    return Controller.GetAxis(gripButton).x >= triggerThreshold;
-  }
-
+  /// <summary>
+  /// Sets up the controller and relevant info.
+  /// </summary>
   private void Awake() {
-    Gizmos.color = Color.green;
-    viveController = GetComponent<SteamVR_TrackedObject>();
+    //Gizmos.color = Color.green;
     currAmmoIndex = 0;
     currDelay = 0.0f;
+
+
+    controller = GetComponent<SteamVR_TrackedController>();
+    controller.TriggerClicked += FireWeapon;
+    controller.Gripped += ReloadWeapon;
   }
 
   private void Update() {
@@ -48,19 +29,21 @@ public class WeaponController : MonoBehaviour {
     if (currDelay > 0.0f) {
       currDelay -= Time.deltaTime;
     }
-    if (currDelay <= 0.0f && TriggerClicked()) {
-      Debug.Log("Trigger clicked, attempting to fire");
-      weapon.Fire(ammoType[currAmmoIndex]);
-      currDelay = fireDelay[currAmmoIndex];
-    }
-
-    if (GripClicked()) {
-      Debug.Log("Grip clicked, attempting to reload");
-      weapon.Reload(ammoType[currAmmoIndex]);
-    }
   }
 
 
+  void ReloadWeapon(object sender, ClickedEventArgs e) {
+    Debug.Log("Grip clicked, attempting to reload");
+    weapon.ReActivate(ammoType[currAmmoIndex]);
+  }
+
+  void FireWeapon(object sender, ClickedEventArgs e) {
+    if (currDelay <= 0.0f) {
+      Debug.Log("Trigger clicked, attempting to fire");
+      weapon.Activate(ammoType[currAmmoIndex]);
+      currDelay = fireDelay[currAmmoIndex];
+    }
+  }
 
   #region Ugly Crap
   /*

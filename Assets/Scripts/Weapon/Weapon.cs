@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour {
 
 	public GameObject modelWeapon;
-	public WeaponController controller;
+	public SimpleWeaponController controller;
 	public GameObject hand;
 
   // Collider that monitors the summoning action
@@ -27,9 +27,15 @@ public abstract class Weapon : MonoBehaviour {
     modelWeapon.transform.SetParent(null);
 	}
 
-	/* Gun/Rocket launcher firing */
-	public virtual void Fire (string ammoTag) {}
+	/// <summary>
+  /// Activates the selected weapon. For ranged weapons like guns that mean firing a weapon; for close-range weapons like swords that can be made blank.
+  /// </summary>
+  /// <param name="tag">Tag for the ammo if the weapon is a ranged weapon</param>
+	public virtual bool Activate (string tag) { return false; }
 
-  /* Gun/Rocket launcher reloading */
-  public virtual void Reload(string ammoTag) {}
+  /// <summary>
+  /// Reactivates the selected weapon. For ranged weapons like guns that mean reloading; for close-range weapons like swords that can be made blank.
+  /// </summary>
+  /// <param name="tag">Tag for the ammo if the weapon is a ranged weapon</param>
+  public virtual bool ReActivate(string tag) { return false; }
 }

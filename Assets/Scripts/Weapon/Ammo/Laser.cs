@@ -10,6 +10,8 @@ public class Laser : MonoBehaviour, IAmmo {
 
   private uint currTime = 0;
 
+  public GameObject Weapon { get; set; }
+
 	// Use this for initialization
 	void Start () {
     lifetime = (uint) (lifetime / Time.deltaTime);
@@ -32,11 +34,17 @@ public class Laser : MonoBehaviour, IAmmo {
 
   }
 
+  /// <summary>
+  /// After colliding with an object with a health, reduces its health.
+  /// </summary>
+  /// <param name="collision"></param>
   public void OnCollisionEnter(Collision collision) {
-    IHealth health = (IHealth)collision.gameObject.GetComponent(typeof(IHealth));
-    if (health != null) {
-      IHealthChange damage = (IHealthChange)GetComponent(typeof(IHealthChange));
-      damage.ChangeHealth(health);
+    if (collision.gameObject != Weapon) {
+      IHealth health = (IHealth)collision.gameObject.GetComponent(typeof(IHealth));
+      if (health != null) {
+        IHealthChange damage = (IHealthChange)GetComponent(typeof(IHealthChange));
+        damage.ChangeHealth(health);
+      }
     }
   }
 

@@ -36,46 +36,52 @@ public class AmmoPooler : Weapon {
     Setup();
   }
 
+  /// <summary>
+  /// Creates the ammo and adds them to the magazine.
+  /// </summary>
   public override void Setup() {
     foreach (KeyValuePair<string, Queue<GameObject>> pair in poolDictionary) {
       Pool pool = stringToPoolDictionary[pair.Key];
       for (int i = 0; i < pool.size; ++i) {
         GameObject obj = Instantiate(pool.prefab);
         obj.SetActive(false);
+        IAmmo ammo = (IAmmo)obj.GetComponent(typeof(IAmmo));
+        ammo.Weapon = controller.gameObject;
         pair.Value.Enqueue(obj);
       }
     }
   }
 
-  public override void Fire(string ammoTag) {
+  /// <summary>
+  /// Fires the gun.
+  /// </summary>
+  /// <param name="ammoTag"></param>
+  /// <returns>true if successfully fires; false if not calibrated (if controlled by the user), does not contain the correct ammo type, and/or the magazine is empty</returns>
+  public override bool Activate(string ammoTag) {
     if (!ArmController.isCalibrated) {
       Debug.Log("You have not calibrated!");
-      return;
+      return false;
     }
 
     if (!poolDictionary.ContainsKey(ammoTag)) {
       Debug.Log("Projectile " + ammoTag + " not found");
       Debug.Log("Check spelling of tag");
-      return;
+      return false;
     }
 
 
     if (poolDictionary[ammoTag].Count == 0) {
       Debug.Log("Magazine empty, awaiting reload");
-      return;
+      return false;
     }
 
     Debug.Log("Successful fire");
     GameObject projectile = poolDictionary[ammoTag].Dequeue();
 
-    Vector3 weaponPosition = modelWeapon.transform.position;
-    Quaternion weaponRotation = modelWeapon.transform.rotation;
-    Vector3 forwardDirection = modelWeapon.transform.forward;
-
     projectile.SetActive(true);
-    projectile.transform.position = new Vector3(weaponPosition.x, weaponPosition.y, weaponPosition.z);
-    projectile.transform.rotation = new Quaternion(weaponRotation.x, weaponRotation.y, weaponRotation.z, weaponRotation.w);
-    projectile.transform.forward = new Vector3(forwardDirection.x, forwardDirection.y, forwardDirection.z);
+    projectile.transform.position = modelWeapon.transform.position;
+    projectile.transform.rotation = modelWeapon.transform.rotation;
+    projectile.transform.forward = modelWeapon.transform.forward;
 
     IAmmo pooledProjectile = projectile.GetComponent<IAmmo>();
 
@@ -83,13 +89,24 @@ public class AmmoPooler : Weapon {
       Debug.Log("Projectile I_Ammo obtained");
       pooledProjectile.OnObjectSpawn();
     }
+    return true;
   }
 
-public override void Reload(string ammoTag) {
-  Setup();
-}
+  /// <summary>
+  /// Reloads the gun.
+  /// </summary>
+  /// <param name="ammoTag"></param>
+  /// <returns>True if successfully reloads; false if the magazine is full.</returns>
+  public override bool ReActivate(string ammoTag) {
+    if (poolDictionary[ammoTag].Count != stringToPoolDictionary[ammoTag].size) {
+      Setup();
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-void Update() {
-  Debug.DrawRay(modelWeapon.transform.position, modelWeapon.transform.forward, Color.red);
-}
+  void Update() {
+    Debug.DrawRay(modelWeapon.transform.position, modelWeapon.transform.forward, Color.red);
+  }
 }

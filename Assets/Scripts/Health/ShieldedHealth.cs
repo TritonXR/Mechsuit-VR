@@ -5,6 +5,8 @@ using UnityEngine;
 public class ShieldedHealth : MonoBehaviour, IHealth {
   /* Shield */
   public int maxShield;
+  [SerializeField]
+  public List<int> shieldResistances;
   public float delay;
   public float chargePerSecond;
 
@@ -52,6 +54,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   /// <param name="type"></param>
   /// <returns>The remaining value to be damamged to health</returns>
   private float DamageShield(float value, DamageType type) {
+    // TODO: do shield damage calculating
     if (type.ToString().StartsWith("health")) {
       return value;
     }
