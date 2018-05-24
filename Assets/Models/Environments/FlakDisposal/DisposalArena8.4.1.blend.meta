@@ -1,0 +1,207 @@
+fileFormatVersion: 2
+guid: 746b461104e0bfc41b08466cdabd977a
+timeCreated: 1527130527
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: arena
+    100002: Blade
+    100004: Blade_001
+    100006: Blade_002
+    100008: Blade_003
+    100010: Blade_004
+    100012: Blade_005
+    100014: ChippedBlade
+    100016: ChippedBlade_001
+    100018: ChippedBlade_002
+    100020: ChippedBlade_003
+    100022: Cube_for_scale
+    100024: //RootNode
+    100026: doorblades
+    100028: doorblades_001
+    100030: doorgrate
+    100032: doorgrate_001
+    100034: Empty
+    100036: Empty_001
+    100038: Empty_002
+    100040: Empty_003
+    100042: Empty_004
+    100044: Empty_005
+    100046: Empty_006
+    100048: Empty_007
+    100050: Empty_008
+    100052: Empty_009
+    100054: ring1
+    100056: ring2
+    100058: ring3
+    400000: arena
+    400002: Blade
+    400004: Blade_001
+    400006: Blade_002
+    400008: Blade_003
+    400010: Blade_004
+    400012: Blade_005
+    400014: ChippedBlade
+    400016: ChippedBlade_001
+    400018: ChippedBlade_002
+    400020: ChippedBlade_003
+    400022: Cube_for_scale
+    400024: //RootNode
+    400026: doorblades
+    400028: doorblades_001
+    400030: doorgrate
+    400032: doorgrate_001
+    400034: Empty
+    400036: Empty_001
+    400038: Empty_002
+    400040: Empty_003
+    400042: Empty_004
+    400044: Empty_005
+    400046: Empty_006
+    400048: Empty_007
+    400050: Empty_008
+    400052: Empty_009
+    400054: ring1
+    400056: ring2
+    400058: ring3
+    2100000: unnamed
+    2300000: arena
+    2300002: Blade
+    2300004: Blade_001
+    2300006: Blade_002
+    2300008: Blade_003
+    2300010: Blade_004
+    2300012: Blade_005
+    2300014: ChippedBlade
+    2300016: ChippedBlade_001
+    2300018: ChippedBlade_002
+    2300020: ChippedBlade_003
+    2300022: Cube_for_scale
+    2300024: doorblades
+    2300026: doorblades_001
+    2300028: doorgrate
+    2300030: doorgrate_001
+    2300032: ring1
+    2300034: ring2
+    2300036: ring3
+    3300000: arena
+    3300002: Blade
+    3300004: Blade_001
+    3300006: Blade_002
+    3300008: Blade_003
+    3300010: Blade_004
+    3300012: Blade_005
+    3300014: ChippedBlade
+    3300016: ChippedBlade_001
+    3300018: ChippedBlade_002
+    3300020: ChippedBlade_003
+    3300022: Cube_for_scale
+    3300024: doorblades
+    3300026: doorblades_001
+    3300028: doorgrate
+    3300030: doorgrate_001
+    3300032: ring1
+    3300034: ring2
+    3300036: ring3
+    4300000: Cube_for_scale
+    4300002: doorgrate_001
+    4300004: doorblades_001
+    4300006: doorgrate
+    4300008: doorblades
+    4300010: ring2
+    4300012: Blade_003
+    4300014: Blade_002
+    4300016: ChippedBlade
+    4300018: ChippedBlade_001
+    4300020: ring3
+    4300022: Blade_005
+    4300024: Blade_004
+    4300026: ChippedBlade_003
+    4300028: ChippedBlade_002
+    4300030: ring1
+    4300032: Blade_001
+    4300034: Blade
+    4300036: arena
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
