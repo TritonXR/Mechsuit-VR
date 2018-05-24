@@ -29,10 +29,9 @@ public class ArmController : MonoBehaviour {
   [SerializeField]
   private static float minArmExtend = 0.1f;
   private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm);
-  private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
+  //private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
 
-  private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
-
+  //private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
 
   private Vector3 firstPosition, secondPosition;
 

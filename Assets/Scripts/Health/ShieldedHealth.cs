@@ -5,18 +5,16 @@ using UnityEngine;
 public class ShieldedHealth : MonoBehaviour, IHealth {
   /* Shield */
   public int maxShield;
-  [SerializeField]
   public float delay;
   public float chargePerSecond;
 
   /* Health */
   public int maxHealth;
-  [SerializeField]
   public bool restoreable; // If the health can be restored by a potion
 
-  private float currHealth;
-  private float currShield;
-  private float delayTime;
+  protected float currHealth;
+  protected float currShield;
+  protected float delayTime;
 
   void Start() {
     currHealth = maxHealth;

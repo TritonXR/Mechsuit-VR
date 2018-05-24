@@ -5,7 +5,6 @@ using UnityEngine;
 
 
 public class TimedRestore : MonoBehaviour, IHealthChange, ITimedAction {
-  [SerializeField]
   public float restorePerSecond;
 
   public void ChangeHealth(IHealth health) {

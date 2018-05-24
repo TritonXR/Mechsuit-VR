@@ -4,39 +4,13 @@ using UnityEngine;
 
 public class ShieldedHealthWithResistance :  ShieldedHealth {
   /* Shield */
-  public int maxShield;
   [SerializeField]
   public List<int> shieldResistances;
-  public float delay;
-  public float chargePerSecond;
 
   /* Health */
-  public int maxHealth;
   [SerializeField]
   // Should shield bring extra resistances;
   public List<int> healthResistances;
-  public bool restoreable; // If the health can be restored by a potion
-
-  private float currHealth;
-  private float currShield;
-  private float delayTime;
-
-  void Start() {
-    currHealth = maxHealth;
-    currShield = maxShield;
-  }
-
-  /// <summary>
-  /// Handles the auto shield regen
-  /// </summary>
-  void Update() {
-    if (delayTime >= 0) {
-      delayTime -= Time.deltaTime;
-    } else {
-      Restore(chargePerSecond * Time.deltaTime, RestoreType.shield);
-    }
-  }
-
 
   public override void TakeDamage(float value, DamageType type) {
     float damage = DamageShield(value, type);

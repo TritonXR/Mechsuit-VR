@@ -8,16 +8,7 @@ using UnityEngine;
 /// </summary>
 public class HealthWithResistance : SimpleHealth {
   [SerializeField]
-  public int maxHealth;
-  [SerializeField]
   public List<int> healthResistances;
-  public bool restoreable; // If the health can be restored by a potion
-
-  private float currHealth;
-
-  void Start() {
-    currHealth = maxHealth;
-  }
 
   public override void TakeDamage(float value, DamageType type) {
     Debug.Log("Damage caused to: " + this.gameObject.name);

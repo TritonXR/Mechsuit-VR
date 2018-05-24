@@ -7,12 +7,10 @@ using UnityEngine;
 /// https://unity3d.com/learn/tutorials/topics/multiplayer-networking/player-health-single-player
 /// </summary>
 public class SimpleHealth : MonoBehaviour, IHealth {
-  [SerializeField]
   public int maxHealth;
-  [SerializeField]
   public bool restoreable; // If the health can be restored by a potion
 
-  private float currHealth;
+  protected float currHealth;
 
   void Start() {
     currHealth = maxHealth;
