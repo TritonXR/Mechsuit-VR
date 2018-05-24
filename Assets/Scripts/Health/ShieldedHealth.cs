@@ -5,24 +5,20 @@ using UnityEngine;
 public class ShieldedHealth : MonoBehaviour, IHealth {
   /* Shield */
   public int maxShield;
-  [SerializeField]
-  public List<int> shieldResistances;
   public float delay;
   public float chargePerSecond;
 
   /* Health */
   public int maxHealth;
-  [SerializeField]
-  // Should shield bring extra resistances;
-  public List<int> healthResistances;
   public bool restoreable; // If the health can be restored by a potion
 
-  private float currHealth;
-  private float currShield;
-  private float delayTime;
+  protected float currHealth;
+  protected float currShield;
+  protected float delayTime;
 
   void Start() {
     currHealth = maxHealth;
+    currShield = maxShield;
   }
 
   /// <summary>
@@ -37,7 +33,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   }
 
 
-  public void TakeDamage(float value, DamageType type) {
+  public virtual void TakeDamage(float value, DamageType type) {
     float damage = DamageShield(value, type);
     if (damage == value) { // Penetrates the shield
       DamageType newType = (DamageType)System.Enum.Parse(typeof(DamageType), type.ToString().Split('_')[1]);
@@ -75,11 +71,9 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   }
 
   private void DamageHealth(float value, DamageType type) {
-    Debug.Log("Damage caused to the health of: " + this.gameObject.name);
+    Debug.Log("Damage caused to: " + this.gameObject.name);
     Debug.Log("The health of this object is: " + currHealth);
-    float percentageReduced = 1 - ((float)healthResistances[(int)type]) / 100;
-    float actualDamage = value * percentageReduced;
-    currHealth = (currHealth - actualDamage <= 0) ? 0 : currHealth - actualDamage;
+    currHealth = (currHealth - value <= 0) ? 0 : currHealth - value;
 
     if (currHealth <= 0) {
       Debug.Log("Destroyed: " + this.gameObject.name);

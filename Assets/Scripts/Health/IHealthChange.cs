@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum DamageType {
+  none,
+  health_none,
   physical,
   health_physical
 };

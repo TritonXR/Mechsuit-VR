@@ -7,24 +7,19 @@ using UnityEngine;
 /// https://unity3d.com/learn/tutorials/topics/multiplayer-networking/player-health-single-player
 /// </summary>
 public class SimpleHealth : MonoBehaviour, IHealth {
-  [SerializeField]
   public int maxHealth;
-  [SerializeField]
-  public List<int> healthResistances;
   public bool restoreable; // If the health can be restored by a potion
 
-  private float currHealth;
+  protected float currHealth;
 
   void Start() {
     currHealth = maxHealth;
   }
 
-  public void TakeDamage(float value, DamageType type) {
+  public virtual void TakeDamage(float value, DamageType type) {
     Debug.Log("Damage caused to: " + this.gameObject.name);
     Debug.Log("The health of this object is: " + currHealth);
-    float percentageReduced = 1 - ((float)healthResistances[(int)type]) / 100;
-    float actualDamage = value * percentageReduced;
-    currHealth = (currHealth - actualDamage <= 0) ? 0 : currHealth - actualDamage;
+    currHealth = (currHealth - value <= 0) ? 0 : currHealth - value;
 
     if (currHealth <= 0) {
       Debug.Log("Destroyed: " + this.gameObject.name);

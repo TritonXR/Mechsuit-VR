@@ -29,10 +29,9 @@ public class ArmController : MonoBehaviour {
   [SerializeField]
   private static float minArmExtend = 0.1f;
   private static float mechUpperArmLength = MECH_ARM_LENGTH * (1 - forearmToArm);
-  private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
+  //private static float mechLowerArmLength = MECH_ARM_LENGTH * forearmToArm;
 
-  private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
-
+  //private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
 
   private Vector3 firstPosition, secondPosition;
 
@@ -211,7 +210,7 @@ public class ArmController : MonoBehaviour {
   void Calibrate(object sender, ClickedEventArgs e) {
     if (stage == 0) { // First check
       Debug.Log("Trigger pulled, expected at shoulder.");
-      firstPosition = controller.transform.position;
+      firstPosition = controller.position;
 
       // Move our empty shoulder gameobject to the player's assumed shoulder position.
       playerShoulder.position = firstPosition;
@@ -224,7 +223,7 @@ public class ArmController : MonoBehaviour {
       stage = 1;
     } else if (stage == 1) { // Second check
       Debug.Log("Trigger pulled, expected arm to be extended.");
-      secondPosition = controller.transform.position;
+      secondPosition = controller.position;
       Debug.Log("secondPosition is ("
                   + secondPosition.x + ", "
                   + secondPosition.y + ", "
