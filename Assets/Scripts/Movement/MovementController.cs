@@ -27,17 +27,6 @@ public class MovementController : MonoBehaviour {
   [SerializeField]
   public float pulseStrength;
 
-  //reference to the tracked-object component on the controller/HMD GameObject
-  public SteamVR_TrackedObject trackedObj;
-
-  /// <summary>
-  /// The controller.
-  /// </summary>
-  /// <value>The device.</value>
-  public SteamVR_Controller.Device Device {
-    get { return SteamVR_Controller.Input ((int)trackedObj.index); }
-  }
-
   /* A sphere used to debug the force of movement. */
   public GameObject sphere;
 
@@ -49,15 +38,7 @@ public class MovementController : MonoBehaviour {
   }*/
   bool cooldown;
 
-  /*** Methods start here ***/
-
-  /// <summary>
-  /// Start this instance.
-  /// </summary>
-  void Start() {
-    //get the device associated with that tracked object (which is how you access buttons and stuff)
-    Debug.Log("DEVICE: " + Device);
-  }
+  #region methods
 
   /// <summary>
   /// Raises the trigger enter event.
@@ -115,4 +96,5 @@ public class MovementController : MonoBehaviour {
   public Vector3 GetForwardDirection() {
     return cameraPlayer.transform.forward;
   }
+  #endregion
 }
