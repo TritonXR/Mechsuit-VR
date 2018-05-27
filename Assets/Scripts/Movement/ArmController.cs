@@ -42,7 +42,7 @@ public class ArmController : MonoBehaviour {
   private int stage = 0;
   #endregion
 
-  #region Attributes
+  #region Properties
   private float ArmLength {
     get {
       return Vector3.Distance(controller.position, playerShoulder.position);
@@ -51,7 +51,7 @@ public class ArmController : MonoBehaviour {
 
   private bool IsLeft {
     get {
-      return trackedController.controllerIndex == 2;
+      return trackedController.gameObject.name.Contains("left");
     }
   }
 
