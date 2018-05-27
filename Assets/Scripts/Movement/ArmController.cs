@@ -75,11 +75,7 @@ public class ArmController : MonoBehaviour {
   /// Determine left/right controller, and start calibration process
   /// </summary>
   void Start() {
-    isCalibrated = false;
-
-    armExtend = 1.0f;
-    hand.position = upperArm.position + MECH_ARM_LENGTH * armExtend * hand.forward;
-    Debug.Log("Ready to check shoulder position.");
+    Reset();
   }
 
 
@@ -204,9 +200,18 @@ public class ArmController : MonoBehaviour {
   void ShoulderCheck() {
 
   }
-#endregion
+  #endregion
 
   #region Calibration
+
+  public void Reset() {
+    isCalibrated = false;
+    stage = 0;
+    armExtend = 1.0f;
+    hand.position = upperArm.position + MECH_ARM_LENGTH * armExtend * hand.forward;
+    Debug.Log("Ready to check shoulder position.");
+  }
+
   void Calibrate(object sender, ClickedEventArgs e) {
     if (stage == 0) { // First check
       Debug.Log("Trigger pulled, expected at shoulder.");
