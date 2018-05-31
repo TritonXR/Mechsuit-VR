@@ -208,7 +208,6 @@ public class ArmController : MonoBehaviour {
     isCalibrated = false;
     stage = 0;
     armExtend = 1.0f;
-    hand.position = upperArm.position + MECH_ARM_LENGTH * armExtend * hand.forward;
     Debug.Log("Ready to check shoulder position.");
   }
 
