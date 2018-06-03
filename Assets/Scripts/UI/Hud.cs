@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hud : MonoBehaviour {
+public class HUD : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

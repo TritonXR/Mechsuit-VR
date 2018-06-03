@@ -16,6 +16,10 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   protected float currShield;
   protected float delayTime;
 
+  /* Health Bar */
+
+  public GameObject healthFill;
+
   void Start() {
     currHealth = maxHealth;
     currShield = maxShield;
