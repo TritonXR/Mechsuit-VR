@@ -12,13 +12,11 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   public int maxHealth;
   public bool restoreable; // If the health can be restored by a potion
 
-  protected float currHealth;
-  protected float currShield;
-  protected float delayTime;
+  public float currHealth;
+  public float currShield;
+  public float delayTime;
 
-  /* Health Bar */
-
-  public GameObject healthFill;
+  public HUD hud;
 
   void Start() {
     currHealth = maxHealth;
@@ -45,6 +43,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
     } else {
       DamageHealth(damage, type);
     }
+    hud.UpdateHealth();
   }
 
   /// <summary>
@@ -70,7 +69,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
       Debug.Log("Remaining shield of this object is: " + currShield);
       damageToHealth = 0;
     }
-
+    delayTime = delay;
     return damageToHealth;
   }
 
@@ -104,6 +103,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
         RestoreHealth(remainHealth);
         break;
     }
+    hud.UpdateHealth();
   }
 
   private float RestoreHealth(float value) {

@@ -6,8 +6,7 @@ public class CalibrateMenu : MonoBehaviour {
 
   public CalibrateManager manager;
 
-  public GameObject pauseMenu;
-  public GameObject calibrateMenu;
+  public GameObject pauseMenu, calibrateMenu, HUDMenu;
 
   public UnityEngine.UI.Toggle firstLeft, firstRight, secondLeft, secondRight;
   public UnityEngine.UI.Button startGame;
@@ -40,6 +39,7 @@ public class CalibrateMenu : MonoBehaviour {
   public void Resume() {
     Debug.Log("Resuming...");
     calibrateMenu.SetActive(false);
+    HUDMenu.SetActive(true);
     Time.timeScale = 1.0f;
   }
 

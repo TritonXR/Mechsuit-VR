@@ -224,31 +224,13 @@ public class ArmController : MonoBehaviour {
     if (stage == 0) { // First check
       Debug.Log("Trigger pulled, expected at shoulder.");
       firstPosition = controller.position;
-
       // Move our empty shoulder gameobject to the player's assumed shoulder position.
       playerShoulder.position = firstPosition;
-
-      Debug.Log("firstPosition is ("
-                  + firstPosition.x + ", "
-                  + firstPosition.y + ", "
-                  + firstPosition.z + ")");
-
       stage = 1;
     } else if (stage == 1) { // Second check
       Debug.Log("Trigger pulled, expected arm to be extended.");
       secondPosition = controller.position;
-      Debug.Log("secondPosition is ("
-                  + secondPosition.x + ", "
-                  + secondPosition.y + ", "
-                  + secondPosition.z + ")");
-
       maxArmLength = Vector3.Distance(firstPosition, secondPosition);
-
-      string left = IsLeft ? "Left" : "Right";
-      Debug.Log(left + " arm, length: " + maxArmLength);
-
-      Debug.Log("Upper Arm Length: " + mechUpperArmLength);
-
       stage = 2;
     }
     manager.NotifyMenu(IsLeft, stage);

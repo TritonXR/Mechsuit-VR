@@ -6,8 +6,7 @@ public class PauseMenu : MonoBehaviour {
 
   public SteamVR_TrackedController leftTrackedController, rightTrackedController;
 
-  public GameObject calibrateMenu;
-  private GameObject pauseMenu;
+  public GameObject calibrateMenu, pauseMenu, HUDMenu;
   
   private void Awake() {
     pauseMenu = gameObject.transform.parent.gameObject;
@@ -19,9 +18,11 @@ public class PauseMenu : MonoBehaviour {
   public void TogglePauseMenu(object sender, ClickedEventArgs e) {
     if (pauseMenu.activeSelf) {
       pauseMenu.SetActive(false);
+      HUDMenu.SetActive(true);
       Time.timeScale = 1.0f;
     } else if (!calibrateMenu.activeSelf) {
       pauseMenu.SetActive(true);
+      HUDMenu.SetActive(false);
       Time.timeScale = 0.0f;
     }
   }

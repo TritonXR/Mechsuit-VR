@@ -17,29 +17,27 @@ public class SimpleHealth : MonoBehaviour, IHealth {
   }
 
   public virtual void TakeDamage(float value, DamageType type) {
-    Debug.Log("Damage caused to: " + this.gameObject.name);
-    Debug.Log("The health of this object is: " + currHealth);
+    Debug.Log("The health of " + this.gameObject.name + " is: " + currHealth);
     currHealth = (currHealth - value <= 0) ? 0 : currHealth - value;
 
     if (currHealth <= 0) {
       Debug.Log("Destroyed: " + this.gameObject.name);
       Destroy(this.gameObject);
     } else {
-      Debug.Log("Remaining health of this object is: " + currHealth);
+      Debug.Log("Remaining health of" + this.gameObject.name + " this object is: " + currHealth);
     }
   }
 
   public void Restore (float value, RestoreType type) {
     if (type == RestoreType.health && restoreable) {
-      Debug.Log("Restore caused to: " + this.gameObject.name);
-      Debug.Log("The health of this object is: " + currHealth);
+      Debug.Log("The health of " + this.gameObject.name + " is: " + currHealth);
 
       currHealth = (currHealth + value >= maxHealth) ? maxHealth : currHealth + value;
 
       if (currHealth >= maxHealth) {
         Debug.Log("Restored to full health: " + this.gameObject.name);
       } else {
-        Debug.Log("Current health of this object is: " + currHealth);
+        Debug.Log("Current health of" + this.gameObject.name + " this object is: " + currHealth);
       }
     }
   }

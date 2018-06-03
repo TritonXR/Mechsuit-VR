@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class HUD : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+  public GameObject shieldFill, healthFill;
+  public ShieldedHealth core;
+
+  public void UpdateHealth() {
+    shieldFill.transform.localPosition = new Vector3(-100 + 100 * (core.currShield / core.maxShield), shieldFill.transform.localPosition.y, shieldFill.transform.localPosition.z);
+    healthFill.transform.localPosition = new Vector3(-100 + 100 * (core.currHealth / core.maxHealth), healthFill.transform.localPosition.y, healthFill.transform.localPosition.z);
+  }
 }

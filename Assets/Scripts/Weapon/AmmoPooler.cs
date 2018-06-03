@@ -75,9 +75,8 @@ public class AmmoPooler : Weapon {
       return false;
     }
 
-    Debug.Log("Successful fire");
     GameObject projectile = poolDictionary[ammoTag].Dequeue();
-    Debug.Log("Remaining count: " + poolDictionary[ammoTag].Count);
+    Debug.Log("Fire for " + gameObject.name + ", remaining count: " + poolDictionary[ammoTag].Count);
     projectile.SetActive(true);
     projectile.transform.position = modelWeapon.transform.position;
     projectile.transform.rotation = modelWeapon.transform.rotation;
@@ -90,7 +89,9 @@ public class AmmoPooler : Weapon {
     }
 
     AudioSource sound = GetComponent<AudioSource>();
-    sound.Play();
+    if (sound != null) {
+      sound.Play();
+    }
     return true;
   }
 

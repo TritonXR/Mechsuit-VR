@@ -9,6 +9,7 @@ public class Potion : MonoBehaviour {
     if (health != null) {
       IHealthChange restore = (IHealthChange)GetComponent(typeof(IHealthChange));
       restore.ChangeHealth(health);
+      Destroy(this.gameObject);
     }
   }
 }
