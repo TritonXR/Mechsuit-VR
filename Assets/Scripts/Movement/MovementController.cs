@@ -44,7 +44,6 @@ public class MovementController : MonoBehaviour {
   /// </summary>
   /// <param name="other">Other.</param>
   void OnTriggerEnter(Collider other) {
-    Debug.Log ("Enters collider " + other.tag);
     if(other.tag == "ForwardCollider") {
       if (!cooldown && calibrateManager.BothCalibrated) {
         //NEVER EXECUTED PROPERLY

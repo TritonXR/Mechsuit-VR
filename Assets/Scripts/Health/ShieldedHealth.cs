@@ -66,7 +66,7 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
       Debug.Log("Remaining shield of this object is: " + currShield);
       damageToHealth = 0;
     }
-
+    delayTime = delay;
     return damageToHealth;
   }
 

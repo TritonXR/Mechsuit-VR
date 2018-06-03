@@ -39,7 +39,6 @@ public class UserWeaponController : SimpleWeaponController {
 
   void FireWeapon(object sender, ClickedEventArgs e) {
     if (currDelay <= 0.0f) {
-      Debug.Log("Trigger clicked, attempting to fire");
       weapon.Activate(ammoType[currAmmoIndex]);
       currDelay = fireDelay[currAmmoIndex];
     }
