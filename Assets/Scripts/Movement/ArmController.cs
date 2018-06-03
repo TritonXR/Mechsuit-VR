@@ -23,7 +23,6 @@ public class ArmController : MonoBehaviour {
   private static float forearmToArm = 0.5f;
   [Range(0.0f, 1.0f)]
   private float armExtend;
-  public static bool isCalibrated = false;
   [SerializeField]
   private static float MECH_ARM_LENGTH = 6.0f;
   [SerializeField]
@@ -33,13 +32,15 @@ public class ArmController : MonoBehaviour {
 
   //private static float upperArmRadius = mechUpperArmLength + 0.4000002f;
 
+  public CalibrateManager manager;
+
   private Vector3 firstPosition, secondPosition;
 
   /// <summary>
   /// Stage in the calibration process.
   /// 0 = uncalibrated, 1 = shoulder calibrated, 2 = shoulder and arm length fully calibrated
   /// </summary>
-  private int stage = 0;
+  private byte stage = 0;
   #endregion
 
   #region Properties
@@ -58,6 +59,15 @@ public class ArmController : MonoBehaviour {
   private Vector3 ControllerAngle {
     get {
       return controller.eulerAngles;
+    }
+  }
+
+  public bool IsCalibrated {
+    get {
+      return stage == 2;
+    }
+    set {
+      stage = (value == false) ? (byte)0 : (byte)2;
     }
   }
   #endregion
@@ -83,7 +93,7 @@ public class ArmController : MonoBehaviour {
   /// If we have calibrated the controllers, update the inverse kinematics
   /// </summary>
   void Update() {
-    if (isCalibrated) {
+    if (IsCalibrated) {
       HandCheck();
     }
   }
@@ -205,7 +215,6 @@ public class ArmController : MonoBehaviour {
   #region Calibration
 
   public void Reset() {
-    isCalibrated = false;
     stage = 0;
     armExtend = 1.0f;
     Debug.Log("Ready to check shoulder position.");
@@ -238,11 +247,11 @@ public class ArmController : MonoBehaviour {
       string left = IsLeft ? "Left" : "Right";
       Debug.Log(left + " arm, length: " + maxArmLength);
 
-      isCalibrated = true;
       Debug.Log("Upper Arm Length: " + mechUpperArmLength);
 
       stage = 2;
     }
+    manager.NotifyMenu(IsLeft, stage);
   }
 #endregion
 } // end of public class armController

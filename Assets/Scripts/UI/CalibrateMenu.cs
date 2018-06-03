@@ -4,24 +4,18 @@ using UnityEngine;
 
 public class CalibrateMenu : MonoBehaviour {
 
-  public ArmController leftController, rightController;
+  public CalibrateManager manager;
 
   public GameObject pauseMenu;
-  private GameObject calibrateMenu;
-  private void Awake() {
+  public GameObject calibrateMenu;
+
+  public UnityEngine.UI.Toggle firstLeft, firstRight, secondLeft, secondRight;
+  public UnityEngine.UI.Button startGame;
+
+  void Awake() {
     calibrateMenu = gameObject.transform.parent.gameObject;
     Calibrate();
     Time.timeScale = 0.0f;
-  }
-
-  public void TogglePauseMenu(object sender, ClickedEventArgs e) {
-    if (calibrateMenu.activeSelf) {
-      calibrateMenu.SetActive(false);
-      Time.timeScale = 1.0f;
-    } else {
-      calibrateMenu.SetActive(true);
-      Time.timeScale = 0.0f;
-    }
   }
 
   public void QuitGame() {
@@ -35,13 +29,33 @@ public class CalibrateMenu : MonoBehaviour {
 
   public void Calibrate() {
     Debug.Log("Restarting calibration...");
-    leftController.Reset();
-    rightController.Reset();
+    manager.ResetCalibration();
+    firstLeft.isOn = false;
+    firstRight.isOn = false;
+    secondLeft.isOn = false;
+    secondRight.isOn = false;
+    startGame.interactable = false;
   }
 
   public void Resume() {
     Debug.Log("Resuming...");
     calibrateMenu.SetActive(false);
     Time.timeScale = 1.0f;
+  }
+
+  public void ChangeScreen(bool isLeft, byte stage) {
+    if (isLeft && stage == 1) {
+      firstLeft.isOn = true;
+    } else if (isLeft && stage == 2) {
+      secondLeft.isOn = true;
+    } else if (stage == 1) {
+      firstRight.isOn = true;
+    } else {
+      secondRight.isOn = true;
+    }
+
+    if (manager.BothCalibrated) {
+      startGame.interactable = true;
+    }
   }
 }

@@ -58,7 +58,7 @@ public class AmmoPooler : Weapon {
   /// <param name="ammoTag"></param>
   /// <returns>true if successfully fires; false if not calibrated (if controlled by the user), does not contain the correct ammo type, and/or the magazine is empty</returns>
   public override bool Activate(string ammoTag) {
-    if (!ArmController.isCalibrated) {
+    if (!manager.BothCalibrated) {
       Debug.Log("You have not calibrated!");
       return false;
     }

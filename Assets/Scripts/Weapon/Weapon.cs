@@ -7,6 +7,7 @@ public abstract class Weapon : MonoBehaviour {
 	public GameObject modelWeapon;
 	public SimpleWeaponController controller;
 	public GameObject hand;
+  public CalibrateManager manager;
 
   // Collider that monitors the summoning action
   public Collider weaponCollider;

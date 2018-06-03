@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIMenu : MonoBehaviour {
-
+public class PauseMenu : MonoBehaviour {
 
   public SteamVR_TrackedController leftTrackedController, rightTrackedController;
 
@@ -21,7 +20,7 @@ public class UIMenu : MonoBehaviour {
     if (pauseMenu.activeSelf) {
       pauseMenu.SetActive(false);
       Time.timeScale = 1.0f;
-    } else {
+    } else if (!calibrateMenu.activeSelf) {
       pauseMenu.SetActive(true);
       Time.timeScale = 0.0f;
     }
@@ -38,6 +37,7 @@ public class UIMenu : MonoBehaviour {
 
   public void ReCalibrate() {
     Debug.Log("Restarting calibration...");
+    pauseMenu.SetActive(false);
     calibrateMenu.SetActive(true);
   }
 

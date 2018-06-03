@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour {
+  public CalibrateManager calibrateManager;
 
   public Vector3 pointEnter;
 
@@ -24,7 +25,6 @@ public class MovementController : MonoBehaviour {
   */
   public float maxPulseMagnitude;
 
-  [SerializeField]
   public float pulseStrength;
 
   /* A sphere used to debug the force of movement. */
@@ -47,7 +47,7 @@ public class MovementController : MonoBehaviour {
   void OnTriggerEnter(Collider other) {
     Debug.Log ("Enters collider " + other.tag);
     if(other.tag == "ForwardCollider") {
-      if (!cooldown && ArmController.isCalibrated) {
+      if (!cooldown && calibrateManager.BothCalibrated) {
         //NEVER EXECUTED PROPERLY
         //timeLeft = cooldownTime;
         //Debug.Log ("Boost activated! timeLeft is " + timeLeft);
