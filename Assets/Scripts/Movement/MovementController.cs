@@ -9,6 +9,8 @@ public class MovementController : MonoBehaviour {
 
   public Camera cameraPlayer;
 
+  public AudioSource sound;
+
   /// <summary>
   /// This is the mechsuit body, or the camera rig itself.
   /// </summary>
@@ -26,9 +28,6 @@ public class MovementController : MonoBehaviour {
   public float maxPulseMagnitude;
 
   public float pulseStrength;
-
-  /* A sphere used to debug the force of movement. */
-  public GameObject sphere;
 
   /* cooldown */
   private readonly float cooldownTime = 1.0f;
@@ -73,6 +72,7 @@ public class MovementController : MonoBehaviour {
     suitBody.velocity = Vector3.zero;
     suitBody.AddForce (GetForwardDirection () * pulseStrength);
     Invoke ("EndPulse", cooldownTime);
+    sound.Play();
     //calc force
     //float m = velocity.magnitude / maxPulseMagnitude;
 

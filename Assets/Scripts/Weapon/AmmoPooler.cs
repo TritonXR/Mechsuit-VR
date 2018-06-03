@@ -77,7 +77,7 @@ public class AmmoPooler : Weapon {
 
     Debug.Log("Successful fire");
     GameObject projectile = poolDictionary[ammoTag].Dequeue();
-
+    Debug.Log("Remaining count: " + poolDictionary[ammoTag].Count);
     projectile.SetActive(true);
     projectile.transform.position = modelWeapon.transform.position;
     projectile.transform.rotation = modelWeapon.transform.rotation;
@@ -86,9 +86,11 @@ public class AmmoPooler : Weapon {
     IAmmo pooledProjectile = projectile.GetComponent<IAmmo>();
 
     if (pooledProjectile != null) {
-      Debug.Log("Projectile I_Ammo obtained");
       pooledProjectile.OnObjectSpawn();
     }
+
+    AudioSource sound = GetComponent<AudioSource>();
+    sound.Play();
     return true;
   }
 
