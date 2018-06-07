@@ -10,35 +10,45 @@ public class SimpleHealth : MonoBehaviour, IHealth {
   public int maxHealth;
   public bool restoreable; // If the health can be restored by a potion
 
-  protected float currHealth;
+  public HUD hud;
+
+  /* Properties */
+  public float CurrHealth { get; protected set; }
+  public int MaxHealth {
+    get { return maxHealth; }
+  }
 
   void Start() {
-    currHealth = maxHealth;
+    CurrHealth = maxHealth;
   }
 
   public virtual void TakeDamage(float value, DamageType type) {
-    Debug.Log("The health of " + this.gameObject.name + " is: " + currHealth);
-    currHealth = (currHealth - value <= 0) ? 0 : currHealth - value;
-
-    if (currHealth <= 0) {
+    Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
+    CurrHealth = (CurrHealth - value <= 0) ? 0 : CurrHealth - value;
+    hud.UpdateHealth(this, gameObject.tag != "Player", gameObject.name);
+    if (CurrHealth <= 0) {
       Debug.Log("Destroyed: " + this.gameObject.name);
       Destroy(this.gameObject);
     } else {
-      Debug.Log("Remaining health of" + this.gameObject.name + " this object is: " + currHealth);
+      Debug.Log("Remaining health of" + this.gameObject.name + " this object is: " + CurrHealth);
     }
+
+
   }
 
   public void Restore (float value, RestoreType type) {
     if (type == RestoreType.health && restoreable) {
-      Debug.Log("The health of " + this.gameObject.name + " is: " + currHealth);
+      Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
 
-      currHealth = (currHealth + value >= maxHealth) ? maxHealth : currHealth + value;
+      CurrHealth = (CurrHealth + value >= maxHealth) ? maxHealth : CurrHealth + value;
 
-      if (currHealth >= maxHealth) {
+      if (CurrHealth >= maxHealth) {
         Debug.Log("Restored to full health: " + this.gameObject.name);
       } else {
-        Debug.Log("Current health of" + this.gameObject.name + " this object is: " + currHealth);
+        Debug.Log("Current health of" + this.gameObject.name + " this object is: " + CurrHealth);
       }
     }
+
+    hud.UpdateHealth(this, gameObject.tag != "Player", gameObject.name);
   }
 }

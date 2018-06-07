@@ -17,19 +17,19 @@ public class AIWeaponController : SimpleWeaponController {
   }
 
   private void Update() {
-    //Debug.Log("WeaponController.Update()");
-    //if (currDelay <= 0.0f && TriggerClicked()) {
-    if (currDelay > 0.0f) {
-      currDelay -= Time.deltaTime;
-    }
-
-    else {
-      if (!FireWeapon() && !ReloadWeapon()) {
-        Debug.Log("You have not calibrated, or the ammo type is incorrect!");
+    if (target != null) {
+      //Debug.Log("WeaponController.Update()");
+      //if (currDelay <= 0.0f && TriggerClicked()) {
+      if (currDelay > 0.0f) {
+        currDelay -= Time.deltaTime;
+      } else {
+        if (!FireWeapon() && !ReloadWeapon()) {
+          Debug.Log("You have not calibrated, or the ammo type is incorrect!");
+        }
       }
-    }
 
-    this.transform.LookAt(target.transform);
+      this.transform.LookAt(target.transform);
+    }
   }
 
   bool ReloadWeapon() {
