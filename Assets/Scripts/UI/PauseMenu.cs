@@ -4,27 +4,10 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour {
 
-  public SteamVR_TrackedController leftTrackedController, rightTrackedController;
-
   public GameObject calibrateMenu, pauseMenu, HUDMenu;
   
   private void Awake() {
     pauseMenu = gameObject.transform.parent.gameObject;
-    leftTrackedController.MenuButtonClicked += TogglePauseMenu;
-    rightTrackedController.MenuButtonClicked += TogglePauseMenu;
-    Time.timeScale = 0.0f;
-  }
-
-  public void TogglePauseMenu(object sender, ClickedEventArgs e) {
-    if (pauseMenu.activeSelf) {
-      pauseMenu.SetActive(false);
-      HUDMenu.SetActive(true);
-      Time.timeScale = 1.0f;
-    } else if (!calibrateMenu.activeSelf) {
-      pauseMenu.SetActive(true);
-      HUDMenu.SetActive(false);
-      Time.timeScale = 0.0f;
-    }
   }
 
   public void QuitGame() {
@@ -40,6 +23,7 @@ public class PauseMenu : MonoBehaviour {
     Debug.Log("Restarting calibration...");
     pauseMenu.SetActive(false);
     calibrateMenu.SetActive(true);
+    calibrateMenu.GetComponent<CalibrateMenu>().Calibrate();
   }
 
   public void Resume() {
