@@ -41,6 +41,7 @@ public class AmmoPooler : Weapon {
   /// </summary>
   public override void Setup() {
     foreach (KeyValuePair<string, Queue<GameObject>> pair in poolDictionary) {
+      pair.Value.Clear();
       Pool pool = stringToPoolDictionary[pair.Key];
       for (int i = 0; i < pool.size; ++i) {
         GameObject obj = Instantiate(pool.prefab);
@@ -111,5 +112,9 @@ public class AmmoPooler : Weapon {
 
   void Update() {
     Debug.DrawRay(modelWeapon.transform.position, modelWeapon.transform.forward, Color.red);
+  }
+
+  public int GetPoolDictionary(string ammoTag) {
+    return poolDictionary[ammoTag].Count;
   }
 }

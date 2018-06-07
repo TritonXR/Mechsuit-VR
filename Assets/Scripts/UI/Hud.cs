@@ -6,9 +6,15 @@ public class HUD : MonoBehaviour {
 
   public GameObject shieldFill, healthFill;
   public ShieldedHealth core;
+  public AmmoPooler ammoCount;
+  public UnityEngine.UI.Text ammoDisplay;
 
   public void UpdateHealth() {
     shieldFill.transform.localPosition = new Vector3(-100 + 100 * (core.currShield / core.maxShield), shieldFill.transform.localPosition.y, shieldFill.transform.localPosition.z);
     healthFill.transform.localPosition = new Vector3(-100 + 100 * (core.currHealth / core.maxHealth), healthFill.transform.localPosition.y, healthFill.transform.localPosition.z);
+  }
+
+  public void UpdateAmmo() {
+    ammoDisplay.text = ammoCount.GetPoolDictionary("Laser").ToString();
   }
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UserWeaponController : SimpleWeaponController {
   /* SteamVR controller */
   private SteamVR_TrackedController controller;
-
+  public HUD hud;
 
   /* Methods */
   /// <summary>
@@ -34,12 +34,14 @@ public class UserWeaponController : SimpleWeaponController {
 
   void ReloadWeapon(object sender, ClickedEventArgs e) {
     Debug.Log("Grip clicked, attempting to reload");
+    hud.UpdateAmmo();
     weapon.ReActivate(ammoType[currAmmoIndex]);
   }
 
   void FireWeapon(object sender, ClickedEventArgs e) {
     if (currDelay <= 0.0f) {
       weapon.Activate(ammoType[currAmmoIndex]);
+      hud.UpdateAmmo();
       currDelay = fireDelay[currAmmoIndex];
     }
   }
