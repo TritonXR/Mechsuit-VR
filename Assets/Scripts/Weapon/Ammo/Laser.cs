@@ -37,15 +37,20 @@ public class Laser : MonoBehaviour, IAmmo {
   /// <summary>
   /// After colliding with an object with a health, reduces its health.
   /// </summary>
-  /// <param name="collision"></param>
-  public void OnCollisionEnter(Collision collision) {
-    if (collision.gameObject != Weapon) {
-      IHealth health = (IHealth)collision.gameObject.GetComponent(typeof(IHealth));
+  /// <param name="collder"></param>
+  public void OnTriggerEnter(Collider collider) {
+    print(collider.gameObject.name);
+    if (collider.gameObject != Weapon) {
+      IHealth health = (IHealth)collider.gameObject.GetComponent(typeof(IHealth));
       if (health != null) {
         IHealthChange damage = (IHealthChange)GetComponent(typeof(IHealthChange));
         damage.ChangeHealth(health);
       }
     }
+  }
+
+  public void OnCollisionEnter(Collision collision) {
+    print(collision.gameObject.name);
   }
 
 }

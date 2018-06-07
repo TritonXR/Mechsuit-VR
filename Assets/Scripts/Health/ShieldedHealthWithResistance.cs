@@ -35,14 +35,14 @@ public class ShieldedHealthWithResistance :  ShieldedHealth {
     }
     // Not penetrating the shield
     Debug.Log("Damage caused to the shield of: " + this.gameObject.name);
-    Debug.Log("The shield of this object is: " + currShield);
-    float damageToHealth = currShield;
-    currShield = (currShield - value <= 0) ? 0 : currShield - value;
-    if (currShield <= 0) {
+    Debug.Log("The shield of this object is: " + CurrShield);
+    float damageToHealth = CurrShield;
+    CurrShield = (CurrShield - value <= 0) ? 0 : CurrShield - value;
+    if (CurrShield <= 0) {
       Debug.Log("Shield broken for:" + this.gameObject.name);
       damageToHealth = value - damageToHealth;
     } else {
-      Debug.Log("Remaining shield of this object is: " + currShield);
+      Debug.Log("Remaining shield of this object is: " + CurrShield);
       damageToHealth = 0;
     }
 
@@ -51,16 +51,16 @@ public class ShieldedHealthWithResistance :  ShieldedHealth {
 
   private void DamageHealth(float value, DamageType type) {
     Debug.Log("Damage caused to the health of: " + this.gameObject.name);
-    Debug.Log("The health of this object is: " + currHealth);
+    Debug.Log("The health of this object is: " + CurrHealth);
     float percentageReduced = 1 - ((float)healthResistances[(int)type]) / 100;
     float actualDamage = value * percentageReduced;
-    currHealth = (currHealth - actualDamage <= 0) ? 0 : currHealth - actualDamage;
+    CurrHealth = (CurrHealth - actualDamage <= 0) ? 0 : CurrHealth - actualDamage;
 
-    if (currHealth <= 0) {
+    if (CurrHealth <= 0) {
       Debug.Log("Destroyed: " + this.gameObject.name);
       Destroy(this.gameObject);
     } else {
-      Debug.Log("Remaining health of this object is: " + currHealth);
+      Debug.Log("Remaining health of this object is: " + CurrHealth);
     }
   }
 }

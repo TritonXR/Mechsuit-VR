@@ -12,15 +12,19 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
   public int maxHealth;
   public bool restoreable; // If the health can be restored by a potion
 
-  public float currHealth;
-  public float currShield;
-  public float delayTime;
+  public float CurrHealth { get; protected set; }
+  public float CurrShield { get; protected set; }
+  private float delayTime;
+
+  public int MaxHealth {
+    get { return maxHealth; }
+  }
 
   public HUD hud;
 
   void Start() {
-    currHealth = maxHealth;
-    currShield = maxShield;
+    CurrHealth = maxHealth;
+    CurrShield = maxShield;
   }
 
   /// <summary>
@@ -36,14 +40,21 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
 
 
   public virtual void TakeDamage(float value, DamageType type) {
-    float damage = DamageShield(value, type);
-    if (damage == value) { // Penetrates the shield
+    if (type.ToString().StartsWith("health")) {
       DamageType newType = (DamageType)System.Enum.Parse(typeof(DamageType), type.ToString().Split('_')[1]);
-      DamageHealth(damage, newType);
+      DamageHealth(value, newType);
     } else {
+      float damage = DamageShield(value, type);
       DamageHealth(damage, type);
     }
-    hud.UpdateHealth();
+
+    hud.UpdateHealth(this, gameObject.tag != "Player", gameObject.name);
+    if (CurrHealth <= 0) {
+      Debug.Log("Destroyed: " + this.gameObject.name);
+      Destroy(this.gameObject);
+    } else {
+      Debug.Log("Remaining health of this object is: " + CurrHealth);
+    }
   }
 
   /// <summary>
@@ -59,14 +70,14 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
     }
     // Not penetrating the shield
     Debug.Log("Damage caused to the shield of: " + this.gameObject.name);
-    Debug.Log("The shield of this object is: " + currShield);
-    float damageToHealth = currShield;
-    currShield = (currShield - value <= 0) ? 0 : currShield - value;
-    if (currShield <= 0) {
+    Debug.Log("The shield of this object is: " + CurrShield);
+    float damageToHealth = CurrShield;
+    CurrShield = (CurrShield - value <= 0) ? 0 : CurrShield - value;
+    if (CurrShield <= 0) {
       Debug.Log("Shield broken for:" + this.gameObject.name);
       damageToHealth = value - damageToHealth;
     } else {
-      Debug.Log("Remaining shield of this object is: " + currShield);
+      Debug.Log("Remaining shield of this object is: " + CurrShield);
       damageToHealth = 0;
     }
     delayTime = delay;
@@ -75,15 +86,8 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
 
   private void DamageHealth(float value, DamageType type) {
     Debug.Log("Damage caused to: " + this.gameObject.name);
-    Debug.Log("The health of this object is: " + currHealth);
-    currHealth = (currHealth - value <= 0) ? 0 : currHealth - value;
-
-    if (currHealth <= 0) {
-      Debug.Log("Destroyed: " + this.gameObject.name);
-      Destroy(this.gameObject);
-    } else {
-      Debug.Log("Remaining health of this object is: " + currHealth);
-    }
+    Debug.Log("The health of this object is: " + CurrHealth);
+    CurrHealth = (CurrHealth - value <= 0) ? 0 : CurrHealth - value;
   }
 
   public void Restore(float value, RestoreType type) {
@@ -103,20 +107,20 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
         RestoreHealth(remainHealth);
         break;
     }
-    hud.UpdateHealth();
+    hud.UpdateHealth(this, gameObject.tag != "Player", gameObject.name);
   }
 
   private float RestoreHealth(float value) {
     Debug.Log("Restore caused to the health of: " + this.gameObject.name);
-    float remainShield = currHealth;
+    float remainShield = CurrHealth;
 
-    currHealth = (currHealth + value >= maxHealth) ? maxHealth : currHealth + value;
+    CurrHealth = (CurrHealth + value >= maxHealth) ? maxHealth : CurrHealth + value;
 
-    if (currHealth >= maxHealth) {
+    if (CurrHealth >= maxHealth) {
       Debug.Log("Restored to full health: " + this.gameObject.name);
-      remainShield = value - (currHealth - remainShield);
+      remainShield = value - (CurrHealth - remainShield);
     } else {
-      Debug.Log("Current health of this object is: " + currHealth);
+      Debug.Log("Current health of this object is: " + CurrHealth);
       remainShield = 0;
     }
     return remainShield;
@@ -124,15 +128,15 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
 
   private float RestoreShield(float value) {
     Debug.Log("Restore caused to the shield of: " + this.gameObject.name);
-    float remainHealth = currShield;
+    float remainHealth = CurrShield;
 
-    currShield = (currShield + value >= maxShield) ? maxShield : currShield + value;
+    CurrShield = (CurrShield + value >= maxShield) ? maxShield : CurrShield + value;
 
-    if (currShield >= maxShield) {
+    if (CurrShield >= maxShield) {
       Debug.Log("Restored to full shield: " + this.gameObject.name);
-      remainHealth = value - (currShield - remainHealth);
+      remainHealth = value - (CurrShield - remainHealth);
     } else {
-      Debug.Log("Current health of this object is: " + currHealth);
+      Debug.Log("Current health of this object is: " + CurrHealth);
       remainHealth = 0;
     }
     return remainHealth;
