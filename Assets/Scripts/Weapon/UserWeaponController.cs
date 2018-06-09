@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UserWeaponController : SimpleWeaponController {
   /* SteamVR controller */
   private SteamVR_TrackedController controller;
-  public HUD hud;
+  public Hud hud;
 
   /* Methods */
   /// <summary>

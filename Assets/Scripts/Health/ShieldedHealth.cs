@@ -14,13 +14,14 @@ public class ShieldedHealth : MonoBehaviour, IHealth {
 
   public float CurrHealth { get; protected set; }
   public float CurrShield { get; protected set; }
+  public bool Restorable { get { return restoreable; } }
   private float delayTime;
 
   public int MaxHealth {
     get { return maxHealth; }
   }
 
-  public HUD hud;
+  public Hud hud;
 
   void Start() {
     CurrHealth = maxHealth;

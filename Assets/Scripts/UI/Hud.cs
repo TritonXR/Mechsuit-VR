@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HUD : MonoBehaviour {
+public class Hud : MonoBehaviour {
   public GameObject enemyShieldBar, enemyHealthBar;
   public GameObject selfShieldFill, selfHealthFill, enemyShieldFill, enemyHealthFill;
   public UnityEngine.UI.Text enemyName;

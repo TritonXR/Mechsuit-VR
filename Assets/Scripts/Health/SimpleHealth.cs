@@ -10,13 +10,14 @@ public class SimpleHealth : MonoBehaviour, IHealth {
   public int maxHealth;
   public bool restoreable; // If the health can be restored by a potion
 
-  public HUD hud;
+  public Hud hud;
 
   /* Properties */
   public float CurrHealth { get; protected set; }
   public int MaxHealth {
     get { return maxHealth; }
   }
+  public bool Restorable { get { return restoreable; } }
 
   void Start() {
     CurrHealth = maxHealth;

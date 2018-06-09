@@ -23,9 +23,7 @@ public class Laser : MonoBehaviour, IAmmo {
       Debug.DrawRay(this.transform.position, this.transform.forward, Color.green);
       this.transform.Translate(Vector3.forward * speed * Time.deltaTime);
       currTime++;
-    }
-
-    else {
+    } else {
       Destroy(this.gameObject);
     }
 	}
@@ -45,12 +43,8 @@ public class Laser : MonoBehaviour, IAmmo {
       if (health != null) {
         IHealthChange damage = (IHealthChange)GetComponent(typeof(IHealthChange));
         damage.ChangeHealth(health);
+        Destroy(this.gameObject);
       }
     }
   }
-
-  public void OnCollisionEnter(Collision collision) {
-    print(collision.gameObject.name);
-  }
-
 }
