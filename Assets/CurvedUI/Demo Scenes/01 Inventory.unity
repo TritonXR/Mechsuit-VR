@@ -42,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 9
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 8
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -88,9 +88,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_ShadowMaskMode: 2
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -110,8 +109,6 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
-    debug:
-      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &2914225
 GameObject:
@@ -257,7 +254,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &6657884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,7 +401,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &28296165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,7 +507,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &90351380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -620,9 +614,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -649,7 +643,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.59761, y: 50.00045}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0.48046875, y: 0.14453125}
+  savedTextUV0: {x: 0.42578125, y: 0.5722656}
   savedFill: 0
 --- !u!222 &92300543
 CanvasRenderer:
@@ -754,7 +748,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &131852351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,7 +821,6 @@ MonoBehaviour:
   m_PreferredHeight: 700
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &145042655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -988,9 +980,9 @@ MonoBehaviour:
   DoNotTesselate: 0
   savedPos: {x: -50.008137, y: 241.51875, z: -0.000016276806}
   savedUp: {x: 0, y: 1, z: 0}
-  savedRectSize: {x: 418.1014, y: 66.960686}
+  savedRectSize: {x: 418.1014, y: 66.460686}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0, y: 0.0078125}
+  savedTextUV0: {x: 0.796875, y: 0.5}
   savedFill: 0
 --- !u!114 &171033085
 MonoBehaviour:
@@ -1012,9 +1004,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 45
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 45
@@ -1087,7 +1079,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &201345678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1284,7 +1275,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &253965405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1301,7 +1291,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.1, y: 118.82331}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0, y: 0.0078125}
+  savedTextUV0: {x: 0.54296875, y: 0}
   savedFill: 0
 --- !u!114 &253965406
 MonoBehaviour:
@@ -1398,9 +1388,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -1427,7 +1417,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.59761, y: 50.00045}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0.5, y: 0}
+  savedTextUV0: {x: 0.19140625, y: 0.6484375}
   savedFill: 0
 --- !u!222 &263188683
 CanvasRenderer:
@@ -1492,7 +1482,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &287568837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1572,7 +1561,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &295865350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1741,7 +1729,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &345494900
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,7 +1920,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &406357316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2192,7 +2178,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &416629922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2303,7 +2288,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &427782217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2374,7 +2358,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &438404678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2693,7 +2676,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.59761, y: 50.00045}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0, y: 0.40234375}
+  savedTextUV0: {x: 0.2578125, y: 0.61328125}
   savedFill: 0
 --- !u!114 &505459400
 MonoBehaviour:
@@ -2715,9 +2698,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -2789,7 +2772,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &517727190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2806,7 +2788,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.25784, y: 39.60777}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0.05078125, y: 0.66015625}
+  savedTextUV0: {x: 0, y: 0.27734375}
   savedFill: 0
 --- !u!114 &517727191
 MonoBehaviour:
@@ -2903,7 +2885,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &554475237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3012,7 +2993,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &601646269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3159,7 +3139,6 @@ MonoBehaviour:
   m_PreferredHeight: 120
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &615204333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3279,7 +3258,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &628192319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3523,7 +3501,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &679034781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3634,7 +3611,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &701060887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3873,7 +3849,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &715456030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4117,7 +4092,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &758156259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4205,7 +4179,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &818412023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4365,7 +4338,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 100000
-  m_LayoutPriority: 1
 --- !u!114 &866822280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4559,7 +4531,6 @@ MonoBehaviour:
   m_PreferredHeight: 5
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &895533296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4708,7 +4679,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &897390296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4774,7 +4744,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 10000
-  m_LayoutPriority: 1
 --- !u!1 &941442234
 GameObject:
   m_ObjectHideFlags: 0
@@ -4831,7 +4800,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &941442237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5028,7 +4996,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &959728511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5045,7 +5012,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.25784, y: 39.60777}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0, y: 0.5}
+  savedTextUV0: {x: 0.359375, y: 0.1484375}
   savedFill: 0
 --- !u!114 &959728512
 MonoBehaviour:
@@ -5163,7 +5130,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &1011217707
 GameObject:
   m_ObjectHideFlags: 0
@@ -5395,7 +5361,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1091989650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5468,9 +5433,9 @@ MonoBehaviour:
   DoNotTesselate: 0
   savedPos: {x: -50.008137, y: 187.05807, z: -0.000016276806}
   savedUp: {x: 0, y: 1, z: 0}
-  savedRectSize: {x: 418.1014, y: 41.960686}
+  savedRectSize: {x: 418.1014, y: 42.460686}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0.25390625, y: 0.25390625}
+  savedTextUV0: {x: 0.6484375, y: 0.5527344}
   savedFill: 0
 --- !u!114 &1101098939
 MonoBehaviour:
@@ -5492,7 +5457,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
@@ -5654,7 +5619,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1155270352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5818,7 +5782,6 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1162728431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6160,7 +6123,6 @@ MonoBehaviour:
   m_PreferredHeight: 150
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1274872641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6268,7 +6230,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1283115060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6606,7 +6567,6 @@ MonoBehaviour:
   m_PreferredHeight: 40
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1316044891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6768,11 +6728,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!4 &1423482942
 Transform:
   m_ObjectHideFlags: 0
@@ -6925,7 +6885,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 10000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &1473940422
 GameObject:
   m_ObjectHideFlags: 0
@@ -6981,7 +6940,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1473940425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7262,7 +7220,6 @@ MonoBehaviour:
   m_PreferredHeight: 40
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1554186061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7431,7 +7388,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1561378866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7596,7 +7552,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1583957165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7613,7 +7568,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.25784, y: 39.60777}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0.8828125, y: 0.22265625}
+  savedTextUV0: {x: 0.9140625, y: 0.44140625}
   savedFill: 0
 --- !u!114 &1583957166
 MonoBehaviour:
@@ -7751,7 +7706,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1597868826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7994,7 +7948,6 @@ MonoBehaviour:
   m_PreferredHeight: 40
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1656486660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8159,7 +8112,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1676165895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8176,7 +8128,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 268.0014, y: 118.82331}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.2265625, y: 0}
+  savedTextUV0: {x: 0.2734375, y: 0}
   savedFill: 0
 --- !u!114 &1676165896
 MonoBehaviour:
@@ -8272,7 +8224,6 @@ MonoBehaviour:
   m_PreferredHeight: 120
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1710349957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8460,7 +8411,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1729066587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8612,7 +8562,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1730796181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8897,7 +8846,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1791766479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9182,7 +9130,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1811669921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9467,7 +9414,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1880712364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9538,7 +9484,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1977195346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9686,7 +9631,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &1988591694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9703,7 +9647,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 418.1014, y: 118.82331}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0.53515625, y: 0.29296875}
+  savedTextUV0: {x: 0, y: 0.5}
   savedFill: 0
 --- !u!114 &1988591695
 MonoBehaviour:
@@ -9921,6 +9865,9 @@ MonoBehaviour:
   gazeTimedClickProgressImage: {fileID: 0}
   worldSpaceMouseSensitivity: 1
   usedHand: 1
+  TouchControllerTransform: {fileID: 0}
+  InteractionButton: 8192
+  oculusCameraRig: {fileID: 0}
 --- !u!1 &2044932888
 GameObject:
   m_ObjectHideFlags: 0
@@ -9976,7 +9923,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &2044932891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9993,7 +9939,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.25784, y: 39.60777}
   savedColor: {r: 1, g: 1, b: 1, a: 0.584}
-  savedTextUV0: {x: 0, y: 0.0078125}
+  savedTextUV0: {x: 0.54296875, y: 0}
   savedFill: 0
 --- !u!114 &2044932892
 MonoBehaviour:
@@ -10155,7 +10101,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 150.59761, y: 50.00045}
   savedColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  savedTextUV0: {x: 0.34765625, y: 0.40234375}
+  savedTextUV0: {x: 0.2578125, y: 0.6542969}
   savedFill: 0
 --- !u!114 &2058133248
 MonoBehaviour:
@@ -10177,9 +10123,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6f8ca24a874af994382ecbbbbc85bb95, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -10356,7 +10302,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &2103529882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10460,7 +10405,6 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 10000
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &2129031494
 GameObject:
   m_ObjectHideFlags: 0
@@ -10516,7 +10460,6 @@ MonoBehaviour:
   m_PreferredHeight: 40
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &2129031497
 MonoBehaviour:
   m_ObjectHideFlags: 0

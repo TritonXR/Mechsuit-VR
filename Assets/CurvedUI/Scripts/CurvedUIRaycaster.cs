@@ -51,7 +51,7 @@ namespace CurvedUI
         float objectsUnderGazeLastChangeTime;
         bool gazeClickExecuted = false;
         bool pointingAtCanvas = false;
-
+        bool pointingAtCanvasLastFrame = false;
 
 
 
@@ -67,6 +67,10 @@ namespace CurvedUI
             //the canvas needs an event camera set up to process events correctly. Try to use main camera if no one is provided.
             if (myCanvas.worldCamera == null && Camera.main != null)
                 myCanvas.worldCamera = Camera.main;
+
+            //this must be set to false to make sure proper interactions.
+            //Otherwise, Unity may ignore Selectables on edges of heavily curved canvas.
+            ignoreReversedGraphics = false;
         }
 
         protected override void Start()
@@ -76,14 +80,6 @@ namespace CurvedUI
 
         protected virtual void Update()
         {
-            // a way to reset GazeClick when user look away from the canvas
-            // not needed in most projects, but left here for reference.
-            //if (!pointingAtCanvas)
-            //{
-            //    ResetGazeTimedClick();
-            //    return;
-            //}
-
             //Gaze click process.
             if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.GAZE && CurvedUIInputModule.Instance.GazeUseTimedClick)
             {
@@ -100,24 +96,30 @@ namespace CurvedUI
                     selectablesUnderGaze.AddRange(objectsUnderPointer);
                     selectablesUnderGaze.RemoveAll(delegate (GameObject obj)
                     {
-                        return obj.GetComponent<Selectable>() == null;
+                        return obj.GetComponent<Selectable>() == null || obj.GetComponent<Selectable>().interactable == false;
                     });
+
+                    //Animate progress bar
+                    if (GazeProgressImage)
+                    {
+                        if (GazeProgressImage.type != Image.Type.Filled)
+                            GazeProgressImage.type = Image.Type.Filled;
+
+                        GazeProgressImage.fillAmount =
+                            (Time.time - objectsUnderGazeLastChangeTime).RemapAndClamp(CurvedUIInputModule.Instance.GazeClickTimerDelay, CurvedUIInputModule.Instance.GazeClickTimer + CurvedUIInputModule.Instance.GazeClickTimerDelay, 0, 1);
+                    }
                 }
-                else //not poiting at canvas, reset the timer.
+                else if (!pointingAtCanvas && pointingAtCanvasLastFrame) //first frame after gaze pointer leaves this canvas.
+                { 
+                    //not poiting at canvas, reset the timer.
                     ResetGazeTimedClick();
 
-
-                //Animate progress bar
-                if (CurvedUIInputModule.Instance.GazeTimedClickProgressImage != null)
-                {
-                    if (CurvedUIInputModule.Instance.GazeTimedClickProgressImage.type != Image.Type.Filled)
-                        CurvedUIInputModule.Instance.GazeTimedClickProgressImage.type = Image.Type.Filled;
-
-                    CurvedUIInputModule.Instance.GazeTimedClickProgressImage.fillAmount =
-                        (Time.time - objectsUnderGazeLastChangeTime).RemapAndClamp(CurvedUIInputModule.Instance.GazeClickTimerDelay, CurvedUIInputModule.Instance.GazeClickTimer + CurvedUIInputModule.Instance.GazeClickTimerDelay, 0, 1);
+                    if (GazeProgressImage)
+                        GazeProgressImage.fillAmount = 0;
                 }
+            }
 
-            } 
+            pointingAtCanvasLastFrame = pointingAtCanvas;
 
             //reset this variable. It will be checked again during next Raycast method run.
             pointingAtCanvas = false;
@@ -175,7 +177,19 @@ namespace CurvedUI
 
             //check if we have a world camera to process events by
             if (myCanvas.worldCamera == null)
-                Debug.LogWarning("CurvedUIRaycaster requires Canvas to have a world camera reference to process events!", myCanvas.gameObject);
+            {
+                //try assigning main came
+                if (Camera.main)
+                    myCanvas.worldCamera = Camera.main;
+
+                //nope, no luck
+                if (myCanvas.worldCamera == null)
+                {
+                    Debug.LogWarning("CurvedUI: No WORLD CAMERA assigned to Canvas "+this.gameObject.name+" to use for event processing!", myCanvas.gameObject);
+                    return;
+                }    
+            }
+          
 
             Camera worldCamera = myCanvas.worldCamera;
             Ray ray3D;
@@ -986,6 +1000,10 @@ namespace CurvedUI
 
 
         #region SUPPORT FUNCTIONS
+        Image GazeProgressImage {
+            get { return CurvedUIInputModule.Instance.GazeTimedClickProgressImage; }
+        }
+
         /// <summary>
         /// Determine the signed angle between two vectors, with normal 'n'
         /// as the rotation axis.
@@ -1271,13 +1289,29 @@ namespace CurvedUI
         {
             for (int i = 0; i < GetObjectsUnderPointer().Count; i++)
             {
-                if (GetObjectsUnderPointer()[i].GetComponent<Slider>())//slider requires a diffrent event to click.
+                if (GetObjectsUnderPointer()[i].GetComponent<Slider>())//slider requires a diffrent way to click.
                 {
-                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerDownHandler); 
-                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerUpHandler);
+                    //Click calculated via RectTransformUtility - that's the way Slider class does it under the hood.
+                    Slider m_slider = GetObjectsUnderPointer()[i].GetComponent<Slider>();
+                    Vector2 clickPoint;
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle((m_slider.handleRect.parent as RectTransform), lastFrameEventData.position, myCanvas.worldCamera, out clickPoint);
+                    clickPoint -= m_slider.handleRect.parent.GetComponent<RectTransform>().rect.position;
+                    m_slider.normalizedValue = clickPoint.x / (m_slider.handleRect.parent as RectTransform).rect.width;
+
+
+                    //prompt update from fill Graphic to avoid flicker
+                    GetObjectsUnderPointer()[i].GetComponent<Slider>().fillRect.GetComponent<Graphic>().SetAllDirty();
+
+
+                    //log
+                    //Debug.Log("x: " + clickPoint.x + ", width:" + (m_slider.transform as RectTransform).rect.width + ", value:" + clickPoint.x / (m_slider.transform as RectTransform).rect.width);
                 }
                 else
-                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], new PointerEventData(EventSystem.current), ExecuteEvents.pointerClickHandler); //all other ui objects
+                {
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerDownHandler);
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerClickHandler);
+                    ExecuteEvents.Execute(GetObjectsUnderPointer()[i], lastFrameEventData, ExecuteEvents.pointerUpHandler);
+                }
             }
         }
         #endregion

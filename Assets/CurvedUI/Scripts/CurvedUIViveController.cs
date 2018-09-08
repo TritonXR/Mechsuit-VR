@@ -209,12 +209,12 @@ namespace CurvedUI
 			}
 
 			//ApplicationMenu
-			if (device.GetTouchDown(SteamVR_Controller.ButtonMask.ApplicationMenu))
+			if (device.GetPressDown(SteamVR_Controller.ButtonMask.ApplicationMenu))
 			{
 				OnApplicationMenuClicked(SetButtonEvent(ref applicationMenuPressed, true, 1f));
 
 			}
-			else if (device.GetTouchUp(SteamVR_Controller.ButtonMask.ApplicationMenu))
+			else if (device.GetPressUp(SteamVR_Controller.ButtonMask.ApplicationMenu))
 			{
 
 				OnApplicationMenuUnclicked(SetButtonEvent(ref applicationMenuPressed, false, 0f));
@@ -222,16 +222,17 @@ namespace CurvedUI
 			}
 
 			//Grip
-			if (device.GetTouchDown(SteamVR_Controller.ButtonMask.Grip))
+			if (device.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
 			{
 				OnGripClicked(SetButtonEvent(ref gripPressed, true, 1f));
 
 			}
-			else if (device.GetTouchUp(SteamVR_Controller.ButtonMask.Grip))
+			else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
 			{
 				OnGripUnclicked(SetButtonEvent(ref gripPressed, false, 0f));
-
 			}
+
+     
 
 			//Touchpad Clicked
 			if (device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))

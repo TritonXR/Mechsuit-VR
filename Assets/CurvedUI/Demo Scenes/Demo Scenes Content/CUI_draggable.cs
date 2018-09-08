@@ -61,7 +61,7 @@ namespace CurvedUI
             }
             else if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.GAZE)
             {
-                //position when using gaze
+                //position when using gaze - uses the center of the screen as guiding point.
                 GetComponentInParent<CurvedUISettings>().RaycastToCanvasSpace(Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2.0f, Screen.height / 2.0f)), out newPos);
             }
             else newPos = Vector2.zero;

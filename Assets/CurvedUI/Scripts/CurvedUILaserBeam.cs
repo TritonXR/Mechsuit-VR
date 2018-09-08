@@ -16,6 +16,8 @@ namespace CurvedUI
         [SerializeField]
         Transform LaserBeamDot;
         [SerializeField]
+        bool CollideWithMyLayerOnly = false;
+        [SerializeField]
         bool hideWhenNotAimingAtCanvas = false;
 
 
@@ -32,8 +34,18 @@ namespace CurvedUI
                 //change the laser's length depending on where it hits
                 float length = 10000;
 
+
+                //create layerMaskwe're going to use for raycasting
+                int myLayerMask = -1;
+                if (CollideWithMyLayerOnly)
+                {
+                    //lm with my own layer only.
+                    myLayerMask = 1 << this.gameObject.layer;
+                }
+
+
                 RaycastHit hit;
-                if (Physics.Raycast(myRay, out hit, length))
+                if (Physics.Raycast(myRay, out hit, length, myLayerMask))
                 {
                     length = Vector3.Distance(hit.point, this.transform.position);
 

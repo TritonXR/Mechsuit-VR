@@ -112,9 +112,12 @@ public class CurvedUIInputModule : StandaloneInputModule {
     Transform TouchControllerTransform;
     [SerializeField]
     OVRInput.Button InteractionButton = OVRInput.Button.PrimaryIndexTrigger;
+    [SerializeField]
+    OVRCameraRig oculusCameraRig;
+
 
     //Support variables - Touch
-    private OVRCameraRig oculusRig;
+    private OVRInput.Controller activeCont;
 #endif
 
 
@@ -130,8 +133,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
 #if CURVEDUI_GOOGLEVR
 
 
-
-
 #else // CURVEDUI_GOOGLEVR ELSE
 
     protected override void Awake(){
@@ -141,21 +142,19 @@ public class CurvedUIInputModule : StandaloneInputModule {
 		base.Awake ();
 
 
-        //gaze setup
+        //Gaze setup
         if (gazeTimedClickProgressImage != null)
             gazeTimedClickProgressImage.fillAmount = 0;
 
-
-
-        //steamvr setup
+        //SteamVR setup
 #if CURVEDUI_VIVE
 		//SEtup controllers for vive
 		if(ControlMethod == CUIControlMethod.STEAMVR)
 		SetupViveControllers();
 #endif
-
-
     }
+
+
 
     protected override void Start()
     {
@@ -164,21 +163,27 @@ public class CurvedUIInputModule : StandaloneInputModule {
         base.Start();
 
 
-        //oculus touchs setup
+        //OculusVR setup
 #if CURVEDUI_TOUCH
-        //find the oculus rig - via manager or by findObjectOfType, if unavailable
-        if (OVRManager.instance != null)
+        if (oculusCameraRig == null)
         {
-            oculusRig = OVRManager.instance.GetComponent<OVRCameraRig>();
+            //find the oculus rig - via manager or by findObjectOfType, if unavailable
+            if (OVRManager.instance != null)
+            {
+                oculusCameraRig = OVRManager.instance.GetComponent<OVRCameraRig>();
+            }
+
+            if (oculusCameraRig == null)
+            {
+                oculusCameraRig = Object.FindObjectOfType<OVRCameraRig>();
+            }
+
+            if (oculusCameraRig == null && ControlMethod == CUIControlMethod.OCULUSVR)
+            {
+                Debug.LogError("OVRCameraRig prefab required. Import Oculus Utilities and drag OVRCameraRig prefab onto the scene.");
+            }            
         }
 
-        if (oculusRig == null)
-        {
-            oculusRig = Object.FindObjectOfType<OVRCameraRig>();
-        }
-
-        if (oculusRig == null && ControlMethod == CUIControlMethod.OCULUSVR)
-            Debug.LogError("OVRCameraRig prefab required. Import Oculus Utilities and drag OVRCameraRig prefab onto the scene.");
 #endif
     }
 
@@ -239,11 +244,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
 				ProcessCustomRayController();
 				break;
 			}
-//		case CUIControlMethod.DAYDREAM: //deprecated
-//			{
-//				ProcessCustomRayController();
-//				break;
-//			}
 		default: goto case CUIControlMethod.MOUSE;
 		}
 	}
@@ -578,121 +578,54 @@ public class CurvedUIInputModule : StandaloneInputModule {
     {
 #if CURVEDUI_TOUCH
 
-        //find if we're using Rift with touch. Hand differentiation will only be used for those.
-        bool touchControllersUsed =  OVRInput.GetActiveController() == OVRInput.Controller.Touch ||
-                                     OVRInput.GetActiveController() == OVRInput.Controller.LTouch ||
-                                     OVRInput.GetActiveController() == OVRInput.Controller.RTouch;
+        activeCont = OVRInput.GetActiveController();
 
 
-        // check the state of the interaction button
-        if (usedHand == Hand.Both || !touchControllersUsed)
+        //Find the currently used HandAnchor----------------------//
+        //and set direction ray using its transform
+        switch (activeCont)
         {
-            CustomControllerButtonDown = OVRInput.Get(InteractionButton);
+            //Oculus Touch
+            case OVRInput.Controller.RTouch: CustomControllerRay = new Ray(oculusCameraRig.rightHandAnchor.position, oculusCameraRig.rightHandAnchor.forward); break;
+            case OVRInput.Controller.LTouch: CustomControllerRay = new Ray(oculusCameraRig.leftHandAnchor.position, oculusCameraRig.leftHandAnchor.forward); break;
+            //GearVR touchpad
+            case OVRInput.Controller.Touchpad: CustomControllerRay = new Ray(oculusCameraRig.centerEyeAnchor.position, oculusCameraRig.centerEyeAnchor.forward); break;
+            //GearVR controller / Oculus Go controller
+            case OVRInput.Controller.RTrackedRemote: goto case OVRInput.Controller.RTouch;
+            case OVRInput.Controller.LTrackedRemote: goto case OVRInput.Controller.LTouch;
+            //edge cases
+            default: CustomControllerRay = new Ray(OculusTouchUsedControllerTransform.position, OculusTouchUsedControllerTransform.forward); break;
         }
-        else if (usedHand == Hand.Right)
+
+
+
+        //Check if interaction button is pressed ---------------//
+
+        //find if we're using Rift with touch. If yes, we'll have to check if the interaction button is pressed on the proper hand.
+        bool touchControllersUsed = (activeCont == OVRInput.Controller.Touch || activeCont == OVRInput.Controller.LTouch || activeCont == OVRInput.Controller.RTouch);
+
+        if (usedHand == Hand.Both || !touchControllersUsed) 
+        {
+            //check if this button is pressed on any controller. Handles GearVR controller and Oculus Go controller.
+            CustomControllerButtonDown = OVRInput.Get(InteractionButton);
+
+            //on GearVR, also check touchpad, as a secondary, optional input.
+            if (activeCont == OVRInput.Controller.Touchpad)
+                CustomControllerButtonDown = CustomControllerButtonDown || OVRInput.Get(OVRInput.Button.PrimaryTouchpad);
+        }
+        else if (usedHand == Hand.Right) // Right Oculus Touch
         {
             CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.RTouch);
         }
-        else if (usedHand == Hand.Left)
+        else if (usedHand == Hand.Left)  // Left Oculus Touch
         {
             CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.LTouch);
         }
 
-        //set direction ray
-        CustomControllerRay = new Ray(OculusTouchUsedControllerTransform.position, OculusTouchUsedControllerTransform.forward);
+        
 
-        //process all events based on this data
-        ProcessOculusTouchEventData();
-	}
-
-    protected virtual void ProcessOculusTouchEventData()
-    {
-        //lets get mouse event data - we're going to edit it and use it for touch controllers
-        PointerEventData eventData = GetMousePointerEventData(0).GetButtonState(PointerEventData.InputButton.Left).eventData.buttonData;
-
-        //pointer down interactions
-        if (pressedDown && !pressedLastFrame)
-        {
-            GameObject currentOverGo = eventData.pointerCurrentRaycast.gameObject;
-
-            eventData.eligibleForClick = true;
-            eventData.delta = Vector2.zero;
-            eventData.dragging = false;
-            eventData.useDragThreshold = true;
-            eventData.pressPosition = eventData.position;
-            eventData.pointerPressRaycast = eventData.pointerCurrentRaycast;
-
-            DeselectIfSelectionChanged(currentOverGo, eventData);
-
-            if (eventData.pointerEnter != currentOverGo)
-            {
-                // send a pointer enter to the touched element if it isn't the one to select...
-                HandlePointerExitAndEnter(eventData, currentOverGo);
-                eventData.pointerEnter = currentOverGo;
-            }
-
-            // search for the control that will receive the press
-            // if we can't find a press handler set the press
-            // handler to be what would receive a click.
-            var newPressed = ExecuteEvents.ExecuteHierarchy(currentOverGo, eventData, ExecuteEvents.pointerDownHandler);
-
-            // didnt find a press handler... search for a click handler
-            if (newPressed == null)
-                newPressed = ExecuteEvents.GetEventHandler<IPointerClickHandler>(currentOverGo);
-
-
-            float time = Time.unscaledTime;
-            if (newPressed == eventData.lastPress)
-            {
-                var diffTime = time - eventData.clickTime;
-                if (diffTime < 0.3f)
-                    ++eventData.clickCount;
-                else
-                    eventData.clickCount = 1;
-
-                eventData.clickTime = time;
-            }
-            else eventData.clickCount = 1;
-
-            eventData.pointerPress = newPressed;
-            eventData.rawPointerPress = currentOverGo;
-            eventData.clickTime = time;
-
-            // Save the drag handler as well
-            eventData.pointerDrag = ExecuteEvents.GetEventHandler<IDragHandler>(currentOverGo);
-
-            if (eventData.pointerDrag != null)
-                ExecuteEvents.Execute(eventData.pointerDrag, eventData, ExecuteEvents.initializePotentialDrag);
-
-        }
-        else if (!pressedDown && pressedLastFrame) //pointer up interactions
-        {
-            //if we did not move the pointer since the begining, this is a click.
-            if (eventData.pointerPress == eventData.selectedObject/*Vector2.Distance (eventData.position, eventData.pressPosition) < dragThreshold*/)
-            {
-                ExecuteEvents.Execute(eventData.selectedObject, eventData, ExecuteEvents.pointerClickHandler);
-            }
-
-            //execute pointer up events
-            ExecuteEvents.Execute(eventData.selectedObject, eventData, ExecuteEvents.pointerUpHandler);
-
-            //process end drag - done differently now
-            //if (eventData.pointerDrag != null && eventData.dragging) {
-            ExecuteEvents.Execute(eventData.pointerDrag, eventData, ExecuteEvents.endDragHandler);
-            eventData.dragging = false;
-            eventData.pointerDrag = null;
-            //}
-        }
-
-        if (eventData.IsPointerMoving())
-        {
-            ProcessDrag(eventData);
-            ProcessMove(eventData);
-        }
-
-        //save button state for this frame
-        pressedLastFrame = pressedDown;
-    
+        //process all events based on this data--------------//
+        ProcessCustomRayController();
 #endif // END OF CURVEDUI_TOUCH IF
     }
     #endregion
@@ -896,7 +829,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
         get { return gazeTimedClickProgressImage; }
         set { gazeTimedClickProgressImage = value; }
     }
-    
+
 
 
 #if CURVEDUI_VIVE
@@ -954,16 +887,19 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 
 #if CURVEDUI_TOUCH
+    public OVRCameraRig OculusCameraRig {
+        get { return oculusCameraRig; }
+        set {  oculusCameraRig = value;  }
+    }
+
+
     public OVRInput.Button OculusTouchInteractionButton {
         get { return InteractionButton; }
-        set
-        {
-            InteractionButton = value;
-        }
+        set  {  InteractionButton = value;  }
     }
 
     public Transform OculusTouchUsedControllerTransform {
-        get { return UsedHand == Hand.Left ? oculusRig.leftHandAnchor : oculusRig.rightHandAnchor; }
+        get { return UsedHand == Hand.Left ? oculusCameraRig.leftHandAnchor : oculusCameraRig.rightHandAnchor; }
     }
 #endif // CURVEDUI_TOUCH
 

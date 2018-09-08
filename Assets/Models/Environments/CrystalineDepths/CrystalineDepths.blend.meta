@@ -1,34 +1,45 @@
 fileFormatVersion: 2
-guid: 046bcdc7a95b9524a93ac02044952c00
+guid: 5613bf46de4b94c4aa9984de44ceb374
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Cylinder
-    100002: Cylinder_001
+    100000: ArenaBase1
+    100002: Cone
     100004: //RootNode
-    400000: Cylinder
-    400002: Cylinder_001
+    100006: Cube
+    100008: KPCircle
+    100010: KPSquare
+    400000: ArenaBase1
+    400002: Cone
     400004: //RootNode
-    2300000: Cylinder
-    2300002: Cylinder_001
-    3300000: Cylinder
-    3300002: Cylinder_001
-    4300000: Cylinder_001
-    4300002: Cylinder
+    400006: Cube
+    400008: KPCircle
+    400010: KPSquare
+    2100000: unnamed
+    2300000: ArenaBase1
+    2300002: Cone
+    2300004: Cube
+    2300006: KPCircle
+    2300008: KPSquare
+    3300000: ArenaBase1
+    3300002: Cone
+    3300004: Cube
+    3300006: KPCircle
+    3300008: KPSquare
+    4300000: Cube
+    4300002: KPSquare
+    4300004: Cone
+    4300006: KPCircle
+    4300008: ArenaBase1
     7400000: Default Take
     9500000: //RootNode
     2186277476908879412: ImportLogs
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: unnamed
-    second: {fileID: 2100000, guid: d37d48eaeef3b25448e58db4c50aaa49, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -68,7 +79,7 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    indexFormat: 1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88

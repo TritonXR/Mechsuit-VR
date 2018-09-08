@@ -68,6 +68,9 @@ namespace CurvedUI {
         GUI.changed = false;
         EditorGUIUtility.labelWidth = 150;
 
+            //show version
+            GUILayout.Label("Version 2.6p2", EditorStyles.miniLabel);
+
             //vr event system warning
             if (PlayerSettings.virtualRealitySupported && CUIeventSystemPresent == false) //vr enabled reports wrong value on some versions
             {
@@ -138,7 +141,7 @@ namespace CurvedUI {
 
 
             //advanced settings
-            GUILayout.Space(20);
+            GUILayout.Space(30);
 
         if (!ShowAdvaced) {
 			//show advanced settings enable button
@@ -191,14 +194,15 @@ namespace CurvedUI {
             }
             GUILayout.EndHorizontal();
 
-                //documentation link
+            //documentation link
             GUILayout.Space(20);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Documentation", GUILayout.Width(146));
             if (GUILayout.Button("Open in web browser")) Help.BrowseURL("https://docs.google.com/document/d/10hNcvOMissNbGgjyFyV1MS7HwkXXE6270A6Ul8h8pnQ/edit");
                 GUILayout.EndHorizontal();
+            }
 
-            } 
+            GUILayout.Space(20);
 
             //final settings
             if (GUI.changed && myTarget != null)
@@ -335,7 +339,7 @@ namespace CurvedUI {
 
 			GUILayout.EndVertical();
             GUILayout.EndHorizontal();
-            GUILayout.Space(40);
+            GUILayout.Space(20);
         }
 
 
@@ -394,7 +398,10 @@ namespace CurvedUI {
             GUILayout.Space(10);
         }
 
-
+        bool CustomDefinePresent(string define)
+        {
+            return PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup).Contains(define);
+        }
 
 
     /// <summary>

@@ -276,12 +276,17 @@ namespace CurvedUI
 
             //TextMeshPro experimental support. Go to CurvedUITMP.cs to learn how to enable it.
 #if CURVEDUI_TMP || TMP_PRESENT
-		foreach(TextMeshProUGUI tmp in GetComponentsInChildren<TextMeshProUGUI>(true)){
-			if(tmp.GetComponent<CurvedUITMP>() == null){
-				tmp.gameObject.AddComponent<CurvedUITMP>();
-				tmp.SetAllDirty();
-			}
-		}
+		    foreach(TextMeshProUGUI tmp in GetComponentsInChildren<TextMeshProUGUI>(true)){
+			    if(tmp.GetComponent<CurvedUITMP>() == null){
+				    tmp.gameObject.AddComponent<CurvedUITMP>();
+				    tmp.SetAllDirty();
+			    }
+		    }
+
+            foreach (TMP_InputField tmp in GetComponentsInChildren<TMP_InputField>(true))
+            {
+                tmp.AddComponentIfMissing<CurvedUITMPInputFieldCaret>();
+            }
 #endif
         }
 
