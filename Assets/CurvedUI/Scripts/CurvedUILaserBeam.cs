@@ -54,7 +54,7 @@ namespace CurvedUI
                     if (cuiSettings != null)
                     {
                         //find if there are any canvas objects we're pointing at. we only want transforms with graphics to block the pointer. (that are drawn by canvas => depth not -1)
-                        int selectablesUnderPointer = cuiSettings.GetObjectsUnderPointer().FindAll(x => x.GetComponent<Graphic>() != null && x.GetComponent<Graphic>().depth != -1).Count;
+                        int selectablesUnderPointer = cuiSettings.GetObjectsUnderPointer().FindAll(x => x != null && x.GetComponent<Graphic>() != null && x.GetComponent<Graphic>().depth != -1).Count;
 
                         length = selectablesUnderPointer == 0 ? 10000 : Vector3.Distance(hit.point, this.transform.position);
                     }

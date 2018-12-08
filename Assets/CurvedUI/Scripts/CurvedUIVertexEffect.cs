@@ -131,7 +131,7 @@ namespace CurvedUI
 
                 if (myPosOnCanvas.z.Abs() > 0.1f)
                 {
-                    Debug.LogWarning("CurvedUI: The Pos Z of " + GetComponent<Selectable>().GetType().Name + " \"" + this.gameObject.name + "\" is not 0 in relation to the canvas. The interactions may not be perfectly accurate.", this.gameObject);
+                    Debug.LogWarning("CurvedUI: The Z position of \"" + this.gameObject.name + "\" "  + GetComponent<Selectable>().GetType().Name + ", or one of its parents is not 0 in relation to the canvas. The interactions may not be accurate.", this.gameObject);
                 }
             }
         }
@@ -168,7 +168,7 @@ namespace CurvedUI
         }
 
 
-        void Update()
+        void LateUpdate()
         {
 #if CURVEDUI_TMP || TMP_PRESENT  // CurvedUITMP handles updates for TextMeshPro objects.
             if (myTMP || myTMPSubMesh) return;

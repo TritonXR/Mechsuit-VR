@@ -8,7 +8,7 @@ namespace CurvedUI
 	/// </summary>
 	public class CurvedUIViveController : MonoBehaviour
 	{
-		#if CURVEDUI_VIVE
+		#if CURVEDUI_STEAMVR_LEGACY
 	
 
 		#region settings

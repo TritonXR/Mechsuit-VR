@@ -44,6 +44,11 @@ namespace CurvedUI
         Vector2 lastCanvasPos = Vector2.zero;
         GameObject colliderContainer;
         PointerEventData lastFrameEventData;
+        PointerEventData curEventData;
+        PointerEventData eventDataToUse;
+        Camera cachedWorldCamera;
+        Ray cachedRay;
+        Graphic gph;
 
         //gaze click
         List<GameObject> selectablesUnderGaze = new List<GameObject>();
@@ -189,10 +194,8 @@ namespace CurvedUI
                     return;
                 }    
             }
-          
 
-            Camera worldCamera = myCanvas.worldCamera;
-            Ray ray3D;
+            cachedWorldCamera = myCanvas.worldCamera;
 
             //get a ray to raycast with depending on the control method
             switch (CurvedUIInputModule.ControlMethod)
@@ -200,46 +203,35 @@ namespace CurvedUI
                 case CurvedUIInputModule.CUIControlMethod.MOUSE:
                 {
                     // Get a ray from the camera through the point on the screen - used for mouse input
-                    ray3D = worldCamera.ScreenPointToRay(eventData.position);
+                    cachedRay = cachedWorldCamera.ScreenPointToRay(eventData.position);
                     break;
                 }
                 case CurvedUIInputModule.CUIControlMethod.GAZE:
                 {
                     //get a ray from the center of world camera. used for gaze input
-                    ray3D = new Ray(worldCamera.transform.position, worldCamera.transform.forward);
+                    cachedRay = new Ray(cachedWorldCamera.transform.position, cachedWorldCamera.transform.forward);
 
                     UpdateSelectedObjects(eventData);
-
                     break;
                 }
                 case CurvedUIInputModule.CUIControlMethod.WORLD_MOUSE:
                 {
-                    // Get a ray set in CustromControllerRay property
-                    ray3D = new Ray(worldCamera.transform.position, (mySettings.CanvasToCurvedCanvas(CurvedUIInputModule.Instance.WorldSpaceMouseInCanvasSpace) - myCanvas.worldCamera.transform.position));
+                    cachedRay = new Ray(cachedWorldCamera.transform.position, (mySettings.CanvasToCurvedCanvas(CurvedUIInputModule.Instance.WorldSpaceMouseInCanvasSpace) - myCanvas.worldCamera.transform.position));
                     break;
                 }
-                case CurvedUIInputModule.CUIControlMethod.STEAMVR:
+                case CurvedUIInputModule.CUIControlMethod.STEAMVR_LEGACY:
                 {
-#if CURVEDUI_VIVE
-					// Get a ray from proper controller.
-                    if ((eventData as CurvedUIPointerEventData).Controller == CurvedUIInputModule.Right.gameObject)
-                    {
-                        ray3D = new Ray(CurvedUIInputModule.Right.PointingOrigin, CurvedUIInputModule.Right.PointingDirection);
-                    }
-                    else if ((eventData as CurvedUIPointerEventData).Controller == CurvedUIInputModule.Left.gameObject)
-                    {
-                        ray3D = new Ray(CurvedUIInputModule.Left.PointingOrigin, CurvedUIInputModule.Left.PointingDirection);
-                    }
-                    else
-                    {
-                        ray3D = new Ray();
-                        Debug.LogWarning("CurvedUI: Unknown controller");
-                    }
-
+                    cachedRay = new Ray(CurvedUIInputModule.Instance.ControllerPointingOrigin, CurvedUIInputModule.Instance.ControllerPointingDirection);
                     break;
-#else
+                }
+                case CurvedUIInputModule.CUIControlMethod.GOOGLEVR:
+                {
+                    cachedRay = new Ray(CurvedUIInputModule.Instance.ControllerPointingOrigin, CurvedUIInputModule.Instance.ControllerPointingDirection);
+                    break;
+                }
+                case CurvedUIInputModule.CUIControlMethod.STEAMVR_2:
+                {
                     goto case CurvedUIInputModule.CUIControlMethod.CUSTOM_RAY;
-#endif
                 }
                 case CurvedUIInputModule.CUIControlMethod.OCULUSVR:
                 {
@@ -247,57 +239,43 @@ namespace CurvedUI
                 }
                 case CurvedUIInputModule.CUIControlMethod.CUSTOM_RAY:
                 {
-                    // Get a ray set in CustromControllerRay property
-                    ray3D = CurvedUIInputModule.CustomControllerRay;
-                    //ProcessMove(eventData);
+                    cachedRay = CurvedUIInputModule.CustomControllerRay;
 
                     UpdateSelectedObjects(eventData);
                     break;
                 }
-//                case CurvedUIInputModule.CUIControlMethod.DAYDREAM: //deprecated
-//                {
-//                    goto case CurvedUIInputModule.CUIControlMethod.CUSTOM_RAY;
-//                }
-                case CurvedUIInputModule.CUIControlMethod.GOOGLEVR:
-                {
-#if CURVEDUI_GOOGLEVR
-					ray3D = new Ray(GvrPointerInputModule.Pointer.PointerTransform.position, GvrPointerInputModule.Pointer.PointerTransform.forward);
-					break;
-#else
-					Debug.LogError("CURVEDUI: Missing GoogleVR support code. Enable GoogleVR control method on CurvedUISettings component.");
-                    goto case CurvedUIInputModule.CUIControlMethod.GAZE;
-#endif 
-                }
                 default:
                 {
-                    ray3D = new Ray();
+                    cachedRay = new Ray();
                     break;
                 }
             }
 
 
-            //Create a copy of the eventData to be used by this canvas. This allows
-            PointerEventData newEventData = new PointerEventData(EventSystem.current);
+            //Create a copy of the eventData to be used by this canvas. 
+            if(curEventData == null)
+                curEventData = new PointerEventData(EventSystem.current);
+
             if (!overrideEventData)
             {
-                newEventData.pointerEnter = eventData.pointerEnter;
-                newEventData.rawPointerPress = eventData.rawPointerPress;
-                newEventData.pointerDrag = eventData.pointerDrag;
-                newEventData.pointerCurrentRaycast = eventData.pointerCurrentRaycast;
-                newEventData.pointerPressRaycast = eventData.pointerPressRaycast;
-                newEventData.hovered = new List<GameObject>();
-                newEventData.hovered.AddRange(eventData.hovered);
-                newEventData.eligibleForClick = eventData.eligibleForClick;
-                newEventData.pointerId = eventData.pointerId;
-                newEventData.position = eventData.position;
-                newEventData.delta = eventData.delta;
-                newEventData.pressPosition = eventData.pressPosition;
-                newEventData.clickTime = eventData.clickTime;
-                newEventData.clickCount = eventData.clickCount;
-                newEventData.scrollDelta = eventData.scrollDelta;
-                newEventData.useDragThreshold = eventData.useDragThreshold;
-                newEventData.dragging = eventData.dragging;
-                newEventData.button = eventData.button;
+                curEventData.pointerEnter = eventData.pointerEnter;
+                curEventData.rawPointerPress = eventData.rawPointerPress;
+                curEventData.pointerDrag = eventData.pointerDrag;
+                curEventData.pointerCurrentRaycast = eventData.pointerCurrentRaycast;
+                curEventData.pointerPressRaycast = eventData.pointerPressRaycast;
+                curEventData.hovered.Clear();
+                curEventData.hovered.AddRange(eventData.hovered);
+                curEventData.eligibleForClick = eventData.eligibleForClick;
+                curEventData.pointerId = eventData.pointerId;
+                curEventData.position = eventData.position;
+                curEventData.delta = eventData.delta;
+                curEventData.pressPosition = eventData.pressPosition;
+                curEventData.clickTime = eventData.clickTime;
+                curEventData.clickCount = eventData.clickCount;
+                curEventData.scrollDelta = eventData.scrollDelta;
+                curEventData.useDragThreshold = eventData.useDragThreshold;
+                curEventData.dragging = eventData.dragging;
+                curEventData.button = eventData.button;
             }
 
 
@@ -318,22 +296,22 @@ namespace CurvedUI
                 {
                     case CurvedUISettings.CurvedUIShape.CYLINDER:
                     {
-                        if (!RaycastToCyllinderCanvas(ray3D, out remappedPosition, false)) return;
+                        if (!RaycastToCyllinderCanvas(cachedRay, out remappedPosition, false)) return;
                         break;
                     }
                     case CurvedUISettings.CurvedUIShape.CYLINDER_VERTICAL:
                     {
-                        if (!RaycastToCyllinderVerticalCanvas(ray3D, out remappedPosition, false)) return;
+                        if (!RaycastToCyllinderVerticalCanvas(cachedRay, out remappedPosition, false)) return;
                         break;
                     }
                     case CurvedUISettings.CurvedUIShape.RING:
                     {
-                        if (!RaycastToRingCanvas(ray3D, out remappedPosition, false)) return;
+                        if (!RaycastToRingCanvas(cachedRay, out remappedPosition, false)) return;
                         break;
                     }
                     case CurvedUISettings.CurvedUIShape.SPHERE:
                     {
-                        if (!RaycastToSphereCanvas(ray3D, out remappedPosition, false)) return;
+                        if (!RaycastToSphereCanvas(cachedRay, out remappedPosition, false)) return;
                         break;
                     }
                 }
@@ -344,7 +322,7 @@ namespace CurvedUI
 
                 //Creating eventData for canvas Raycasting -------------------//
                 //Which eventData were going to use?
-                PointerEventData eventDataToUse = overrideEventData ? eventData : newEventData;
+                eventDataToUse = overrideEventData ? eventData : curEventData;
 
                 // Swap event data pressPosition to our remapped pos if this is the frame of the press
                 if (eventDataToUse.pressPosition == eventDataToUse.position)
@@ -356,27 +334,14 @@ namespace CurvedUI
 
 
 
-
                 //Scroll Handling---------------------------------------------//
                 //We must handle scroll a little differently on these platforms
-                if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.STEAMVR)
+                if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.STEAMVR_LEGACY)
                 {
                     eventDataToUse.delta = remappedPosition - lastCanvasPos;
                     lastCanvasPos = remappedPosition;
                 }
-                //else if (CurvedUIInputModule.ControlMethod == CurvedUIInputModule.CUIControlMethod.GAZE)
-                //{
-                //    //Test for selected object being dragged and initialize dragging, if needed.
-                //    //We do this here to trick unity's StandAloneInputModule into thinking we used a touch or mouse to do it.
-                //    if (eventData.IsPointerMoving() && eventData.pointerDrag != null && !eventData.dragging
-                //    && ShouldStartDrag(eventData.pressPosition, eventData.position, EventSystem.current.pixelDragThreshold, eventData.useDragThreshold))
-                //    {
-                //        ExecuteEvents.Execute(eventData.pointerDrag, eventData, ExecuteEvents.beginDragHandler);
-                //        eventData.dragging = true;
-                //    }
-                //}
             }
-
 
 
             //store objects under pointer so they can quickly retrieved if needed by other scripts
@@ -385,20 +350,9 @@ namespace CurvedUI
             lastFrameEventData = eventData;
 
             // Use base class raycast method to finish the raycast if we hit anything
-            base.Raycast(overrideEventData ? eventData : newEventData, resultAppendList);
+            base.Raycast(overrideEventData ? eventData : curEventData, resultAppendList);
 
         }
-
-
-
-		LayerMask GetLayerMaskForMyLayer(){
-			int myLayerMask = -1;
-			if (mySettings.RaycastMyLayerOnly)
-			{
-				myLayerMask = 1 << this.gameObject.layer;
-			}
-			return myLayerMask;
-		}
 
 
         public virtual bool RaycastToCyllinderCanvas(Ray ray3D, out Vector2 o_canvasPos, bool OutputInCanvasSpace = false)
@@ -1000,6 +954,13 @@ namespace CurvedUI
 
 
         #region SUPPORT FUNCTIONS
+        LayerMask GetLayerMaskForMyLayer() {
+            int myLayerMask = -1;
+            if (mySettings.RaycastMyLayerOnly)
+                myLayerMask = 1 << this.gameObject.layer;
+            return myLayerMask;
+        }
+
         Image GazeProgressImage {
             get { return CurvedUIInputModule.Instance.GazeTimedClickProgressImage; }
         }
@@ -1029,6 +990,7 @@ namespace CurvedUI
             HandlePointerExitAndEnter(pointerEvent, targetGO);
         }
 
+       
         protected void UpdateSelectedObjects(PointerEventData eventData)
         {
 
@@ -1051,7 +1013,7 @@ namespace CurvedUI
                 if (go == null) continue;
 
                 //go through only go that can be selected and are drawn by the canvas
-                Graphic gph = go.GetComponent<Graphic>();
+                gph = go.GetComponent<Graphic>();
 #if UNITY_5_1
                         if (go.GetComponent<Selectable>() != null && gph != null && gph.depth != -1)
 #else
@@ -1296,7 +1258,10 @@ namespace CurvedUI
                     Vector2 clickPoint;
                     RectTransformUtility.ScreenPointToLocalPointInRectangle((m_slider.handleRect.parent as RectTransform), lastFrameEventData.position, myCanvas.worldCamera, out clickPoint);
                     clickPoint -= m_slider.handleRect.parent.GetComponent<RectTransform>().rect.position;
-                    m_slider.normalizedValue = clickPoint.x / (m_slider.handleRect.parent as RectTransform).rect.width;
+                    if (m_slider.direction == Slider.Direction.LeftToRight || m_slider.direction == Slider.Direction.RightToLeft)
+                        m_slider.normalizedValue = clickPoint.x / (m_slider.handleRect.parent as RectTransform).rect.width;
+                    else
+                        m_slider.normalizedValue = clickPoint.y / (m_slider.handleRect.parent as RectTransform).rect.height;
 
 
                     //prompt update from fill Graphic to avoid flicker

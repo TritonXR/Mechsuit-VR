@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using CurvedUI;
 
-#if CURVEDUI_VIVE
+
+#if CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2
 using Valve.VR;
 #endif 
 
@@ -22,13 +23,13 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
     //SETTINGS-------------------------------------------------//
     #region SETTINGS
-    #pragma warning disable 414, 0649
+#pragma warning disable 414, 0649
 
     //Common
     [SerializeField]
     CUIControlMethod controlMethod;
     [SerializeField]
-    string submitButtonName = "Fire1"; 
+    string submitButtonName = "Fire1";
 
     //Gaze
     [SerializeField]
@@ -47,6 +48,14 @@ public class CurvedUIInputModule : StandaloneInputModule {
     //SteamVR and Oculus
     [SerializeField]
     Hand usedHand = Hand.Right;
+    [SerializeField]
+    Transform controllerTransformOverride;
+
+    //SteamVR 2.0 specific
+#if CURVEDUI_STEAMVR_2
+    [SerializeField]
+    SteamVR_Action_Boolean m_steamVRClickAction;
+#endif
 
     //hidden
     static bool disableOtherInputModulesOnStart = true; //default true
@@ -60,12 +69,16 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
     //COMMON VARIABLES-----------------------------------------//
     #region VARIABLES
-   
+
 
     //Support Variables - common
     static CurvedUIInputModule instance;
     GameObject currentDragging;
     GameObject currentPointedAt;
+
+    //Support Variables - handheld controllers
+    GameObject m_rightController;
+    GameObject m_leftController;
 
     //Support Variables - gaze
     float gazeTimerProgress;
@@ -74,9 +87,9 @@ public class CurvedUIInputModule : StandaloneInputModule {
     Ray customControllerRay;
 
     //support variables - other
-	float dragThreshold = 10.0f;
-	bool pressedDown = false;
-	bool pressedLastFrame = false;
+    float dragThreshold = 10.0f;
+    bool pressedDown = false;
+    bool pressedLastFrame = false;
 
     //support variables - world space mouse
     Vector3 lastMouseOnScreenPos = Vector2.zero;
@@ -91,7 +104,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
     //PLATFORM DEPENDANT VARIABLES AND SETTINGS----------------//
 
-#if CURVEDUI_VIVE
+#if CURVEDUI_STEAMVR_LEGACY
     //Settings & References - SteamVR
     [SerializeField]
     SteamVR_ControllerManager steamVRControllerManager;
@@ -105,8 +118,13 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 #endif
 
+#if CURVEDUI_STEAMVR_2
+    [SerializeField]
+    SteamVR_PlayArea steamVRPlayArea;
+#endif
 
-#if CURVEDUI_TOUCH
+
+#if CURVEDUI_OCULUSVR
     //Settings & References - Oculus SDK
     [SerializeField]
     Transform TouchControllerTransform;
@@ -135,11 +153,11 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 #else // CURVEDUI_GOOGLEVR ELSE
 
-    protected override void Awake(){
-		if (!Application.isPlaying) return;
+    protected override void Awake() {
+        if (!Application.isPlaying) return;
 
-		Instance = this;
-		base.Awake ();
+        Instance = this;
+        base.Awake();
 
 
         //Gaze setup
@@ -147,10 +165,13 @@ public class CurvedUIInputModule : StandaloneInputModule {
             gazeTimedClickProgressImage.fillAmount = 0;
 
         //SteamVR setup
-#if CURVEDUI_VIVE
+#if CURVEDUI_STEAMVR_LEGACY
 		//SEtup controllers for vive
-		if(ControlMethod == CUIControlMethod.STEAMVR)
-		SetupViveControllers();
+		if(ControlMethod == CUIControlMethod.STEAMVR_LEGACY)
+		    SetupViveControllers();
+#elif CURVEDUI_STEAMVR_2
+        if (ControlMethod == CUIControlMethod.STEAMVR_2)
+            SetupSteamVR2Controllers();
 #endif
     }
 
@@ -164,7 +185,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 
         //OculusVR setup
-#if CURVEDUI_TOUCH
+#if CURVEDUI_OCULUSVR
         if (oculusCameraRig == null)
         {
             //find the oculus rig - via manager or by findObjectOfType, if unavailable
@@ -194,85 +215,87 @@ public class CurvedUIInputModule : StandaloneInputModule {
     /// Process is called by UI system to process events 
     /// </summary>
     public override void Process()
-	{
-        //processing mouse
-        //eventSystem.SetSelectedGameObject(null, null);
-        //base.Process();
-
+    {
         switch (controlMethod)
-		{
-		case CUIControlMethod.MOUSE:
-			{
-				base.Process();
-				break;
-			}
-		case CUIControlMethod.GAZE:
-			{
-				ProcessGaze();
-				break;
-			}
-		case CUIControlMethod.STEAMVR:
-			{
-				ProcessViveControllers();
-				break;
-			}
-		case CUIControlMethod.OCULUSVR:
-			{
-				ProcessOculusVRController();
-				break;
-			}
-		case CUIControlMethod.WORLD_MOUSE:
-			{
-				//touch can also be used as a world space mouse, although its probably not the best experience
-				//Use standard mouse controller with touch.
-				if (Input.touchCount > 0)
-				{
-					worldSpaceMouseOnCanvasDelta = Input.GetTouch(0).deltaPosition * worldSpaceMouseSensitivity;
-				} else {
-					worldSpaceMouseOnCanvasDelta = new Vector2((Input.mousePosition - lastMouseOnScreenPos).x, (Input.mousePosition - lastMouseOnScreenPos).y) * worldSpaceMouseSensitivity;
-					lastMouseOnScreenPos = Input.mousePosition;
-				}
-				lastWorldSpaceMouseOnCanvas = worldSpaceMouseInCanvasSpace;
-				worldSpaceMouseInCanvasSpace += worldSpaceMouseOnCanvasDelta;
+        {
+            case CUIControlMethod.MOUSE:
+            {
+                base.Process();
+                break;
+            }
+            case CUIControlMethod.GAZE:
+            {
+                ProcessGaze();
+                break;
+            }
+            case CUIControlMethod.STEAMVR_LEGACY:
+            {
+                ProcessViveControllers();
+                break;
+            }
+            case CUIControlMethod.STEAMVR_2:
+            {
+                ProcessSteamVR2Controllers();
+                break;
+            }
+            case CUIControlMethod.OCULUSVR:
+            {
+                ProcessOculusVRController();
+                break;
+            }
+            case CUIControlMethod.WORLD_MOUSE:
+            {
+                //touch can also be used as a world space mouse, although its probably not the best experience
+                //Use standard mouse controller with touch.
+                if (Input.touchCount > 0)
+                {
+                    worldSpaceMouseOnCanvasDelta = Input.GetTouch(0).deltaPosition * worldSpaceMouseSensitivity;
+                } else {
+                    worldSpaceMouseOnCanvasDelta = new Vector2((Input.mousePosition - lastMouseOnScreenPos).x, (Input.mousePosition - lastMouseOnScreenPos).y) * worldSpaceMouseSensitivity;
+                    lastMouseOnScreenPos = Input.mousePosition;
+                }
+                lastWorldSpaceMouseOnCanvas = worldSpaceMouseInCanvasSpace;
+                worldSpaceMouseInCanvasSpace += worldSpaceMouseOnCanvasDelta;
 
-				base.Process();
+                base.Process();
 
-				break;
-			}
-		case CUIControlMethod.CUSTOM_RAY:
-			{
-				ProcessCustomRayController();
-				break;
-			}
-		default: goto case CUIControlMethod.MOUSE;
-		}
-	}
-        #endregion // EVENT PROCESSING - GENERAL
+                break;
+            }
+            case CUIControlMethod.CUSTOM_RAY:
+            {
+                ProcessCustomRayController();
+                break;
+            }
 
-
-
-        #region EVENT PROCESSING - GAZE
-	protected virtual void ProcessGaze()
-	{
-		bool usedEvent = SendUpdateEventToSelectedObject();
-
-		if (eventSystem.sendNavigationEvents)
-		{
-			if (!usedEvent)
-				usedEvent |= SendMoveEventToSelectedObject();
-
-			if (!usedEvent)
-				SendSubmitEventToSelectedObject();
-		}
-
-		ProcessMouseEvent();
-	}
-        #endregion // EVENT PROCESSING - GAZE
+            default: goto case CUIControlMethod.MOUSE;
+        }
+    }
+    #endregion // EVENT PROCESSING - GENERAL
 
 
 
-        #region EVENT PROCESSING - CUSTOM RAY
-	protected virtual void ProcessCustomRayController(){
+    #region EVENT PROCESSING - GAZE
+    protected virtual void ProcessGaze()
+    {
+        bool usedEvent = SendUpdateEventToSelectedObject();
+
+        if (eventSystem.sendNavigationEvents)
+        {
+            if (!usedEvent)
+                usedEvent |= SendMoveEventToSelectedObject();
+
+            if (!usedEvent)
+                SendSubmitEventToSelectedObject();
+        }
+
+        ProcessMouseEvent();
+    }
+    #endregion // EVENT PROCESSING - GAZE
+
+
+
+    #region EVENT PROCESSING - CUSTOM RAY
+    protected virtual void ProcessCustomRayController() {
 
         var mouseData = GetMousePointerEventData(0);
         PointerEventData eventData = mouseData.GetButtonState(PointerEventData.InputButton.Left).eventData.buttonData;
@@ -300,11 +323,9 @@ public class CurvedUIInputModule : StandaloneInputModule {
             }
         }
 
-       
-
         //save button state for this frame
         pressedLastFrame = pressedDown;
-	}
+    }
 
     /// <summary>
     /// Sends trigger down / trigger released events to gameobjects under the pointer.
@@ -416,8 +437,8 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
     #region EVENT PROCESSING - VIVE
     protected virtual void ProcessViveControllers()
-	{
-#if CURVEDUI_VIVE
+    {
+#if CURVEDUI_STEAMVR_LEGACY
         switch (usedHand)
         {
             case Hand.Right:
@@ -576,7 +597,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
     #region EVENT PROCESSING - OCULUS TOUCH
     protected virtual void ProcessOculusVRController()
     {
-#if CURVEDUI_TOUCH
+#if CURVEDUI_OCULUSVR
 
         activeCont = OVRInput.GetActiveController();
 
@@ -598,7 +619,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
         }
 
 
-
         //Check if interaction button is pressed ---------------//
 
         //find if we're using Rift with touch. If yes, we'll have to check if the interaction button is pressed on the proper hand.
@@ -607,28 +627,88 @@ public class CurvedUIInputModule : StandaloneInputModule {
         if (usedHand == Hand.Both || !touchControllersUsed) 
         {
             //check if this button is pressed on any controller. Handles GearVR controller and Oculus Go controller.
-            CustomControllerButtonDown = OVRInput.Get(InteractionButton);
+          CustomControllerButtonState = OVRInput.Get(InteractionButton);
 
             //on GearVR, also check touchpad, as a secondary, optional input.
             if (activeCont == OVRInput.Controller.Touchpad)
-                CustomControllerButtonDown = CustomControllerButtonDown || OVRInput.Get(OVRInput.Button.PrimaryTouchpad);
+                CustomControllerButtonState = CustomControllerButtonState || OVRInput.Get(OVRInput.Button.PrimaryTouchpad);
         }
         else if (usedHand == Hand.Right) // Right Oculus Touch
         {
-            CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.RTouch);
+            CustomControllerButtonState = OVRInput.Get(InteractionButton, OVRInput.Controller.RTouch);
         }
         else if (usedHand == Hand.Left)  // Left Oculus Touch
         {
-            CustomControllerButtonDown = OVRInput.Get(InteractionButton, OVRInput.Controller.LTouch);
+            CustomControllerButtonState = OVRInput.Get(InteractionButton, OVRInput.Controller.LTouch);
         }
 
         
-
         //process all events based on this data--------------//
         ProcessCustomRayController();
-#endif // END OF CURVEDUI_TOUCH IF
+#endif // END OF CURVEDUI_OCULUSVR IF
     }
     #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+    #region STEAMVR_2
+    void ProcessSteamVR2Controllers()
+#if CURVEDUI_STEAMVR_2
+    {
+        if(m_steamVRClickAction != null)
+        {
+            CustomControllerButtonState = m_steamVRClickAction.GetState(SteamVRInputSource);
+            CustomControllerRay = new Ray(ControllerTransform.transform.position, ControllerTransform.transform.forward);
+
+            ProcessCustomRayController();
+        }
+        else
+        {
+            Debug.LogError("CURVEDUI: Choose which SteamVR_Action will be used for a Click on CurvedUISettings component.");
+        }
+    }
+
+
+    void SetupSteamVR2Controllers()
+    {
+
+        if (steamVRPlayArea == null)
+            steamVRPlayArea = FindObjectOfType<SteamVR_PlayArea>();
+
+        if (steamVRPlayArea != null)
+        {
+            foreach (SteamVR_Behaviour_Pose poseComp in steamVRPlayArea.GetComponentsInChildren<SteamVR_Behaviour_Pose>(true))
+            {
+                if (poseComp.inputSource == SteamVR_Input_Sources.RightHand)
+                    m_rightController = poseComp.gameObject;
+                else if (poseComp.inputSource == SteamVR_Input_Sources.LeftHand)
+                    m_leftController = poseComp.gameObject;
+            }
+        }
+        else
+        {
+            Debug.LogError("CURVEDUI: Can't find SteamVR_PlayArea component on the scene. Add a reference to it manually to CurvedUIInputModule on EventSystem gameobject.", this.gameObject);
+        }
+
+        if (m_steamVRClickAction == null)
+            Debug.LogError("CURVEDUI: No SteamVR action to use for button interactions. Choose the action you want to use to click the buttons on CurvedUISettings component.");
+    }
+
+#else
+    {}
+#endif //end of CURVEDUI_STEAMVR_2 if
+
+    #endregion //end of STEAMVR_2 region
+
 
 
 #endif // END OF CURVEDUI_GOOGLEVR IF - GOOGLEVR INPUT MODULE OVERRIDE
@@ -647,7 +727,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
         bool moduleMissing = true;
         EventSystem eventGO = GameObject.FindObjectOfType<EventSystem>();
 
-        if(eventGO == null)
+        if (eventGO == null)
         {
             Debug.LogError("CurvedUI: Your EventSystem component is missing from the scene! Unity Canvas will not track interactions without it.");
             return null as T;
@@ -655,13 +735,13 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
         foreach (BaseInputModule module in eventGO.GetComponents<BaseInputModule>())
         {
-			if (module is T) {
-				moduleMissing = false;
-				module.enabled = true;
-			} else if (disableOtherInputModulesOnStart) {
-				module.enabled = false;
+            if (module is T) {
+                moduleMissing = false;
+                module.enabled = true;
+            } else if (disableOtherInputModulesOnStart) {
+                module.enabled = false;
 
-				#if CURVEDUI_GOOGLEVR //on GVR, we have to completely destroy the module because the code looks for first instance, even if it's disabled
+#if CURVEDUI_GOOGLEVR //on GVR, we have to completely destroy the module because the code looks for first instance, even if it's disabled
 				if(module is GvrPointerInputModule){
 					if(Application.isPlaying){
 						Destroy(module);
@@ -670,8 +750,8 @@ public class CurvedUIInputModule : StandaloneInputModule {
 						DestroyImmediate(module);
 					}
 				}
-				#endif 
-			}
+#endif
+            }
         }
 
         if (moduleMissing)
@@ -690,43 +770,165 @@ public class CurvedUIInputModule : StandaloneInputModule {
 
 
 
-    #region SETTERS AND GETTERS
+    #region SETTERS AND GETTERS - GENERAL
+
+
     public static CurvedUIInputModule Instance {
-        get
-        {
+        get {
             if (instance == null)
                 instance = EnableInputModule<CurvedUIInputModule>();
-
             return instance;
         }
         private set { instance = value; }
     }
 
+
     /// <summary>
-    /// When in CUSTOM_RAY controller mode, RayCaster will use this worldspace Ray to determine which Canvas objects are being selected.
+    /// Current controller mode. Decides how user can interact with the canvas. 
     /// </summary>
-    public static Ray CustomControllerRay {
-        get { return Instance.customControllerRay; }
-        set  {  Instance.customControllerRay = value;  }
+    public static CUIControlMethod ControlMethod {
+        get { return Instance.controlMethod; }
+        set
+        {
+            if (Instance.controlMethod != value)
+            {
+                Instance.controlMethod = value;
+#if CURVEDUI_STEAMVR_LEGACY
+                if(value == CUIControlMethod.STEAMVR_LEGACY)
+                    Instance.SetupViveControllers();
+#endif 
+            }
+        }
     }
 
     /// <summary>
-    /// When in CUSTOM_RAY controller mode, Input module will use this wbool to determine whether interaction button is pressed.
+    /// Which hand can be used to interact with canvas. Left, Right or Both. Default Right.
+    /// Used in control methods that differentiate hands (STEAMVR, OCULUSVR)
     /// </summary>
-    [System.Obsolete("Misspelled. Use CustomControllerButtonDown instead.")]
-    public static bool CustromControllerButtonDown {
+    public Hand UsedHand {
+        get { return usedHand; }
+        set { usedHand = value; }
+    }
+
+    /// <summary>
+    /// Gameobject of the handheld controller used for interactions - Oculus Touch, GearVR remote etc. 
+    /// If ControllerTransformOverride is set, that transform will be returned instead.
+    /// Used in STEAMVR, STEAMVR_LEGACY, OCULUSVR and GOOGLEVR control methods.
+    /// </summary>
+    public Transform ControllerTransform {
+        get
+        {
+          //use override, if available.
+          if (ControllerTransformOverride != null)
+                return ControllerTransformOverride;
+
+#if CURVEDUI_OCULUSVR
+          return UsedHand == Hand.Left ? oculusCameraRig.leftHandAnchor : oculusCameraRig.rightHandAnchor; 
+#elif CURVEDUI_STEAMVR_LEGACY
+          return UsedHand == Hand.Left ? leftCont.transform : rightCont.transform; 
+#elif CURVEDUI_STEAMVR_2
+            return UsedHand == Hand.Left ? m_leftController.transform : m_rightController.transform;
+#elif CURVEDUI_GOOGLEVR
+          return Pointer.PointerTransform; 
+#else
+          Debug.LogWarning("CURVEDUI: CurvedUIInputModule.ActiveController will only return proper gameobject in  STEAMVR, STEAMVR_LEGACY, OCULUSVR or GOOGLEVR control methods.");
+          return null;
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Direction where the handheld controller points. Forward (blue) direction of the controller transform.
+    /// If ControllerTransformOverride is set, its forward direction will be returned instead.
+    /// Used in STEAMVR, STEAMVR_LEGACY, OCULUSVR and GOOGLEVR control methods.
+    /// </summary>
+    public Vector3 ControllerPointingDirection {
+        get
+        {
+#if  CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2 || CURVEDUI_GOOGLEVR || CURVEDUI_OCULUSVR
+            return ControllerTransform.forward;
+#else
+            Debug.LogWarning("CURVEDUI: CurvedUIInputModule.PointingDirection will only return proper direction in  STEAMVR, STEAMVR_LEGACY, OCULUSVR or GOOGLEVR control methods.");
+            return Vector3.forward;
+#endif
+        }
+    }
+
+
+    /// <summary>
+    /// World Space position where the pointing ray starts. Usually the location of controller transform.
+    /// If ControllerTransformOverride is set, its position will be returned instead.
+    /// Used in STEAMVR, STEAMVR_LEGACY, OCULUSVR and GOOGLEVR control methods.
+    /// </summary>
+    public Vector3 ControllerPointingOrigin {
+        get
+        {
+#if  CURVEDUI_STEAMVR_LEGACY || CURVEDUI_STEAMVR_2 || CURVEDUI_GOOGLEVR || CURVEDUI_OCULUSVR
+            return ControllerTransform.position;
+#else
+            Debug.LogWarning("CURVEDUI: CurvedUIInputModule.PointingOrigin will only return proper position in  STEAMVR, STEAMVR_LEGACY, OCULUSVR or GOOGLEVR control methods.");
+            return Vector3.zero;
+#endif
+        }
+    }
+
+    /// <summary>
+    /// If not null, this transform will be used as the Controller Transform. This controls the raycast.
+    /// Its position will be used as PointingOrigin and its forward (blue) direction as PointingDirection.
+    /// </summary>
+    public Transform ControllerTransformOverride {
+        get { return instance.controllerTransformOverride; }
+        set { instance.controllerTransformOverride = value; }
+    }
+
+    /// <summary>
+    /// Gameobject we're currently pointing at.
+    /// Updated every frame.
+    /// </summary>
+    public GameObject CurrentPointedAt {
+        get { return currentPointedAt; }
+    }
+    #endregion
+
+
+
+
+
+
+    #region SETTERS AND GETTERS - CUSTOM RAY
+    /// <summary>
+    /// When in CUSTOM_RAY controller mode, Canvas Raycaster will use this worldspace Ray to determine which Canvas objects are being selected.
+    /// </summary>
+    public static Ray CustomControllerRay {
+        get { return Instance.customControllerRay; }
+        set { Instance.customControllerRay = value; }
+    }
+
+ 
+    /// <summary>
+    /// Tell CurvedUI if controller button is pressed when in CUSTOM_RAY controller mode. Input module will use this to interact with canvas.
+    /// </summary>
+    public static bool CustomControllerButtonState {
         get { return Instance.pressedDown; }
         set { Instance.pressedDown = value; }
     }
 
     /// <summary>
-    /// When in CUSTOM_RAY controller mode, Input module will use this wbool to determine whether interaction button is pressed.
+    /// When in CUSTOM_RAY controller mode, Input module will use this bool to determine whether interaction button is pressed.
     /// </summary>
+    [System.Obsolete("Use CustomControllerButtonState instead.")]
     public static bool CustomControllerButtonDown {
         get { return Instance.pressedDown; }
         set { Instance.pressedDown = value; }
     }
+    #endregion
 
+
+
+
+
+
+    #region SETTERS AND GETTERS - WORLD SPACE MOUSE
     /// <summary>
     /// Returns the position of the world space pointer in Canvas' local space. 
     /// You can use it to position an image on world space mouse pointer's position.
@@ -755,41 +957,13 @@ public class CurvedUIInputModule : StandaloneInputModule {
         get { return worldSpaceMouseSensitivity; }
         set { worldSpaceMouseSensitivity = value; }
     }
+    #endregion
 
 
-    /// <summary>
-    /// Current controller mode. Decides how user can interact with the canvas. 
-    /// </summary>
-    public static CUIControlMethod ControlMethod {
-        get { return Instance.controlMethod; }
-        set
-        {
-            if (Instance.controlMethod != value)
-            {
-                Instance.controlMethod = value;
-#if CURVEDUI_VIVE
-                if(value == CUIControlMethod.STEAMVR)
-                    Instance.SetupViveControllers();
-#endif 
-            }
-        }
-    }
 
-    /// <summary>
-    /// Gameobject we're currently pointing at.
-    /// </summary>
-    public GameObject CurrentPointedAt {
-        get { return currentPointedAt; }
-    }
 
-    /// <summary>
-    /// Which VR Controller can be used to interact with canvas. Left, Right or Both. Default Right.
-    /// </summary>
-    public Hand UsedHand {
-        get { return usedHand; }
-        set { usedHand = value;  }
-    }
 
+    #region SETTERS AND GETTERS - GAZE
     /// <summary>
     /// Gaze Control Method. Should execute OnClick events on button after user points at them?
     /// </summary>
@@ -829,17 +1003,21 @@ public class CurvedUIInputModule : StandaloneInputModule {
         get { return gazeTimedClickProgressImage; }
         set { gazeTimedClickProgressImage = value; }
     }
+    #endregion
 
 
 
-#if CURVEDUI_VIVE
+
+
+
+    #region SETTERS AND GETTERS - STEAMVR_LEGACY
+#if CURVEDUI_STEAMVR_LEGACY
     /// <summary>
     /// Scene's controller manager. Used to get references for Vive controllers.
     /// </summary>
     public SteamVR_ControllerManager SteamVRControllerManager {
             get { return steamVRControllerManager; }
-            set
-            {
+            set {
                 if (steamVRControllerManager != value)  {
                     steamVRControllerManager = value;
                 }
@@ -851,8 +1029,7 @@ public class CurvedUIInputModule : StandaloneInputModule {
         /// </summary>
         public SteamVR_ControllerManager ControllerManager {
             get { return controllerManager; }
-            set
-            {
+            set {
                 controllerManager = value;
                 SetupViveControllers();
             }
@@ -863,7 +1040,6 @@ public class CurvedUIInputModule : StandaloneInputModule {
         /// </summary>
         public static CurvedUIViveController Right {
             get {
-
                 if (!rightCont)
                  rightCont = controllerManager.right.AddComponentIfMissing<CurvedUIViveController>();
 
@@ -875,23 +1051,55 @@ public class CurvedUIInputModule : StandaloneInputModule {
         /// </summary>
         public static CurvedUIViveController Left {
             get {
-
                 if (!leftCont)
                   leftCont = controllerManager.left.AddComponentIfMissing<CurvedUIViveController>();
 
                 return leftCont; }
         }  
-#endif // CURVEDUI_VIVE
+#endif // CURVEDUI_STEAMVR_LEGACY
+    #endregion
 
 
 
 
-#if CURVEDUI_TOUCH
+
+
+    #region SETTERS AND GETTERS - STEAMVR_2
+#if CURVEDUI_STEAMVR_2
+    public SteamVR_PlayArea SteamVRPlayArea {
+        get { return steamVRPlayArea; }
+        set { steamVRPlayArea = value;
+        }
+    }
+
+    /// <summary>
+    /// Currently used SteamVR Input Source, based on used Hand.
+    /// </summary>
+    public SteamVR_Input_Sources SteamVRInputSource {
+        get {  return (UsedHand == Hand.Left ? Valve.VR.SteamVR_Input_Sources.LeftHand : Valve.VR.SteamVR_Input_Sources.RightHand);
+        }
+    }
+
+    /// <summary>
+    /// SteamVR 2.0 Action that should be used to click on UI elements.
+    /// </summary>
+    public SteamVR_Action_Boolean SteamVRClickAction {
+        get { return m_steamVRClickAction;  }
+        set { m_steamVRClickAction = value; }
+    }
+#endif // end of STEAMVR2
+    #endregion
+
+
+
+
+
+    #region SETTERS AND GETTERS - OCULUSVR
+#if CURVEDUI_OCULUSVR
     public OVRCameraRig OculusCameraRig {
         get { return oculusCameraRig; }
         set {  oculusCameraRig = value;  }
     }
-
 
     public OVRInput.Button OculusTouchInteractionButton {
         get { return InteractionButton; }
@@ -901,36 +1109,32 @@ public class CurvedUIInputModule : StandaloneInputModule {
     public Transform OculusTouchUsedControllerTransform {
         get { return UsedHand == Hand.Left ? oculusCameraRig.leftHandAnchor : oculusCameraRig.rightHandAnchor; }
     }
-#endif // CURVEDUI_TOUCH
+#endif // CURVEDUI_OCULUSVR
+    #endregion 
 
 
 
 
-#endregion // end of SETTERS AND GETTERS
-
-
-
-
-#region ENUMS
-    //enums
+    #region ENUMS
     public enum CUIControlMethod
-{
-	MOUSE = 0,
-	GAZE = 1,
-	WORLD_MOUSE = 2,
-	CUSTOM_RAY = 3,
-	STEAMVR = 4,
-	OCULUSVR = 5,
-	//DAYDREAM = 6,//deprecated, GoogleVR is now used for daydream.
-	GOOGLEVR = 7,
-}
+    {
+	    MOUSE = 0,
+	    GAZE = 1,
+	    WORLD_MOUSE = 2,
+	    CUSTOM_RAY = 3,
+	    STEAMVR_LEGACY = 4,//1.2.3 or earlier
+	    OCULUSVR = 5,
+	    //DAYDREAM = 6,//deprecated, GoogleVR is now used for daydream.
+	    GOOGLEVR = 7,
+        STEAMVR_2 = 8, //2.0 or later
+    }
 
-public enum Hand
-{
-	Both = 0,
-	Right = 1,
-	Left = 2,
-}
-#endregion // ENUMS
+    public enum Hand
+    {
+	    Both = 0,
+	    Right = 1,
+	    Left = 2,
+    }
+    #endregion // ENUMS
 
 }

@@ -25,15 +25,19 @@ namespace CurvedUI {
             CurvedUIInputModule myTarget = (CurvedUIInputModule)target;
 
 
-#if CURVEDUI_TOUCH
+#if CURVEDUI_OCULUSVR
             //automatically find Oculus Rig, if possible
             if (myTarget.OculusCameraRig == null)
                 myTarget.OculusCameraRig = Object.FindObjectOfType<OVRCameraRig>();
 
-#elif CURVEDUI_VIVE
+#elif CURVEDUI_STEAMVR_LEGACY
             //automatically find SteamVR Rig, if possible
             if (myTarget.SteamVRControllerManager == null)
             myTarget.SteamVRControllerManager = Object.FindObjectOfType<SteamVR_ControllerManager>();          
+#elif CURVEDUI_STEAMVR_2
+            //automatically find SteamVR Rig, if possible
+            if (myTarget.SteamVRPlayArea == null)
+                myTarget.SteamVRPlayArea = FindObjectOfType<Valve.VR.SteamVR_PlayArea>();
 #endif
         }
 

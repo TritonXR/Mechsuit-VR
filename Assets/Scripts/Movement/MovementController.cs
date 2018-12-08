@@ -16,15 +16,6 @@ public class MovementController : MonoBehaviour {
   /// </summary>
   public Rigidbody suitBody;
 
-  /*public float maxPulseForce;
-  public float maxPulseDistance;
-
-  public Vector3 enterDisplacement;
-
-  public float dis;
-
-  public Transform MoveColliderRight;
-  */
   public float maxPulseMagnitude;
 
   public float pulseStrength;
@@ -32,12 +23,10 @@ public class MovementController : MonoBehaviour {
   /* cooldown */
   private readonly float cooldownTime = 1.0f;
   float timeLeft;
-  /*bool Cooldown {
-    get { return timeLeft > 0.0f; }
-  }*/
+
   bool cooldown;
 
-  #region methods
+  #region Methods
 
   /// <summary>
   /// Raises the trigger enter event.

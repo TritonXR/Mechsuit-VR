@@ -28,7 +28,7 @@ namespace CurvedUI {
 #pragma warning restore 414
 
 
-#if CURVEDUI_VIVE
+#if CURVEDUI_STEAMVR_LEGACY
         // Update is called once per frame
         void Update()
         {

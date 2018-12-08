@@ -21,8 +21,11 @@ namespace CurvedUI {
 #pragma warning restore 414
 
 
-#if CURVEDUI_TOUCH
-       //variables
+
+
+
+#if CURVEDUI_OCULUSVR
+        //variables
         OVRInput.Controller activeCont;
         bool initialized = false;
 
@@ -39,7 +42,6 @@ namespace CurvedUI {
 
                 initialized = true;
             }
-
 
             //for Oculus Go and GearVR, switch automatically if a different controller is connected.
             //This covers the case where User changes hand setting in Oculus Go menu and gets back to our app.
@@ -58,22 +60,19 @@ namespace CurvedUI {
                 {
                    SwitchHandTo(CurvedUIInputModule.Hand.Right);
                 }
-            }
-            
-        }
-
-        void SwitchHandTo(CurvedUIInputModule.Hand newHand)
-        {
-            CurvedUIInputModule.Instance.UsedHand = newHand;
-            LaserBeam.transform.SetParent(CurvedUIInputModule.Instance.OculusTouchUsedControllerTransform);
-            LaserBeam.transform.ResetTransform();
+            }  
         }
 
         bool IsButtonDownOnController(OVRInput.Controller cont, OVRInput.Controller cont2 = OVRInput.Controller.None)
         {
             return OVRInput.GetDown(CurvedUIInputModule.Instance.OculusTouchInteractionButton, cont) || (cont2 != OVRInput.Controller.None && OVRInput.GetDown(CurvedUIInputModule.Instance.OculusTouchInteractionButton, cont2));
         }
-#elif CURVEDUI_VIVE
+
+
+
+
+
+#elif CURVEDUI_STEAMVR_LEGACY
         void Start()
         {
             //connect to steamVR's OnModelLoaded events so we can update the pointer the moment controller is detected.
@@ -87,9 +86,8 @@ namespace CurvedUI {
         }
 
         void Update()
-        {
-        
-            if (CurvedUIInputModule.ControlMethod != CurvedUIInputModule.CUIControlMethod.STEAMVR) return;
+        {       
+            if (CurvedUIInputModule.ControlMethod != CurvedUIInputModule.CUIControlMethod.STEAMVR_LEGACY) return;
 
             if(autoSwitchHands){
 
@@ -106,27 +104,48 @@ namespace CurvedUI {
             }
         }
 
-        void SwitchHandTo(CurvedUIInputModule.Hand newHand)
+
+#elif CURVEDUI_STEAMVR_2
+        void Start()
         {
-            if (newHand == CurvedUIInputModule.Hand.Right)
+            //initial setup in proper hand
+            SwitchHandTo(CurvedUIInputModule.Instance.UsedHand);
+        }
+        void Update()
+        {
+           if (CurvedUIInputModule.ControlMethod != CurvedUIInputModule.CUIControlMethod.STEAMVR_2) return;
+
+            //Switch hands during runtime when user clicks the action button on another controller
+            if (autoSwitchHands && CurvedUIInputModule.Instance.SteamVRClickAction != null)
             {
-                CurvedUIInputModule.Instance.UsedHand = CurvedUIInputModule.Hand.Right;
-                LaserBeam.transform.SetParent(CurvedUIInputModule.Right.transform);
-                LaserBeam.transform.ResetTransform();
-                LaserBeam.transform.position = CurvedUIInputModule.Right.PointingOrigin;
-                LaserBeam.transform.LookAt(LaserBeam.transform.position + CurvedUIInputModule.Right.PointingDirection);
-            }
-            else
-            {
-                CurvedUIInputModule.Instance.UsedHand = CurvedUIInputModule.Hand.Left;
-                LaserBeam.transform.SetParent(CurvedUIInputModule.Left.transform);
-                LaserBeam.transform.ResetTransform();
-                LaserBeam.transform.position = CurvedUIInputModule.Left.PointingOrigin;
-                LaserBeam.transform.LookAt(LaserBeam.transform.position + CurvedUIInputModule.Left.PointingDirection);
+                if (CurvedUIInputModule.Instance.SteamVRClickAction.GetState(Valve.VR.SteamVR_Input_Sources.RightHand) && CurvedUIInputModule.Instance.UsedHand != CurvedUIInputModule.Hand.Right){
+                    SwitchHandTo(CurvedUIInputModule.Hand.Right);
+                }
+                else if (CurvedUIInputModule.Instance.SteamVRClickAction.GetState(Valve.VR.SteamVR_Input_Sources.LeftHand) && CurvedUIInputModule.Instance.UsedHand != CurvedUIInputModule.Hand.Left ){
+                    SwitchHandTo(CurvedUIInputModule.Hand.Left);
+                }
             }
         }
 #endif
 
+
+
+
+        #region HELPER FUNCTIONS
+        void SwitchHandTo(CurvedUIInputModule.Hand newHand)
+        {
+            CurvedUIInputModule.Instance.UsedHand = newHand;
+
+            if (CurvedUIInputModule.Instance.ControllerTransform)
+            {
+                LaserBeam.transform.SetParent(CurvedUIInputModule.Instance.ControllerTransform);
+                LaserBeam.transform.ResetTransform();
+                LaserBeam.transform.LookAt(LaserBeam.transform.position + CurvedUIInputModule.Instance.ControllerPointingDirection);
+
+            }
+            else Debug.LogError("CURVEDUI: No Active controller that can be used as a parent of the pointer. Is the controller gameobject present on the scene and active?");
+        }
+        #endregion
     }
 
 }
