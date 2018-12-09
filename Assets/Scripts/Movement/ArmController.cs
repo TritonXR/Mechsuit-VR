@@ -12,12 +12,13 @@ public class ArmController : MonoBehaviour {
   public Transform hand;
   public Transform controller;
   public Transform playerShoulder;
-  
+
   [Header("Attributes")]
+  public bool isLeft;
   [SerializeField]
   private bool upperCanRotate;
-  [SerializeField]
-  private float maxArmLength;
+
+  public float maxArmLength;
   [SerializeField]
   [Range(0.2f, 0.8f)]
   private static float forearmToArm = 0.5f;
@@ -34,7 +35,6 @@ public class ArmController : MonoBehaviour {
 
   public CalibrateManager manager;
 
-  private Vector3 firstPosition, secondPosition;
 
   /// <summary>
   /// Stage in the calibration process.
@@ -50,50 +50,21 @@ public class ArmController : MonoBehaviour {
     }
   }
 
-  private bool IsLeft {
-    get {
-      return trackedController.gameObject.name.Contains("left");
-    }
-  }
 
   private Vector3 ControllerAngle {
     get {
       return controller.eulerAngles;
     }
   }
-
-  public bool IsCalibrated {
-    get {
-      return stage == 2;
-    }
-    set {
-      stage = (value == false) ? (byte)0 : (byte)2;
-    }
-  }
   #endregion
 
-  #region Controller and Awake
-  private SteamVR_TrackedController trackedController;
-
-  void Awake() {
-    trackedController = GetComponent<SteamVR_TrackedController>();
-    trackedController.TriggerClicked += Calibrate;
-  }
-  #endregion
-
-  /// <summary>
-  /// Determine left/right controller, and start calibration process
-  /// </summary>
-  void Start() {
-    Reset();
-  }
 
 
   /// <summary>
   /// If we have calibrated the controllers, update the inverse kinematics
   /// </summary>
   void Update() {
-    if (IsCalibrated) {
+    if (manager.BothCalibrated) {
       HandCheck();
     }
   }
@@ -133,7 +104,7 @@ public class ArmController : MonoBehaviour {
     if (armExtend < 1.0f) {
       //float newX = Elbow.position.x;
 
-      if (IsLeft) {
+      if (isLeft) {
         //newX -= mechUpperArmLength * (1.0f - armExtend);
         elbow.position -= elbow.forward * mechUpperArmLength * (1.0f - armExtend);
       } else {
@@ -211,29 +182,4 @@ public class ArmController : MonoBehaviour {
 
   }
   #endregion
-
-  #region Calibration
-
-  public void Reset() {
-    stage = 0;
-    armExtend = 1.0f;
-    Debug.Log("Ready to check shoulder position.");
-  }
-
-  void Calibrate(object sender, ClickedEventArgs e) {
-    if (stage == 0) { // First check
-      Debug.Log("Trigger pulled, expected at shoulder.");
-      firstPosition = controller.position;
-      // Move our empty shoulder gameobject to the player's assumed shoulder position.
-      playerShoulder.position = firstPosition;
-      stage = 1;
-    } else if (stage == 1) { // Second check
-      Debug.Log("Trigger pulled, expected arm to be extended.");
-      secondPosition = controller.position;
-      maxArmLength = Vector3.Distance(firstPosition, secondPosition);
-      stage = 2;
-    }
-    manager.NotifyMenu(IsLeft, stage);
-  }
-#endregion
 } // end of public class armController

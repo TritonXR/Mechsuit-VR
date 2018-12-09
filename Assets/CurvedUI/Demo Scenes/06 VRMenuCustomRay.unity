@@ -253,11 +253,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 675.1707, y: -102.24999, z: 0}
+  savedPos: {x: 677.16174, y: -102.00001, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 157, y: 36}
   savedColor: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}
-  savedTextUV0: {x: 0.18359375, y: 0.2109375}
+  savedTextUV0: {x: 0.07421875, y: 0.1484375}
   savedFill: 0
 --- !u!114 &5461743
 MonoBehaviour:
@@ -889,7 +889,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 387.86548, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &161527859
 MonoBehaviour:
@@ -1738,11 +1738,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 838.6707, y: -422.25, z: 0}
+  savedPos: {x: 845.1618, y: -422.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 139, y: 36}
   savedColor: {r: 0, g: 0.5862067, b: 1, a: 1}
-  savedTextUV0: {x: 0.44140625, y: 0.10546875}
+  savedTextUV0: {x: 0.1796875, y: 0.07421875}
   savedFill: 0
 --- !u!114 &294984848
 MonoBehaviour:
@@ -1908,11 +1908,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 838.6707, y: 57.749996, z: 0}
+  savedPos: {x: 845.1618, y: 58.000004, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 139, y: 36}
   savedColor: {r: 0, g: 0.5862067, b: 1, a: 1}
-  savedTextUV0: {x: 0.44140625, y: 0.10546875}
+  savedTextUV0: {x: 0.1796875, y: 0.07421875}
   savedFill: 0
 --- !u!114 &310659176
 MonoBehaviour:
@@ -2274,11 +2274,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 838.6707, y: -102.24999, z: 0}
+  savedPos: {x: 845.1618, y: -102.00001, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 139, y: 36}
   savedColor: {r: 0, g: 0.5862067, b: 1, a: 1}
-  savedTextUV0: {x: 0.44140625, y: 0.10546875}
+  savedTextUV0: {x: 0.1796875, y: 0.07421875}
   savedFill: 0
 --- !u!114 &374889866
 MonoBehaviour:
@@ -2588,7 +2588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: 240.00452, z: 0}
+  savedPos: {x: 528.62915, y: 240.00452, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 79.991}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2775,7 +2775,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 180, y: 60.000004}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.40234375, y: 0.052734375}
+  savedTextUV0: {x: 0, y: 0.056640625}
   savedFill: 0
 --- !u!114 &445278225
 MonoBehaviour:
@@ -3368,11 +3368,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 675.1707, y: 57.749996, z: 0}
+  savedPos: {x: 677.16174, y: 58.000004, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 157, y: 36}
   savedColor: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}
-  savedTextUV0: {x: 0.18359375, y: 0.2109375}
+  savedTextUV0: {x: 0.07421875, y: 0.1484375}
   savedFill: 0
 --- !u!114 &521915468
 MonoBehaviour:
@@ -3484,7 +3484,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 180, y: 60.000004}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0, y: 0.41601562}
+  savedTextUV0: {x: 0.4140625, y: 0.16210938}
   savedFill: 0
 --- !u!114 &524346638
 MonoBehaviour:
@@ -3576,7 +3576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: 240.00002, z: 0}
+  savedPos: {x: 528.62915, y: 240.00002, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 80}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -3716,7 +3716,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 153.93274, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &696972862
 MonoBehaviour:
@@ -3973,7 +3973,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 387.86548, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &730601705
 MonoBehaviour:
@@ -4065,7 +4065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: -400, z: 0}
+  savedPos: {x: 528.62915, y: -400, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 80}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4483,7 +4483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 505.13815, y: 80.00451, z: 0}
+  savedPos: {x: 528.62915, y: 80.00451, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 79.991}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4723,11 +4723,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 789.33484, y: 257.75, z: 0}
+  savedPos: {x: 789.3309, y: 258.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 381.33826, y: 44}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0, y: 0.25195312}
+  savedTextUV0: {x: 0, y: 0.00390625}
   savedFill: 0
 --- !u!114 &873532437
 MonoBehaviour:
@@ -5024,11 +5024,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 789.33484, y: -222.25, z: 0}
+  savedPos: {x: 789.3309, y: -222.00002, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 381.33826, y: 44}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.3046875, y: 0.22460938}
+  savedTextUV0: {x: 0.4765625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &953510007
 MonoBehaviour:
@@ -5280,11 +5280,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 675.1707, y: -422.25, z: 0}
+  savedPos: {x: 677.16174, y: -422.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 157, y: 36}
   savedColor: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}
-  savedTextUV0: {x: 0.18359375, y: 0.2109375}
+  savedTextUV0: {x: 0.07421875, y: 0.1484375}
   savedFill: 0
 --- !u!114 &978500275
 MonoBehaviour:
@@ -5450,7 +5450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: -399.9955, z: 0}
+  savedPos: {x: 528.62915, y: -399.9955, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 79.991}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -5901,11 +5901,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 838.6707, y: -262.25, z: 0}
+  savedPos: {x: 845.1618, y: -262.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 139, y: 36}
   savedColor: {r: 0, g: 0.5862067, b: 1, a: 1}
-  savedTextUV0: {x: 0.44140625, y: 0.10546875}
+  savedTextUV0: {x: 0.1796875, y: 0.07421875}
   savedFill: 0
 --- !u!114 &1088184632
 MonoBehaviour:
@@ -6017,7 +6017,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 387.86548, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &1100723536
 MonoBehaviour:
@@ -6359,7 +6359,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 320, y: 60.000004}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.2578125, y: 0.33203125}
+  savedTextUV0: {x: 0.5, y: 0.16015625}
   savedFill: 0
 --- !u!114 &1163779852
 MonoBehaviour:
@@ -6471,7 +6471,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 153.93274, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &1164914909
 MonoBehaviour:
@@ -6560,11 +6560,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 789.33484, y: -382.25, z: 0}
+  savedPos: {x: 789.3309, y: -382.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 381.33826, y: 44}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.3046875, y: 0.27734375}
+  savedTextUV0: {x: 0.32421875, y: 0.16992188}
   savedFill: 0
 --- !u!114 &1248554838
 MonoBehaviour:
@@ -7513,11 +7513,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 675.1707, y: 217.75, z: 0}
+  savedPos: {x: 677.16174, y: 218.00002, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 157, y: 36}
   savedColor: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}
-  savedTextUV0: {x: 0.18359375, y: 0.2109375}
+  savedTextUV0: {x: 0.07421875, y: 0.1484375}
   savedFill: 0
 --- !u!114 &1341787143
 MonoBehaviour:
@@ -8283,7 +8283,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 250, y: 60.000004}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.81640625, y: 0.052734375}
+  savedTextUV0: {x: 0, y: 0.37890625}
   savedFill: 0
 --- !u!114 &1431992670
 MonoBehaviour:
@@ -9027,8 +9027,8 @@ MonoBehaviour:
   quality: 1
   interactable: 1
   blocksRaycasts: 1
-  raycastMyLayerOnly: 0
-  forceUseBoxCollider: 1
+  raycastMyLayerOnly: 1
+  forceUseBoxCollider: 0
   angle: 85
   preserveAspect: 1
   vertAngle: 8
@@ -9147,7 +9147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: -240.00002, z: 0}
+  savedPos: {x: 528.62915, y: -240.00002, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 80}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10147,7 +10147,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 153.93274, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &1810747273
 MonoBehaviour:
@@ -10613,7 +10613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 528.777, y: -239.99551, z: 0}
+  savedPos: {x: 528.62915, y: -239.99551, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 79.991}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -10700,11 +10700,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 789.33484, y: 97.75, z: 0}
+  savedPos: {x: 789.3309, y: 98.00001, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 381.33826, y: 44}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0, y: 0.34570312}
+  savedTextUV0: {x: 0, y: 0.22851562}
   savedFill: 0
 --- !u!114 &1921477949
 MonoBehaviour:
@@ -11023,11 +11023,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 675.1707, y: -262.25, z: 0}
+  savedPos: {x: 677.16174, y: -262.00003, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 157, y: 36}
   savedColor: {r: 0.5147059, g: 0.5147059, b: 0.5147059, a: 1}
-  savedTextUV0: {x: 0.18359375, y: 0.2109375}
+  savedTextUV0: {x: 0.07421875, y: 0.1484375}
   savedFill: 0
 --- !u!114 &1943730837
 MonoBehaviour:
@@ -11204,7 +11204,7 @@ MonoBehaviour:
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 153.93274, y: 100}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.42578125, y: 0.22460938}
+  savedTextUV0: {x: 0.56640625, y: 0.052734375}
   savedFill: 0
 --- !u!114 &1960204061
 MonoBehaviour:
@@ -11373,7 +11373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 505.13815, y: 80.00001, z: 0}
+  savedPos: {x: 528.62915, y: 80.00001, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 100.06534, y: 80}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -11608,9 +11608,9 @@ MonoBehaviour:
   gazeTimedClickProgressImage: {fileID: 0}
   worldSpaceMouseSensitivity: 1
   usedHand: 1
-  TouchControllerTransform: {fileID: 0}
-  InteractionButton: 8192
-  oculusCameraRig: {fileID: 0}
+  controllerTransformOverride: {fileID: 0}
+  m_steamVRClickAction: {fileID: 0}
+  steamVRPlayArea: {fileID: 0}
 --- !u!1 &2074850496
 GameObject:
   m_ObjectHideFlags: 0
@@ -11906,11 +11906,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 789.33484, y: -62.25, z: 0}
+  savedPos: {x: 789.3309, y: -62.000004, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 381.33826, y: 44}
   savedColor: {r: 1, g: 1, b: 1, a: 1}
-  savedTextUV0: {x: 0.77734375, y: 0}
+  savedTextUV0: {x: 0.5625, y: 0}
   savedFill: 0
 --- !u!114 &2123423334
 MonoBehaviour:
@@ -11999,11 +11999,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoNotTesselate: 0
-  savedPos: {x: 838.6707, y: 217.75, z: 0}
+  savedPos: {x: 845.1618, y: 218.00002, z: 0}
   savedUp: {x: 0, y: 1, z: 0}
   savedRectSize: {x: 139, y: 36}
   savedColor: {r: 0, g: 0.5862067, b: 1, a: 1}
-  savedTextUV0: {x: 0.44140625, y: 0.10546875}
+  savedTextUV0: {x: 0.1796875, y: 0.07421875}
   savedFill: 0
 --- !u!114 &2142614470
 MonoBehaviour:

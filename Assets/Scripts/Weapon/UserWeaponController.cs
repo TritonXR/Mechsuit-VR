@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Valve.VR;
 
 public class UserWeaponController : SimpleWeaponController {
-  /* SteamVR controller */
-  private SteamVR_TrackedController controller;
   public Hud hud;
 
   /* Methods */
@@ -16,29 +15,30 @@ public class UserWeaponController : SimpleWeaponController {
     //Gizmos.color = Color.green;
     currAmmoIndex = 0;
     currDelay = 0.0f;
-
-
-    controller = GetComponent<SteamVR_TrackedController>();
-    controller.TriggerClicked += FireWeapon;
-    controller.Gripped += ReloadWeapon;
   }
 
   private void Update() {
-    //Debug.Log("WeaponController.Update()");
-    //if (currDelay <= 0.0f && TriggerClicked()) {
     if (currDelay > 0.0f) {
       currDelay -= Time.deltaTime;
+    }
+
+    if (SteamVR_Input._default.inActions.FireWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+      FireWeapon();
+    }
+
+    if (SteamVR_Input._default.inActions.ReloadWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+      ReloadWeapon();
     }
   }
 
 
-  void ReloadWeapon(object sender, ClickedEventArgs e) {
+  void ReloadWeapon() {
     Debug.Log("Grip clicked, attempting to reload");
     hud.UpdateAmmo();
     weapon.ReActivate(ammoType[currAmmoIndex]);
   }
 
-  void FireWeapon(object sender, ClickedEventArgs e) {
+  void FireWeapon() {
     if (currDelay <= 0.0f) {
       weapon.Activate(ammoType[currAmmoIndex]);
       hud.UpdateAmmo();

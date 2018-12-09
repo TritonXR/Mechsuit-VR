@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TestControllerInput : MonoBehaviour {
-  public SteamVR_TrackedObject viveController;
+  //public SteamVR_TrackedObject viveController;
   private Dictionary<string, Valve.VR.EVRButtonId> buttonDictionary;
 
   // Use this for initialization
-  private SteamVR_Controller.Device DeviceInput {
-    get { return SteamVR_Controller.Input((int)viveController.index); }
-  }
+  //private SteamVR_Controller.Device DeviceInput {
+  //  get { return SteamVR_Controller.Input((int)viveController.index); }
+  //}
 
   void Awake() {
-    viveController = GetComponent<SteamVR_TrackedObject>();
+    //viveController = GetComponent<SteamVR_TrackedObject>();
   }
 
   void Start() {
@@ -61,7 +61,7 @@ public class TestControllerInput : MonoBehaviour {
   // Update is called once per frame
   void Update() {
     foreach (KeyValuePair<string, Valve.VR.EVRButtonId> pair in buttonDictionary) {
-      Debug.Log(pair.Key + ": " + DeviceInput.GetAxis(pair.Value));
+      //Debug.Log(pair.Key + ": " + DeviceInput.GetAxis(pair.Value));
     }
   }
 }

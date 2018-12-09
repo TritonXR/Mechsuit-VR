@@ -10,9 +10,9 @@ public class ResetDemo : MonoBehaviour {
 
 	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
 
-	public SteamVR_TrackedObject trackedObj;
+	//public SteamVR_TrackedObject trackedObj;
 
-	public SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
+	//public SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
 	// Use this for initialization
 	void Start () {
@@ -21,11 +21,11 @@ public class ResetDemo : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.R) || controller.GetPressDown (triggerButton)) {
-			resetText.text = "RESETTING LEVEL...";
-		}
-		if(Input.GetKeyUp(KeyCode.R)) {
-			SceneManager.LoadScene ("Main", LoadSceneMode.Single);
-		}
+		//if(Input.GetKeyDown(KeyCode.R) || controller.GetPressDown (triggerButton)) {
+		//	resetText.text = "RESETTING LEVEL...";
+		//}
+		//if(Input.GetKeyUp(KeyCode.R)) {
+		//	SceneManager.LoadScene ("Main", LoadSceneMode.Single);
+		//}
 	}
 }

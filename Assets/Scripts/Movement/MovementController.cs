@@ -16,15 +16,6 @@ public class MovementController : MonoBehaviour {
   /// </summary>
   public Rigidbody suitBody;
 
-  /*public float maxPulseForce;
-  public float maxPulseDistance;
-
-  public Vector3 enterDisplacement;
-
-  public float dis;
-
-  public Transform MoveColliderRight;
-  */
   public float maxPulseMagnitude;
 
   public float pulseStrength;
@@ -32,18 +23,17 @@ public class MovementController : MonoBehaviour {
   /* cooldown */
   private readonly float cooldownTime = 1.0f;
   float timeLeft;
-  /*bool Cooldown {
-    get { return timeLeft > 0.0f; }
-  }*/
+
   bool cooldown;
 
-  #region methods
+  #region Methods
 
   /// <summary>
   /// Raises the trigger enter event.
   /// </summary>
   /// <param name="other">Other.</param>
   void OnTriggerEnter(Collider other) {
+    Debug.Log("Movement trigger enter");
     if(other.tag == "ForwardCollider") {
       if (!cooldown && calibrateManager.BothCalibrated) {
         //NEVER EXECUTED PROPERLY
@@ -51,17 +41,10 @@ public class MovementController : MonoBehaviour {
         //Debug.Log ("Boost activated! timeLeft is " + timeLeft);
         ForwardPulse ();
       }
+    } else {
+      Debug.Log(other.tag);
     }
   }
-
-  void Update() {
-    //Debug.Log ("Update(): timeLeft is " + timeLeft);
-    /*if (cooldown) {
-      Debug.Log ("Cooling down, timeLeft is " + timeLeft);
-      timeLeft -= Time.deltaTime;
-    }*/
-  }
-
 
   /// <summary>
   /// Forwards the pulse.

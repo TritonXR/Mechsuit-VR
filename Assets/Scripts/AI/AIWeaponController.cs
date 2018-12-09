@@ -23,8 +23,8 @@ public class AIWeaponController : SimpleWeaponController {
       if (currDelay > 0.0f) {
         currDelay -= Time.deltaTime;
       } else {
-        if (!FireWeapon() && !ReloadWeapon()) {
-          Debug.Log("You have not calibrated, or the ammo type is incorrect!");
+        if (!FireWeapon()) {
+          ReloadWeapon();
         }
       }
 
@@ -33,13 +33,13 @@ public class AIWeaponController : SimpleWeaponController {
   }
 
   bool ReloadWeapon() {
-    Debug.Log("AI attempting to reload.");
+    //Debug.Log("AI attempting to reload.");
     return weapon.ReActivate(ammoType[currAmmoIndex]);
   }
 
   bool FireWeapon() {
     if (currDelay <= 0.0f) {
-      Debug.Log("AI attempting to fire.");
+      //Debug.Log("AI attempting to fire.");
       currDelay = fireDelay[currAmmoIndex];
       return weapon.Activate(ammoType[currAmmoIndex]);
     } else {
