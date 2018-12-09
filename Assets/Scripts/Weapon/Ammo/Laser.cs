@@ -37,7 +37,7 @@ public class Laser : MonoBehaviour, IAmmo {
   /// </summary>
   /// <param name="collder"></param>
   public void OnTriggerEnter(Collider collider) {
-    print(collider.gameObject.name);
+    //print(collider.gameObject.name);
     if (collider.gameObject != Weapon) {
       IHealth health = (IHealth)collider.gameObject.GetComponent(typeof(IHealth));
       if (health != null) {

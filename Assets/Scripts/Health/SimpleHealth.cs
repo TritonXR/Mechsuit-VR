@@ -24,14 +24,14 @@ public class SimpleHealth : MonoBehaviour, IHealth {
   }
 
   public virtual void TakeDamage(float value, DamageType type) {
-    Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
+    //Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
     CurrHealth = (CurrHealth - value <= 0) ? 0 : CurrHealth - value;
     hud.UpdateHealth(this, gameObject.tag != "Player", gameObject.name);
     if (CurrHealth <= 0) {
-      Debug.Log("Destroyed: " + this.gameObject.name);
+      //Debug.Log("Destroyed: " + this.gameObject.name);
       Destroy(this.gameObject);
     } else {
-      Debug.Log("Remaining health of" + this.gameObject.name + " this object is: " + CurrHealth);
+      //Debug.Log("Remaining health of" + this.gameObject.name + " this object is: " + CurrHealth);
     }
 
 
@@ -39,14 +39,14 @@ public class SimpleHealth : MonoBehaviour, IHealth {
 
   public void Restore (float value, RestoreType type) {
     if (type == RestoreType.health && restoreable) {
-      Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
+      //Debug.Log("The health of " + this.gameObject.name + " is: " + CurrHealth);
 
       CurrHealth = (CurrHealth + value >= maxHealth) ? maxHealth : CurrHealth + value;
 
       if (CurrHealth >= maxHealth) {
-        Debug.Log("Restored to full health: " + this.gameObject.name);
+        //Debug.Log("Restored to full health: " + this.gameObject.name);
       } else {
-        Debug.Log("Current health of" + this.gameObject.name + " this object is: " + CurrHealth);
+       // Debug.Log("Current health of" + this.gameObject.name + " this object is: " + CurrHealth);
       }
     }
 

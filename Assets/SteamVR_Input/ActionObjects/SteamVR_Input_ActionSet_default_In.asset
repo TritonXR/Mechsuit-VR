@@ -25,6 +25,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5e19a5d3715583a48849866aa43d1132, type: 2}
   - {fileID: 11400000, guid: aac1ba549cebcdd4eb5104197f7b2356, type: 2}
   - {fileID: 11400000, guid: 5a470fb6017331d4ea1a53730897f06b, type: 2}
+  - {fileID: 11400000, guid: 5d35e077df075ad418124155d40dd476, type: 2}
   InteractUI: {fileID: 11400000, guid: 622fa429c532d7c42a1447555e114ee7, type: 2}
   Teleport: {fileID: 11400000, guid: 80d0bf235ea2d1d4581c612b0654d06e, type: 2}
   GrabPinch: {fileID: 11400000, guid: 0529c9f54fcfd6541b51c36ecba1aa8c, type: 2}
@@ -36,3 +37,4 @@ MonoBehaviour:
   Calibrate: {fileID: 11400000, guid: 5e19a5d3715583a48849866aa43d1132, type: 2}
   FireWeapon: {fileID: 11400000, guid: aac1ba549cebcdd4eb5104197f7b2356, type: 2}
   ReloadWeapon: {fileID: 11400000, guid: 5a470fb6017331d4ea1a53730897f06b, type: 2}
+  PauseGame: {fileID: 11400000, guid: 5d35e077df075ad418124155d40dd476, type: 2}

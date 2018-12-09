@@ -38,5 +38,7 @@ namespace Valve.VR
         public Valve.VR.SteamVR_Action_Boolean FireWeapon;
         
         public Valve.VR.SteamVR_Action_Boolean ReloadWeapon;
+        
+        public Valve.VR.SteamVR_Action_Boolean PauseGame;
     }
 }

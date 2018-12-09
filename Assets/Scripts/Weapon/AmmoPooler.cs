@@ -60,7 +60,7 @@ public class AmmoPooler : Weapon {
   /// <returns>true if successfully fires; false if not calibrated (if controlled by the user), does not contain the correct ammo type, and/or the magazine is empty</returns>
   public override bool Activate(string ammoTag) {
     if (!manager.BothCalibrated) {
-      Debug.Log("You have not calibrated!");
+      //Debug.Log("You have not calibrated!");
       return false;
     }
 
@@ -77,7 +77,7 @@ public class AmmoPooler : Weapon {
     }
 
     GameObject projectile = poolDictionary[ammoTag].Dequeue();
-    Debug.Log("Fire for " + gameObject.name + ", remaining count: " + poolDictionary[ammoTag].Count);
+    //Debug.Log("Fire for " + gameObject.name + ", remaining count: " + poolDictionary[ammoTag].Count);
     projectile.SetActive(true);
     projectile.transform.position = modelWeapon.transform.position;
     projectile.transform.rotation = modelWeapon.transform.rotation;
