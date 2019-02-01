@@ -9556,9 +9556,6 @@ MonoBehaviour:
   worldSpaceMouseSensitivity: 1
   usedHand: 1
   controllerTransformOverride: {fileID: 0}
-  m_steamVRClickAction: {fileID: 11400000, guid: 622fa429c532d7c42a1447555e114ee7,
-    type: 2}
-  steamVRPlayArea: {fileID: 114323330927037270}
 --- !u!114 &114555037453845408
 MonoBehaviour:
   m_ObjectHideFlags: 1

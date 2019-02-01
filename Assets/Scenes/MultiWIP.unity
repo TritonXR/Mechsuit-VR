@@ -508,7 +508,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1801592068175318, guid: 47bfc39cadf181f4a853ae71d16d04bc,
+  m_PlayerPrefab: {fileID: 1316162144305448, guid: 1310412b68bb9104daf4901a60cea24c,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
@@ -615,7 +615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1519936021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,9 +657,6 @@ MonoBehaviour:
   worldSpaceMouseSensitivity: 1
   usedHand: 1
   controllerTransformOverride: {fileID: 0}
-  m_steamVRClickAction: {fileID: 11400000, guid: 622fa429c532d7c42a1447555e114ee7,
-    type: 2}
-  steamVRPlayArea: {fileID: 0}
 --- !u!114 &1519936023
 MonoBehaviour:
   m_ObjectHideFlags: 0

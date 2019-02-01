@@ -36,6 +36,22 @@
       "requirement": "optional"
     },
     {
+      "name": "/actions/default/in/Calibrate",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/FireWeapon",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/ReloadWeapon",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/PauseGame",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },
