@@ -31,7 +31,7 @@ if __name__ == '__main__':
     #print(linear_data_set)
     #print(linear_data_set.shape)
     model = keras.Sequential([
-        keras.layers.LSTM(64, input_shape=(None, 6)),
+        keras.layers.LSTM(32, input_shape=(None, 6)),
         keras.layers.Dense(3, activation = tf.nn.softmax)
     ])
 
