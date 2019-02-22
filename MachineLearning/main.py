@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # TODO convert to list comprehension
 	#linear_data_set = [matrix for matrix in data for data in data_set]
-    # This would not work 😢
+    # This would not work :(
 	#linear_label_set = [index for index in range(len(data)) for data in data_set]
     linear_data_set = []
     linear_label_set = []
@@ -60,4 +60,4 @@ if __name__ == '__main__':
         predictions = model.predict(array([linear_data_set[i]]))
         print(str(np.argmax(predictions[0])) + " " +  str([linear_label_set[i]]))
 
-    #saved_model_path = tf.contrib.saved_model.save_keras_model(model, 'Models')
+    saved_model_path = tf.contrib.saved_model.save_keras_model(model, 'Models')
