@@ -35,3 +35,12 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+MachineLearning/Models
+MachineLearning/Profile.*
+MachineLearning/__pycache__
+MachineLearning/checkpoint
+MachineLearning/LogFolder
+Assets/ml-agents
+Assets/ml-agents.meta
+Assets/ML_Custom/*

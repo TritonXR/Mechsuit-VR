@@ -7,7 +7,6 @@ from numpy import array
 import os
 from dataParser import parse_file
 
-
 if __name__ == '__main__':
 	# Get file names 
     class_names = [filename.strip(".txt") for filename in os.listdir("Data/Training")]
@@ -60,4 +59,14 @@ if __name__ == '__main__':
         predictions = model.predict(array([linear_data_set[i]]))
         print(str(np.argmax(predictions[0])) + " " +  str([linear_label_set[i]]))
 
-    saved_model_path = tf.contrib.saved_model.save_keras_model(model, 'Models')
+    #saved_model_path = tf.contrib.saved_model.save_keras_model(model, 'Models')
+    #model.save('my_model.h5')
+    #model.save_weights('./checkpoints/my_checkpoint')
+
+    tSess = tf.keras.backend.get_session()
+	# Save checkpoint file
+    tSaver = tf.train.Saver()
+    tSaver.save(tSess, "./Profile.ckpt") # It will generate 4 files: checkpoint, Profile.ckpt.index, Profile.ckpt.meta, Profile.ckpt.data-00000-of-00001
+
+    # Save pb file
+    tf.train.write_graph(tSess.graph_def, "LogFolder", 'Profile.pb', as_text=True)
