@@ -32,9 +32,11 @@ public class MotionRecorder : MonoBehaviour {
   }
 
   void OnDestroy() {
-    WriteData();
-    file.Flush();
-    file.Close();
+    if (file != null) {
+      WriteData();
+      file.Flush();
+      file.Close();
+    }
   }
 
   // Update is called once per frame
