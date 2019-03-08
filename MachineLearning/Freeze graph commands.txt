@@ -1,0 +1,4 @@
+python "C:\Program Files\Python 3.5\Lib\site-packages\tensorflow\python\tools\freeze_graph.py" --input_graph=.\Profile.pb --input_checkpoint=.\Profile.ckpt --output_node_names=Output/Predictions,Output/Loss --output_graph=frozen.pb 
+
+
+python "C:\Program Files\Python 3.5\Lib\site-packages\tensorflow\python\tools\freeze_graph.py" --input_meta_graph=.\Profile.ckpt.meta --input_checkpoint=.\Profile.ckpt --output_graph=.\keras_frozen.pb --output_node_names="dense/Softmax" --input_binary=true

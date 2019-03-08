@@ -7,6 +7,8 @@ from numpy import array
 import os
 from dataParser import parse_file
 
+from freeze_session import freeze_session
+
 if __name__ == '__main__':
 	# Get file names 
     class_names = [filename.strip(".txt") for filename in os.listdir("Data/Training")]
@@ -26,17 +28,19 @@ if __name__ == '__main__':
         index = index + 1
 
     linear_data_set = array(linear_data_set)
-    #linear_data_set.reshape(linear_data_set.size, None, 6)
-    #print(linear_data_set)
-    #print(linear_data_set.shape)
+
     model = keras.Sequential([
-        keras.layers.LSTM(32, input_shape=(None, 6)),
+        keras.layers.LSTM(32, return_sequences=True, input_shape=(None, 6)),
+        keras.layers.Dropout(0.2),
+        keras.layers.LSTM(32, return_sequences=True),
+        keras.layers.Dropout(0.2),
+        keras.layers.LSTM(32),
         keras.layers.Dense(3, activation = tf.nn.softmax)
     ])
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     for i in range(len(linear_data_set)):
-        model.fit(array([linear_data_set[i]]), [linear_label_set[i]], epochs = 5)
+        model.fit(array(linear_data_set[i]), [linear_label_set[i]], epochs = 5)
 
 
     #Test
@@ -60,13 +64,19 @@ if __name__ == '__main__':
         print(str(np.argmax(predictions[0])) + " " +  str([linear_label_set[i]]))
 
     #saved_model_path = tf.contrib.saved_model.save_keras_model(model, 'Models')
-    #model.save('my_model.h5')
+    model.save('motions.h5')
     #model.save_weights('./checkpoints/my_checkpoint')
-
-    tSess = tf.keras.backend.get_session()
+	
+	# First way: get session and save, tweak params of freeze_model.py
+	# Get the Tensorflow Session
+    #tSess = tf.keras.backend.get_session()
 	# Save checkpoint file
-    tSaver = tf.train.Saver()
-    tSaver.save(tSess, "./Profile.ckpt") # It will generate 4 files: checkpoint, Profile.ckpt.index, Profile.ckpt.meta, Profile.ckpt.data-00000-of-00001
+    #tSaver = tf.train.Saver()
+    #tSaver.save(tSess, "./Profile.ckpt") # It will generate 4 files: checkpoint, Profile.ckpt.index, Profile.ckpt.meta, Profile.ckpt.data-00000-of-00001
 
     # Save pb file
-    tf.train.write_graph(tSess.graph_def, "LogFolder", 'Profile.pb', as_text=True)
+    #tf.train.write_graph(tSess.graph_def, "./", 'Profile.pb', as_text=True)
+
+	#Second way: using custom freeze_session
+    #frozen_graph = freeze_session(tSess, output_names=[out.op.name for out in model.outputs])
+    #tf.train.write_graph(frozen_graph, '', 'Train.pb', as_text = False)

@@ -14,15 +14,12 @@ public class GestureRecognition : MonoBehaviour {
 
   private static readonly int DEGREES_OF_FREEDOM = 6;
 
+  private TFGraph graph;
+  private TFSession session;
   [SerializeField]
   private string tf_model_filename;
 
   public TFTensor CreateTensorFromFloat3D(float[,,] gesture) {
-    using (var graph = new TFGraph()) {
-      string path_to_tf_model = Application.dataPath + "/ML_Custom/" + tf_model_filename;
-      Debug.Log(path_to_tf_model);
-      graph.Import(File.ReadAllBytes(path_to_tf_model));
-      var session = new TFSession(graph);
       var runner = session.GetRunner();
       TFTensor tensor = new TFTensor(gesture);
       runner.AddInput(graph["input"][0], tensor);
@@ -33,13 +30,16 @@ public class GestureRecognition : MonoBehaviour {
       // Fetch the results from output:
       TFTensor result = output[0];
       return result;
-    }
   }
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+    graph = new TFGraph();
+    string path_to_tf_model = Application.dataPath + "/ML_Custom/" + tf_model_filename;
+    Debug.Log(path_to_tf_model);
+    graph.Import(File.ReadAllBytes(path_to_tf_model));
+    session = new TFSession(graph);
+  }
 	
 	// Update is called once per frame
 	void Update () {

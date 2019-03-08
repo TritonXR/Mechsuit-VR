@@ -1,4 +1,4 @@
-from numpy import array
+from numpy import array, pad
 
 def parse_file(filename):
     data = []
@@ -23,3 +23,14 @@ def parse_file(filename):
     for i in range(len(data)):
         data[i] = array(data[i])
     return array(data)
+
+def pad_matrix(linear_data_set, pad_length = 300):
+    print('Shape prior to pad')
+    print([matrix.shape for matrix in linear_data_set])
+    for i in range(len(linear_data_set)):
+        pad_tup = ((pad_length-linear_data_set[i].shape[0], 0), (0, 0))
+        linear_data_set[i] = pad(linear_data_set[i], pad_tup,mode='mean')
+    print('Shape after pad')
+    print([matrix.shape for matrix in linear_data_set])
+    return array(linear_data_set)
+    #return [pad(matrix, (), ) for matrix in linear_data_set]
