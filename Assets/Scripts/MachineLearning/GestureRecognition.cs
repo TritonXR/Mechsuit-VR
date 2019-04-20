@@ -44,7 +44,7 @@ public class GestureRecognition : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
     // If trackpad is pressed down, append translation and rotation data to controllerData
-    if (SteamVR_Input._default.inActions.Teleport.GetState(SteamVR_Input_Sources.RightHand)) {
+    if (SteamVR_Actions._default.Teleport.GetState(SteamVR_Input_Sources.RightHand)) {
       controllerData.Add(rightController.localPosition);
       controllerData.Add(rightController.localEulerAngles);
     }

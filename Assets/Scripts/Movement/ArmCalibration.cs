@@ -23,7 +23,7 @@ public class ArmCalibration : MonoBehaviour {
   }
 
   private void Update() {
-    if (SteamVR_Input._default.inActions.Calibrate.GetStateDown(GetSource())) {
+    if (SteamVR_Actions._default.Calibrate.GetStateDown(GetSource())) {
       Calibrate();
     }
   }

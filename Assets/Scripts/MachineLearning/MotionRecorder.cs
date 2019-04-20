@@ -43,33 +43,33 @@ public class MotionRecorder : MonoBehaviour {
   void Update() {
     switch (controllerIndex) {
       case 0:
-        if (SteamVR_Input._default.inActions.GrabPinch.GetStateDown(SteamVR_Input_Sources.LeftHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.LeftHand)) {
           WriteData();
         }
 
-        if (SteamVR_Input._default.inActions.GrabPinch.GetState(SteamVR_Input_Sources.LeftHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetState(SteamVR_Input_Sources.LeftHand)) {
           controllerData.Add(LeftController.localPosition);
           controllerData.Add(LeftController.localEulerAngles);
         }
         break;
 
       case 1:
-        if (SteamVR_Input._default.inActions.GrabPinch.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.RightHand)) {
           WriteData();
         }
 
-        if (SteamVR_Input._default.inActions.GrabPinch.GetState(SteamVR_Input_Sources.RightHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetState(SteamVR_Input_Sources.RightHand)) {
           controllerData.Add(RightController.localPosition);
           controllerData.Add(RightController.localEulerAngles);
         }
         break;
 
       case 2: // both hands: use right hand to start/stop recording
-        if (SteamVR_Input._default.inActions.GrabPinch.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.RightHand)) {
           WriteData();
         }
 
-        if (SteamVR_Input._default.inActions.GrabPinch.GetState(SteamVR_Input_Sources.RightHand)) {
+        if (SteamVR_Actions._default.GrabPinch.GetState(SteamVR_Input_Sources.RightHand)) {
           controllerData.Add(LeftController.localPosition);
           controllerData.Add(LeftController.localEulerAngles);
           controllerData.Add(RightController.localPosition);

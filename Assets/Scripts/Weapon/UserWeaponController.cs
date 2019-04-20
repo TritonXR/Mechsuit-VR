@@ -22,11 +22,11 @@ public class UserWeaponController : SimpleWeaponController {
       currDelay -= Time.deltaTime;
     }
 
-    if (SteamVR_Input._default.inActions.FireWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+    if (SteamVR_Actions._default.FireWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
       FireWeapon();
     }
 
-    if (SteamVR_Input._default.inActions.ReloadWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
+    if (SteamVR_Actions._default.ReloadWeapon.GetStateDown(SteamVR_Input_Sources.RightHand)) {
       ReloadWeapon();
     }
   }

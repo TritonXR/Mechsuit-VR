@@ -26,7 +26,7 @@ public class GestureAgent : Agent {
     AddVectorObs(ballRb.velocity);
     */
     // Change this to check that the vive trackpad is pressed down
-    if (SteamVR_Input._default.inActions.Teleport.GetState(SteamVR_Input_Sources.RightHand)) {
+    if (SteamVR_Actions._default.Teleport.GetState(SteamVR_Input_Sources.RightHand)) {
       AddVectorObs(RightController.localPosition);
       AddVectorObs(RightController.localEulerAngles);
     }

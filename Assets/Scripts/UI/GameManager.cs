@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 
   // Update is called once per frame
   void Update() {
-    if (SteamVR_Input._default.inActions.PauseGame.GetStateDown(SteamVR_Input_Sources.Any)) {
+    if (SteamVR_Actions._default.PauseGame.GetStateDown(SteamVR_Input_Sources.Any)) {
       TogglePauseMenu();
     }
   }
