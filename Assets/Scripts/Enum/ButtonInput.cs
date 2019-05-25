@@ -3,5 +3,7 @@
     ReloadWeapon,
     FireWeapon,
     Calibrate,
-    PauseGame
+    PauseGame,
+    Teleport,
+    GrabPinch
 }

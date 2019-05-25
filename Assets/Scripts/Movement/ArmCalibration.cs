@@ -23,7 +23,7 @@ public class ArmCalibration : MonoBehaviour {
   }
 
   private void Update() {
-    if (SteamVR_Actions._default.Calibrate.GetStateDown(GetSource())) {
+    if (InputManager.Instance.GetButtonInput(ButtonInput.Calibrate, GetSource())) {
       Calibrate();
     }
   }
@@ -48,7 +48,7 @@ public class ArmCalibration : MonoBehaviour {
     manager.NotifyMenu(isLeft, stage);
   }
 
-  private SteamVR_Input_Sources GetSource() {
-    return isLeft ? SteamVR_Input_Sources.LeftHand : SteamVR_Input_Sources.RightHand;
+  private Hand GetSource() {
+        return isLeft ? Hand.LeftHand : Hand.RightHand;
   }
 }
