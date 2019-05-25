@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 using Valve.VR;
@@ -7,6 +8,14 @@ using Valve.VR;
 public class InputManager : MonoBehaviour {
     public static InputManager Instance { get; private set; }
 
+    public Transform steamCamera;
+    public Transform leftController, rightController;
+
+    private GestureRecognition leftGR;
+    private GestureRecognition rightGR;
+
+    private readonly string leftFileName = "D:/MechSuit-VR/MachineLearning/Murui_Data/MSVR_Gestures_Left.dat";
+    private readonly string rightFileName = "D:/MechSuit-VR/MachineLearning/Murui_Data/MSVR_Gestures_Right.dat";
 
     private void Awake() {
         if (Instance == null) {
@@ -14,6 +23,12 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    private void Start() {
+        leftGR = InitializeGR(leftFileName);
+        rightGR = InitializeGR(rightFileName);
+    }
+
+    #region Button input
     public bool GetButtonInput(ButtonInput input, Hand hand = Hand.Any) {
         PropertyInfo[] properties = typeof(SteamVR_Input_ActionSet_default).GetProperties();
         foreach (PropertyInfo property in properties) {
@@ -28,18 +43,67 @@ public class InputManager : MonoBehaviour {
     private SteamVR_Input_Sources GetInputSource(Hand hand) {
         return (SteamVR_Input_Sources)System.Enum.Parse(typeof(Hand), hand.ToString(), true);
     }
+    #endregion
 
-    private void Update() {
-        if (GetButtonInput(ButtonInput.PauseGame, Hand.Any)) {
-            print("Paused");
+    private GestureRecognition InitializeGR (string fileName) {
+        GestureRecognition gr = new GestureRecognition();
+        gr.loadFromFile(fileName);
+        print("Loaded from file");
+        return gr;
+    }
+
+    /// <summary>
+    /// If the system is recording a gesture.
+    /// </summary>
+    private bool isRecording;
+    private IEnumerator leftRecord, rightRecord;
+
+    public void StartRecording(Hand hand = Hand.Both) {
+        isRecording = true;
+        if (hand == Hand.LeftHand || hand == Hand.Both) {
+            leftGR.startStroke(steamCamera.position, steamCamera.rotation);
+            leftRecord = Record(leftGR, leftController);
+            StartCoroutine(leftRecord);
+        }
+
+        if (hand == Hand.RightHand || hand == Hand.Both) {
+            rightGR.startStroke(steamCamera.position, steamCamera.rotation);
+            rightRecord = Record(rightGR, rightController);
+            StartCoroutine(rightRecord);
         }
     }
 
-    public void StartRecording() {
 
+    public GestureInput StopRecording(Hand hand = Hand.Both) {
+        isRecording = false;
+        if (hand == Hand.LeftHand ) {
+            StopCoroutine(leftRecord);
+            int result = leftGR.endStroke();
+            return (GestureInput)result;
+        }
+
+        if (hand == Hand.RightHand) {
+            StopCoroutine(rightRecord);
+            int result = rightGR.endStroke();
+            return (GestureInput)result;
+        }
+
+        if (hand == Hand.Both) {
+            StopCoroutine(leftRecord);
+            StopCoroutine(rightRecord);
+
+            int leftResult = leftGR.endStroke();
+            int rightResult = rightGR.endStroke();
+            return (GestureInput) (leftResult == rightResult ? leftResult : -1);
+        }
+
+        return GestureInput.NotRecognized;
     }
 
-    public GestureInput StopRecording() {
-        throw new System.NotImplementedException();
+    private IEnumerator Record(GestureRecognition gr, Transform controller) {
+        if (isRecording) {
+            gr.contdStroke(controller.localPosition, controller.localRotation);
+            yield return null;
+        }
     }
 }

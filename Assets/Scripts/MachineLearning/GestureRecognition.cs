@@ -45,7 +45,7 @@ public class GestureRecognition : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         // If trackpad is pressed down, append translation and rotation data to controllerData
-        if (InputManager.Instance.GetButtonInput(ButtonInput.Teleport, Hand.RightHand) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.Teleport, Hand.RightHand)) {
             controllerData.Add(rightController.localPosition);
             controllerData.Add(rightController.localEulerAngles);
         }
