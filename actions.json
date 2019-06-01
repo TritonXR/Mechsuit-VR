@@ -2,7 +2,8 @@
   "actions": [
     {
       "name": "/actions/default/in/InteractUI",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/Teleport",
@@ -37,19 +38,28 @@
     },
     {
       "name": "/actions/default/in/Calibrate",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/FireWeapon",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/ReloadWeapon",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/PauseGame",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
+    },
+    {
+      "name": "/actions/default/in/SummonWeapon",
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/out/Haptic",
@@ -83,7 +93,7 @@
   "action_sets": [
     {
       "name": "/actions/default",
-      "usage": "single"
+      "usage": "leftright"
     },
     {
       "name": "/actions/platformer",
@@ -124,7 +134,13 @@
       "/actions/default/in/Pose": "Pose",
       "/actions/default/out/Haptic": "Haptic",
       "/actions/platformer/in/Move": "Move",
-      "/actions/platformer/in/Jump": "Jump"
+      "/actions/platformer/in/Jump": "Jump",
+      "/actions/default/in/FireWeapon": "Fire Weapon",
+      "/actions/default/in/ReloadWeapon": "Reload Weapon",
+      "/actions/default/in/PauseGame": "Pause Game",
+      "/actions/default/in/SummonWeapon": "Summon Weapon",
+      "/actions/default/in/Calibrate": "Calibrate",
+      "/actions/default/in/Squeeze": "Squeeze"
     }
   ]
 }

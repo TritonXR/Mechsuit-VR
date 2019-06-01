@@ -4,6 +4,5 @@
     FireWeapon,
     Calibrate,
     PauseGame,
-    Teleport,
-    GrabPinch
+    SummonWeapon
 }

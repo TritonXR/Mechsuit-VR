@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimpleWeaponController : MonoBehaviour {
   /* Weapon-related variables */
-  public Weapon weapon;
+  public Weapon currentWeapon;
 
   // TODO: refactor those out of controller because close-range weapons like swords don't need those
   public string[] ammoType;

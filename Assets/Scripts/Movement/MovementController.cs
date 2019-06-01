@@ -33,7 +33,7 @@ public class MovementController : MonoBehaviour {
   /// </summary>
   /// <param name="other">Other.</param>
   void OnTriggerEnter(Collider other) {
-    Debug.Log("Movement trigger enter");
+    //Debug.Log("Movement trigger enter");
     if(other.tag == "ForwardCollider") {
       if (!cooldown && calibrateManager.BothCalibrated) {
         //NEVER EXECUTED PROPERLY
@@ -42,7 +42,7 @@ public class MovementController : MonoBehaviour {
         ForwardPulse ();
       }
     } else {
-      Debug.Log(other.tag);
+      //Debug.Log(other.tag);
     }
   }
 

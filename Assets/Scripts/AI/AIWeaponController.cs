@@ -34,14 +34,14 @@ public class AIWeaponController : SimpleWeaponController {
 
   bool ReloadWeapon() {
     //Debug.Log("AI attempting to reload.");
-    return weapon.ReActivate(ammoType[currAmmoIndex]);
+    return currentWeapon.ReActivate(ammoType[currAmmoIndex]);
   }
 
   bool FireWeapon() {
     if (currDelay <= 0.0f) {
       //Debug.Log("AI attempting to fire.");
       currDelay = fireDelay[currAmmoIndex];
-      return weapon.Activate(ammoType[currAmmoIndex]);
+      return currentWeapon.Activate(ammoType[currAmmoIndex]);
     } else {
       return false;
     }

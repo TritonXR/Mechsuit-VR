@@ -14,7 +14,6 @@ public class CalibrateMenu : MonoBehaviour {
 
 
   void Awake() {
-    calibrateMenu = transform.parent.gameObject;
     Calibrate();
     Time.timeScale = 0.0f;
   }

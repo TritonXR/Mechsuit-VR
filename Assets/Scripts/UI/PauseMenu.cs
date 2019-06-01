@@ -5,10 +5,6 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour {
 
   public GameObject calibrateMenu, pauseMenu, HUDMenu;
-  
-  private void Awake() {
-    pauseMenu = gameObject.transform.parent.gameObject;
-  }
 
   public void QuitGame() {
     Debug.Log("Game quitting...");

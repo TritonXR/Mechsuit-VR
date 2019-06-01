@@ -43,33 +43,33 @@ public class MotionRecorder : MonoBehaviour {
   void Update() {
     switch (controllerIndex) {
       case 0:
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.LeftHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.LeftHand)) {
           WriteData();
         }
 
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.LeftHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.LeftHand)) {
           controllerData.Add(LeftController.localPosition);
           controllerData.Add(LeftController.localEulerAngles);
         }
         break;
 
       case 1:
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.RightHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.RightHand)) {
           WriteData();
         }
 
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.RightHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.RightHand)) {
           controllerData.Add(RightController.localPosition);
           controllerData.Add(RightController.localEulerAngles);
         }
         break;
 
       case 2: // both hands: use right hand to start/stop recording
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.RightHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.RightHand)) {
           WriteData();
         }
 
-        if (InputManager.Instance.GetButtonInput(ButtonInput.GrabPinch, Hand.RightHand)) {
+        if (InputManager.Instance.GetButtonInput(ButtonInput.FireWeapon, Hand.RightHand)) {
           controllerData.Add(LeftController.localPosition);
           controllerData.Add(LeftController.localEulerAngles);
           controllerData.Add(RightController.localPosition);

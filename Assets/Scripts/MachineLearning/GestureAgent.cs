@@ -26,7 +26,7 @@ public class GestureAgent : Agent {
     AddVectorObs(ballRb.velocity);
     */
     // Change this to check that the vive trackpad is pressed down
-    if (InputManager.Instance.GetButtonInput(ButtonInput.Teleport, Hand.RightHand)) {
+    if (InputManager.Instance.GetButtonInput(ButtonInput.SummonWeapon, Hand.RightHand)) {
       AddVectorObs(RightController.localPosition);
       AddVectorObs(RightController.localEulerAngles);
     }

@@ -128,6 +128,12 @@ public class MURUI_GR : MonoBehaviour {
         currIndex = index;
     }
 
+
+    public void Discard() {
+        gr.deleteGestureSample(currIndex, gr.getGestureNumberOfSamples(currIndex) - 1);
+        print("Discarded last sample");
+    }
+
     private void OnApplicationQuit() {
         gr.saveToFile(FileName);
     }

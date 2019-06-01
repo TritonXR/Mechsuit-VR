@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR;
 
 public class InputManager : MonoBehaviour {
@@ -40,8 +40,20 @@ public class InputManager : MonoBehaviour {
         return false;
     }
 
+    public bool GetButtonInputUp(ButtonInput input, Hand hand = Hand.Any) {
+        PropertyInfo[] properties = typeof(SteamVR_Input_ActionSet_default).GetProperties();
+        foreach (PropertyInfo property in properties) {
+            if (property.Name == input.ToString()) {
+                return ((SteamVR_Action_Boolean)property.GetValue(SteamVR_Actions._default)).GetStateUp(GetInputSource(hand));
+            }
+        }
+
+        return false;
+    }
+
+
     private SteamVR_Input_Sources GetInputSource(Hand hand) {
-        return (SteamVR_Input_Sources)System.Enum.Parse(typeof(Hand), hand.ToString(), true);
+        return (SteamVR_Input_Sources)System.Enum.Parse(typeof(SteamVR_Input_Sources), hand.ToString(), true);
     }
     #endregion
 
@@ -76,7 +88,7 @@ public class InputManager : MonoBehaviour {
 
     public GestureInput StopRecording(Hand hand = Hand.Both) {
         isRecording = false;
-        if (hand == Hand.LeftHand ) {
+        if (hand == Hand.LeftHand) {
             StopCoroutine(leftRecord);
             int result = leftGR.endStroke();
             return (GestureInput)result;
@@ -94,6 +106,8 @@ public class InputManager : MonoBehaviour {
 
             int leftResult = leftGR.endStroke();
             int rightResult = rightGR.endStroke();
+            print("Left: " + (GestureInput)leftResult);
+            print("Right: " + (GestureInput)rightResult);
             return (GestureInput) (leftResult == rightResult ? leftResult : -1);
         }
 
@@ -101,7 +115,7 @@ public class InputManager : MonoBehaviour {
     }
 
     private IEnumerator Record(GestureRecognition gr, Transform controller) {
-        if (isRecording) {
+        while (isRecording) {
             gr.contdStroke(controller.localPosition, controller.localRotation);
             yield return null;
         }

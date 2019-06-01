@@ -113,6 +113,14 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean SummonWeapon
+        {
+            get
+            {
+                return SteamVR_Actions.default_SummonWeapon;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

@@ -45,7 +45,7 @@ namespace Valve.VR.InteractionSystem
 
         public SteamVR_Behaviour_Pose trackedObject;
         
-        public SteamVR_Action_Boolean grabPinchAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabPinch");
+        public SteamVR_Action_Boolean FireWeaponAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("FireWeapon");
         
         public SteamVR_Action_Boolean grabGripAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
         
@@ -1424,7 +1424,7 @@ namespace Valve.VR.InteractionSystem
                         return explicitType;
                 }
 
-                if (explicitType == GrabTypes.Pinch && grabPinchAction.GetStateDown(handType))
+                if (explicitType == GrabTypes.Pinch && FireWeaponAction.GetStateDown(handType))
                     return GrabTypes.Pinch;
                 if (explicitType == GrabTypes.Grip && grabGripAction.GetStateDown(handType))
                     return GrabTypes.Grip;
@@ -1437,7 +1437,7 @@ namespace Valve.VR.InteractionSystem
                         return GrabTypes.Grip;
                 }
 
-                if (grabPinchAction.GetStateDown(handType))
+                if (FireWeaponAction.GetStateDown(handType))
                     return GrabTypes.Pinch;
                 if (grabGripAction.GetStateDown(handType))
                     return GrabTypes.Grip;
@@ -1456,7 +1456,7 @@ namespace Valve.VR.InteractionSystem
                         return explicitType;
                 }
 
-                if (explicitType == GrabTypes.Pinch && grabPinchAction.GetStateUp(handType))
+                if (explicitType == GrabTypes.Pinch && FireWeaponAction.GetStateUp(handType))
                     return GrabTypes.Pinch;
                 if (explicitType == GrabTypes.Grip && grabGripAction.GetStateUp(handType))
                     return GrabTypes.Grip;
@@ -1469,7 +1469,7 @@ namespace Valve.VR.InteractionSystem
                         return GrabTypes.Grip;
                 }
 
-                if (grabPinchAction.GetStateUp(handType))
+                if (FireWeaponAction.GetStateUp(handType))
                     return GrabTypes.Pinch;
                 if (grabGripAction.GetStateUp(handType))
                     return GrabTypes.Grip;
@@ -1502,7 +1502,7 @@ namespace Valve.VR.InteractionSystem
             switch (type)
             {
                 case GrabTypes.Pinch:
-                    return grabPinchAction.GetState(handType);
+                    return FireWeaponAction.GetState(handType);
 
                 case GrabTypes.Grip:
                     return grabGripAction.GetState(handType);
@@ -1526,7 +1526,7 @@ namespace Valve.VR.InteractionSystem
                     return grabGripAction.GetState(handType);
 
                 case GrabTypes.Grip:
-                    return grabPinchAction.GetState(handType);
+                    return FireWeaponAction.GetState(handType);
 
                 default:
                     return false;
@@ -1548,7 +1548,7 @@ namespace Valve.VR.InteractionSystem
 
             if (preferred == GrabTypes.Pinch)
             {
-                if (grabPinchAction.GetState(handType))
+                if (FireWeaponAction.GetState(handType))
                     return GrabTypes.Pinch;
                 else if (forcePreference)
                     return GrabTypes.None;
@@ -1561,7 +1561,7 @@ namespace Valve.VR.InteractionSystem
                     return GrabTypes.None;
             }
 
-            if (grabPinchAction.GetState(handType))
+            if (FireWeaponAction.GetState(handType))
                 return GrabTypes.Pinch;
             if (grabGripAction.GetState(handType))
                 return GrabTypes.Grip;

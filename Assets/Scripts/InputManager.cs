@@ -18,15 +18,15 @@ public class ViveInput : MonoBehaviour {
   }
 
   public bool getPinch() {
-    return SteamVR_Input._default.inActions.GrabPinch.GetState(hand.handType);
+    return SteamVR_Input._default.inActions.FireWeapon.GetState(hand.handType);
   }
 
   public bool getPinchDown() {
-    return SteamVR_Input._default.inActions.GrabPinch.GetStateDown(hand.handType);
+    return SteamVR_Input._default.inActions.FireWeapon.GetStateDown(hand.handType);
   }
 
   public bool getPinchUp() {
-    return SteamVR_Input._default.inActions.GrabPinch.GetStateUp(hand.handType);
+    return SteamVR_Input._default.inActions.FireWeapon.GetStateUp(hand.handType);
   }
 
   public bool getGrip() {
