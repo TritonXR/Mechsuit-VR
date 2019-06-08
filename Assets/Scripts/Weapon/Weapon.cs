@@ -4,28 +4,18 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour {
     public string name;
-    public GameObject modelWeapon;
-    public SimpleWeaponController controller;
-    public GameObject hand;
     public CalibrateManager manager;
-
-    // Collider that monitors the summoning action
-    public Collider weaponCollider;
 
     public abstract void Setup();
 
     public virtual void Show() {
         //enable the model
-        modelWeapon.gameObject.SetActive(true);
-        //model_weapon.transform.SetParent(controller.debug_tracked_object.transform);
-        //modelWeapon.transform.SetParent(hand.transform);
-        //model_weapon.transform.localPosition = Vector3.zero;
+        gameObject.SetActive(true);
     }
 
     /* After switching weapons, hide it */
     public virtual void Hide() {
-        modelWeapon.gameObject.SetActive(false);
-        //modelWeapon.transform.SetParent(null);
+        gameObject.SetActive(false);
     }
 
     /// <summary>

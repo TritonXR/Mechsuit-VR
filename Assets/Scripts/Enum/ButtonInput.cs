@@ -4,5 +4,6 @@
     FireWeapon,
     Calibrate,
     PauseGame,
-    SummonWeapon
+    SummonWeapon,
+    DequipWeapon
 }

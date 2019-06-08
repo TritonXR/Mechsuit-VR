@@ -62,6 +62,10 @@
       "requirement": "mandatory"
     },
     {
+      "name": "/actions/default/in/DequipWeapon",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     },
@@ -140,7 +144,8 @@
       "/actions/default/in/PauseGame": "Pause Game",
       "/actions/default/in/SummonWeapon": "Summon Weapon",
       "/actions/default/in/Calibrate": "Calibrate",
-      "/actions/default/in/Squeeze": "Squeeze"
+      "/actions/default/in/Squeeze": "Squeeze",
+      "/actions/default/in/DequipWeapon": "Dequip Weapon"
     }
   ]
 }

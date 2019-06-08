@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sword : Weapon {
+public class WhipSegment : MonoBehaviour {
 
-    public GameObject CoreDefense;
-
-    public override void Setup() { }
+    public GameObject CoreDefense = GameObject.Find("CoreDefense");
 
     public void OnTriggerEnter(Collider collider) {
         if (collider.gameObject != CoreDefense) {

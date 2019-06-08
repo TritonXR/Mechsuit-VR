@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using Valve.VR;
 
 public class UserWeaponController : SimpleWeaponController {
     public Hud hud;
 
     public List<Weapon> weapons;
 
+    public float clickInterval = 0.1f;
+
     private readonly Dictionary<GestureInput, string> inputNameDict = new Dictionary<GestureInput, string> {
         { GestureInput.SummonRailgun, "railgun" },
-        { GestureInput.SummonSword, "sword" }
+        { GestureInput.SummonSword, "sword" },
+        { GestureInput.SummonWhip, "whip" }
     };
 
     /* Methods */
@@ -38,12 +39,20 @@ public class UserWeaponController : SimpleWeaponController {
             ReloadWeapon();
         }
 
+        if (InputManager.Instance.GetButtonInput(ButtonInput.DequipWeapon, Hand.RightHand)) {
+            StartCoroutine(WaitForOtherHand(ButtonInput.DequipWeapon, Hand.LeftHand, DequipWeapon));
+        }
+
+        if (InputManager.Instance.GetButtonInput(ButtonInput.DequipWeapon, Hand.LeftHand)) {
+            StartCoroutine(WaitForOtherHand(ButtonInput.DequipWeapon, Hand.RightHand, DequipWeapon));
+        }
+
         if (InputManager.Instance.GetButtonInput(ButtonInput.SummonWeapon, Hand.RightHand)) {
-            InputManager.Instance.StartRecording();
+            InputManager.Instance.StartRecording(Hand.RightHand);
         }
 
         if (InputManager.Instance.GetButtonInputUp(ButtonInput.SummonWeapon, Hand.RightHand)) {
-            GestureInput gesture = InputManager.Instance.StopRecording();
+            GestureInput gesture = InputManager.Instance.StopRecording(Hand.RightHand);
             print("The gesture is: " + gesture);
             Weapon weapon = (from w in weapons where w.name == inputNameDict[gesture] select w).ToArray()[0];
             print(weapon.name);
@@ -52,28 +61,47 @@ public class UserWeaponController : SimpleWeaponController {
     }
 
 
-    void ReloadWeapon() {
-        Debug.Log("Grip clicked, attempting to reload");
-        currentWeapon.ReActivate(ammoType[currAmmoIndex]);
-        hud.UpdateAmmo();
+    private void ReloadWeapon() {
+        if (equipped) {
+            Debug.Log("Grip clicked, attempting to reload");
+            currentWeapon.ReActivate(ammoType[currAmmoIndex]);
+            hud.UpdateAmmo();
+        }
     }
 
-    void FireWeapon() {
-        if (currDelay <= 0.0f) {
+    private void FireWeapon() {
+        if (currDelay <= 0.0f && equipped) {
             currentWeapon.Activate(ammoType[currAmmoIndex]);
             hud.UpdateAmmo();
             currDelay = fireDelay[currAmmoIndex];
         }
     }
 
-    void RecycleWeapon() {
 
+    private IEnumerator WaitForOtherHand(ButtonInput input, Hand hand, System.Action callback) {
+        float timeElapsed = 0f;
+        while (timeElapsed < clickInterval) {
+            if (InputManager.Instance.GetButtonInput(input, hand)) {
+                callback();
+                break;
+            } else {
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
     }
 
-    void SwitchWeapon(Weapon weapon) {
+    private void DequipWeapon() {
+        currentWeapon.Hide();
+        equipped = false;
+        // TODO: if we have a hand for each weapon, we need to display a default "empty" hand here.
+    }
+
+    private void SwitchWeapon(Weapon weapon) {
         currentWeapon.Hide();
         currentWeapon = weapon;
         currentWeapon.Setup();
         currentWeapon.Show();
+        equipped = true;
     }
 }

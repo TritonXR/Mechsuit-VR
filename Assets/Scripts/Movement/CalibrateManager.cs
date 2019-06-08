@@ -4,6 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Monitors the two calibrations.
+/// TODO: make it singleton
 /// </summary>
 public class CalibrateManager : MonoBehaviour {
   public ArmCalibration left, right;

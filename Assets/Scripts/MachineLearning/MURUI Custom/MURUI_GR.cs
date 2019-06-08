@@ -62,7 +62,7 @@ public class MURUI_GR : MonoBehaviour {
                 bool found = false;
                 foreach (int gesture in gestures) {
                     if (result == gesture) {
-                        print(string.Format("Gesture is {0}", gr.getGestureName(gesture)));
+                        print(string.Format("{0} hand: Gesture is {1}", isLeft ? "Left" : "Right", gr.getGestureName(gesture)));
                         found = true;
                         break;
                     }
